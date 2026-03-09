@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Job Odds Tool</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1c2333;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+
+    .subhead {
+      font-size: 18px;
+      line-height: 1.5;
+      max-width: 850px;
+      color: #4e596d;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 280px;
+      padding: 14px 16px;
+      border: 1px solid #ccd3df;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .search-box button {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #1f5eff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .search-hint {
+      margin-top: 10px;
+      color: #6a7385;
+      font-size: 14px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      margin-bottom: 24px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0 24px;
+    }
+
+    .stat {
+      background: #f8faff;
+      border: 1px solid #e1e7f0;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #60708a;
+      margin-bottom: 8px;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+
+    .value {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+
+    .bar-section {
+      margin: 18px 0;
+    }
+
+    .bar-label {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #4e596d;
+      font-weight: bold;
+    }
+
+    .bar {
+      width: 100%;
+      height: 18px;
+      background: #e7ecf3;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4f8cff, #1f5eff);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .bar-fill.alt {
+      background: linear-gradient(90deg, #7c5cff, #5b3df5);
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 18px 0 8px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eaf1ff;
+      color: #1747c8;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .pill.subtle {
+      background: #f2f4f8;
+      color: #4e596d;
+    }
+
+    .text-block {
+      margin-top: 20px;
+    }
+
+    .text-block h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .text-block p {
+      color: #4e596d;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .rankings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .ranking-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #f8faff;
+      border: 1px solid #e1e7f0;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .ranking-title {
+      font-weight: bold;
+    }
+
+    .ranking-score {
+      color: #1747c8;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .no-results {
+      margin-top: 12px;
+      color: #c0392b;
+      font-size: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .rankings {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <h1>What Are the Odds AI Replaces Your Job?</h1>
+      <p class="subhead">
+        Search your job to see its AI exposure score, our estimated probability AI could replace
+        major parts of it, and how it ranks against other occupations.
+      </p>
+
+      <div class="search-box">
+        <input
+          type="text"
+          id="jobSearch"
+          placeholder="Search for a job title, e.g. teacher, programmer, nurse"
+        />
+        <button id="searchButton">Search</button>
+      </div>
+
+      <div id="searchHint" class="search-hint">
+        Try: Computer Programmers, Bartenders, Registered Nurses, Customer Service Representatives
+      </div>
+
+      <div id="noResults" class="no-results hidden">
+        No matching job found. Try a more exact title from the dataset.
+      </div>
+    </header>
+
+    <main>
+      <section id="resultSection" class="card hidden">
+        <h2 id="jobTitle">Job Title</h2>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="label">Odds AI Replaces Major Parts of Your Job</div>
+            <div class="value" id="jobProbability">0%</div>
+            <div class="help">
+              Estimated probability AI could take over a significant share of this job’s tasks.
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="label">AI Exposure Score</div>
+            <div class="value" id="jobExposure">0.00</div>
+            <div class="help">
+              Research score showing how much of this job’s tasks overlap with work AI can already do.
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="label">AI Risk Rank</div>
+            <div class="value" id="jobRank">#0</div>
+            <div class="help">
+              This job’s position compared with all occupations in the dataset.
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="label">More AI-Exposed Than</div>
+            <div class="value" id="jobPercentile">0%</div>
+            <div class="help">
+              Percentage of jobs with lower AI exposure.
+            </div>
+          </div>
+        </div>
+
+        <div class="bar-section">
+          <div class="bar-label">AI Exposure</div>
+          <div class="bar">
+            <div id="exposureBar" class="bar-fill"></div>
+          </div>
+        </div>
+
+        <div class="bar-section">
+          <div class="bar-label">Estimated AI Replacement Probability</div>
+          <div class="bar">
+            <div id="probabilityBar" class="bar-fill alt"></div>
+          </div>
+        </div>
+
+        <div class="meta-row">
+          <span class="pill" id="riskLevel">Risk Level</span>
+          <span class="pill subtle" id="jobFamily">Job Family</span>
+        </div>
+
+        <div class="text-block">
+          <h3>Why this job ranks here</h3>
+          <p id="jobExplanation"></p>
+        </div>
+
+        <div class="text-block">
+          <h3>How this compares</h3>
+          <p id="jobComparison"></p>
+        </div>
+      </section>
+
+      <section class="rankings">
+        <div class="ranking-column card">
+          <h2>Top 10 Most AI-Exposed Jobs</h2>
+          <div id="topJobs" class="ranking-list"></div>
+        </div>
+
+        <div class="ranking-column card">
+          <h2>Top 10 Safest Jobs</h2>
+          <div id="safeJobs" class="ranking-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const jobs = [
+      { occ_code: "15-1251", title: "Computer Programmers", observed_exposure: 0.7451 },
+      { occ_code: "43-4051", title: "Customer Service Representatives", observed_exposure: 0.7011 },
+      { occ_code: "43-9021", title: "Data Entry Keyers", observed_exposure: 0.6707 },
+      { occ_code: "29-2072", title: "Medical Records Specialists", observed_exposure: 0.6674 },
+      { occ_code: "13-1161", title: "Market Research Analysts and Marketing Specialists", observed_exposure: 0.6483 },
+      { occ_code: "41-4012", title: "Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products", observed_exposure: 0.6279 },
+      { occ_code: "13-2051", title: "Financial and Investment Analysts", observed_exposure: 0.5716 },
+      { occ_code: "15-1253", title: "Software Quality Assurance Analysts and Testers", observed_exposure: 0.5195 },
+      { occ_code: "43-9111", title: "Statistical Assistants", observed_exposure: 0.5099 },
+      { occ_code: "15-1212", title: "Information Security Analysts", observed_exposure: 0.4859 },
+      { occ_code: "15-1232", title: "Computer User Support Specialists", observed_exposure: 0.4685 },
+      { occ_code: "27-3031", title: "Public Relations Specialists", observed_exposure: 0.4530 },
+      { occ_code: "43-6014", title: "Secretaries and Administrative Assistants, Except Legal, Medical, and Executive", observed_exposure: 0.4528 },
+      { occ_code: "43-9061", title: "Office Clerks, General", observed_exposure: 0.4504 },
+      { occ_code: "19-4061", title: "Social Science Research Assistants", observed_exposure: 0.4393 },
+      { occ_code: "43-4171", title: "Receptionists and Information Clerks", observed_exposure: 0.4338 },
+      { occ_code: "15-2051", title: "Data Scientists", observed_exposure: 0.4605 },
+      { occ_code: "29-1141", title: "Registered Nurses", observed_exposure: 0.0595 },
+      { occ_code: "47-2111", title: "Electricians", observed_exposure: 0.0 },
+      { occ_code: "35-3011", title: "Bartenders", observed_exposure: 0.0 },
+      { occ_code: "35-9021", title: "Dishwashers", observed_exposure: 0.0 },
+      { occ_code: "33-2011", title: "Firefighters", observed_exposure: 0.0 },
+      { occ_code: "47-2031", title: "Carpenters", observed_exposure: 0.0 },
+      { occ_code: "49-3023", title: "Automotive Service Technicians and Mechanics", observed_exposure: 0.0 },
+      { occ_code: "53-3032", title: "Heavy and Tractor-Trailer Truck Drivers", observed_exposure: 0.0 },
+      { occ_code: "25-2031", title: "Secondary School Teachers, Except Special and Career/Technical Education", observed_exposure: 0.2901 }
+    ];
+
+    function clamp(value, min = 0, max = 1) {
+      return Math.max(min, Math.min(value, max));
+    }
+
+    function getProbability(exposure) {
+      return clamp(exposure * 0.6);
+    }
+
+    function getRiskLevel(probability) {
+      if (probability >= 0.60) return "Very High";
+      if (probability >= 0.45) return "High";
+      if (probability >= 0.30) return "Moderate";
+      if (probability >= 0.15) return "Low";
+      return "Minimal";
+    }
+
+    function getJobFamily(occCode) {
+      const prefix = occCode.split("-")[0];
+      const familyMap = {
+        "11": "Management",
+        "13": "Business & Finance",
+        "15": "Computer & Math",
+        "17": "Engineering",
+        "19": "Science",
+        "21": "Community & Social Service",
+        "23": "Legal",
+        "25": "Education",
+        "27": "Arts & Media",
+        "29": "Healthcare Practitioners",
+        "31": "Healthcare Support",
+        "33": "Protective Service",
+        "35": "Food Service",
+        "37": "Cleaning & Grounds",
+        "39": "Personal Service",
+        "41": "Sales",
+        "43": "Office & Admin",
+        "45": "Farming & Forestry",
+        "47": "Construction",
+        "49": "Repair & Maintenance",
+        "51": "Production",
+        "53": "Transportation"
+      };
+      return familyMap[prefix] || "Other";
+    }
+
+    function getPercentile(index, total) {
+      if (total <= 1) return 0;
+      return Math.round(((total - index - 1) / (total - 1)) * 100);
+    }
+
+    function buildExplanation(job) {
+      const probability = getProbability(job.observed_exposure);
+      const family = getJobFamily(job.occ_code);
+      const title = job.title;
+
+      if (["Computer & Math", "Office & Admin", "Business & Finance", "Arts & Media", "Sales"].includes(family)) {
+        if (probability >= 0.45) {
+          return `${title} ranks among the most AI-exposed jobs in the dataset because much of the role involves digital, text-based, analytical, or information-processing work that AI can already assist with.`;
+        }
+        if (probability >= 0.20) {
+          return `${title} has moderate AI exposure because some parts of the job overlap with work AI can already help perform, but many responsibilities still depend on human judgment and expertise.`;
+        }
+        return `${title} has relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
+      }
+
+      if (["Construction", "Repair & Maintenance", "Food Service", "Cleaning & Grounds", "Transportation", "Farming & Forestry"].includes(family)) {
+        return `${title} ranks among the less AI-exposed occupations because much of the work depends on physical activity, manual skill, or on-site problem-solving that current AI systems cannot perform directly.`;
+      }
+
+      if (["Healthcare Practitioners", "Healthcare Support", "Community & Social Service", "Protective Service"].includes(family)) {
+        return `${title} tends to be less exposed to AI because the role involves in-person care, physical procedures, or real-world decision-making that still relies heavily on human presence.`;
+      }
+
+      if (["Education", "Legal", "Science", "Engineering"].includes(family)) {
+        if (probability >= 0.30) {
+          return `${title} shows moderate to elevated AI exposure because parts of the job involve research, writing, analysis, or structured information work that AI can increasingly support.`;
+        }
+        return `${title} has relatively limited AI exposure because many core parts of the role still depend on expert judgment, specialized knowledge, or real-world interaction.`;
+      }
+
+      return `${title} has a mixed level of AI exposure compared with other jobs in the dataset.`;
+    }
+
+    function buildComparisonText(percentile) {
+      if (percentile >= 99) {
+        return "This job is more AI-exposed than almost every occupation in the dataset.";
+      }
+      if (percentile >= 90) {
+        return `This job is more AI-exposed than ${percentile}% of jobs in the dataset.`;
+      }
+      if (percentile >= 60) {
+        return `This job ranks above average for AI exposure and is more exposed than ${percentile}% of occupations.`;
+      }
+      if (percentile >= 40) {
+        return "This job sits near the middle of the dataset and has a typical level of AI exposure.";
+      }
+      if (percentile >= 10) {
+        return "This job is less AI-exposed than most occupations and sits below the middle of the dataset.";
+      }
+      return "This job ranks among the least AI-exposed occupations in the dataset.";
+    }
+
+    const sortedJobs = [...jobs].sort((a, b) => b.observed_exposure - a.observed_exposure);
+
+    const enrichedJobs = sortedJobs.map((job, index) => {
+      const probability = getProbability(job.observed_exposure);
+      const percentile = getPercentile(index, sortedJobs.length);
+
+      return {
+        ...job,
+        probability,
+        riskLevel: getRiskLevel(probability),
+        rank: index + 1,
+        percentile,
+        jobFamily: getJobFamily(job.occ_code),
+        explanation: buildExplanation(job),
+        comparisonText: buildComparisonText(percentile)
+      };
+    });
+
+    function renderResult(job) {
+      document.getElementById("resultSection").classList.remove("hidden");
+      document.getElementById("noResults").classList.add("hidden");
+
+      document.getElementById("jobTitle").textContent = job.title;
+      document.getElementById("jobProbability").textContent = `${Math.round(job.probability * 100)}%`;
+      document.getElementById("jobExposure").textContent = job.observed_exposure.toFixed(2);
+      document.getElementById("jobRank").textContent = `#${job.rank}`;
+      document.getElementById("jobPercentile").textContent = `${job.percentile}%`;
+      document.getElementById("riskLevel").textContent = `${job.riskLevel} Risk`;
+      document.getElementById("jobFamily").textContent = job.jobFamily;
+      document.getElementById("jobExplanation").textContent = job.explanation;
+      document.getElementById("jobComparison").textContent = job.comparisonText;
+
+      document.getElementById("exposureBar").style.width = `${job.observed_exposure * 100}%`;
+      document.getElementById("probabilityBar").style.width = `${job.probability * 100}%`;
+    }
+
+    function renderRankings() {
+      const topJobs = enrichedJobs.slice(0, 10);
+      const safeJobs = [...enrichedJobs].sort((a, b) => a.observed_exposure - b.observed_exposure).slice(0, 10);
+
+      const topJobsContainer = document.getElementById("topJobs");
+      const safeJobsContainer = document.getElementById("safeJobs");
+
+      topJobsContainer.innerHTML = "";
+      safeJobsContainer.innerHTML = "";
+
+      topJobs.forEach(job => {
+        const div = document.createElement("div");
+        div.className = "ranking-item";
+        div.innerHTML = `
+          <div>
+            <div class="ranking-title">#${job.rank} ${job.title}</div>
+          </div>
+          <div class="ranking-score">${Math.round(job.probability * 100)}%</div>
+        `;
+        topJobsContainer.appendChild(div);
+      });
+
+      safeJobs.forEach((job, index) => {
+        const div = document.createElement("div");
+        div.className = "ranking-item";
+        div.innerHTML = `
+          <div>
+            <div class="ranking-title">#${index + 1} ${job.title}</div>
+          </div>
+          <div class="ranking-score">${Math.round(job.probability * 100)}%</div>
+        `;
+        safeJobsContainer.appendChild(div);
+      });
+    }
+
+    function findJob(searchTerm) {
+      const query = searchTerm.trim().toLowerCase();
+      if (!query) return null;
+
+      let exact = enrichedJobs.find(job => job.title.toLowerCase() === query);
+      if (exact) return exact;
+
+      let contains = enrichedJobs.find(job => job.title.toLowerCase().includes(query));
+      if (contains) return contains;
+
+      return null;
+    }
+
+    function runSearch() {
+      const input = document.getElementById("jobSearch").value;
+      const result = findJob(input);
+
+      if (result) {
+        renderResult(result);
+      } else {
+        document.getElementById("resultSection").classList.add("hidden");
+        document.getElementById("noResults").classList.remove("hidden");
+      }
+    }
+
+    document.getElementById("searchButton").addEventListener("click", runSearch);
+
+    document.getElementById("jobSearch").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        runSearch();
+      }
+    });
+
+    renderRankings();
+    renderResult(enrichedJobs[0]);
+  </script>
+</body>
+</html>
