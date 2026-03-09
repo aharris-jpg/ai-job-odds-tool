@@ -6,35 +6,35 @@
   <title>What Are the Odds AI Replaces Your Job?</title>
   <meta
     name="description"
-    content="Search your occupation to see the estimated odds AI replaces major parts of it, where it ranks, and how it compares with other jobs."
+    content="Search your occupation to see Vegas Insider’s modeled odds AI replaces major parts of it, built from occupation-level AI exposure data from Anthropic."
   />
   <style>
     :root {
       --bg: #f4f7fb;
       --card: #ffffff;
-      --text: #162033;
-      --muted: #66758c;
+      --text: #142033;
+      --muted: #67758b;
       --border: #e2e9f3;
       --blue: #245cff;
+      --blue-dark: #173b89;
       --blue-soft: #edf3ff;
-      --purple: #6f52ff;
-      --purple-soft: #f2efff;
-      --minimal: #2f9e44;
-      --minimal-bg: #e9f8ee;
-      --low: #2d8f7a;
-      --low-bg: #e8f7f4;
-      --moderate: #b7791f;
-      --moderate-bg: #fff5e6;
-      --high: #cf4a4a;
-      --high-bg: #ffefef;
-      --veryhigh: #a63535;
-      --veryhigh-bg: #ffe8e8;
+      --purple: #6950ff;
       --shadow: 0 14px 36px rgba(21, 34, 58, 0.08);
       --radius: 18px;
+
+      --minimal: #228b4e;
+      --minimal-bg: #e9f7ee;
+      --low: #2d9684;
+      --low-bg: #e8f7f4;
+      --moderate: #b87a1b;
+      --moderate-bg: #fff4df;
+      --high: #cc4a4a;
+      --high-bg: #ffefef;
+      --veryhigh: #a63434;
+      --veryhigh-bg: #ffe7e7;
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -43,21 +43,21 @@
       color: var(--text);
       background:
         radial-gradient(circle at top left, rgba(36, 92, 255, 0.08), transparent 28%),
-        radial-gradient(circle at top right, rgba(111, 82, 255, 0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(105, 80, 255, 0.06), transparent 24%),
         var(--bg);
     }
 
     .page {
-      max-width: 1160px;
+      max-width: 1140px;
       margin: 0 auto;
       padding: 20px 14px 52px;
     }
 
     .hero {
-      background: linear-gradient(135deg, #0f1a2d 0%, #17305f 58%, #2750ab 100%);
-      color: white;
-      border-radius: 26px;
-      padding: 24px 18px 18px;
+      background: linear-gradient(135deg, #0f1a2d 0%, #17305f 60%, #2852ae 100%);
+      color: #fff;
+      border-radius: 28px;
+      padding: 22px 18px 16px;
       box-shadow: var(--shadow);
       margin-bottom: 18px;
     }
@@ -76,15 +76,15 @@
 
     h1 {
       margin: 0 0 10px;
-      font-size: 42px;
-      line-height: 1.05;
+      font-size: 44px;
+      line-height: 1.02;
       max-width: 760px;
     }
 
     .subhead {
       margin: 0;
-      max-width: 760px;
-      color: rgba(255,255,255,0.88);
+      max-width: 780px;
+      color: rgba(255,255,255,0.9);
       font-size: 17px;
       line-height: 1.5;
     }
@@ -114,7 +114,7 @@
     }
 
     .search-box button,
-    .small-btn,
+    .btn,
     .toggle-btn {
       border: none;
       border-radius: 14px;
@@ -122,11 +122,18 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .search-box button:hover,
+    .btn:hover,
+    .toggle-btn:hover {
+      transform: translateY(-1px);
     }
 
     .search-box button {
-      background: white;
-      color: #163983;
+      background: #fff;
+      color: #173983;
       min-width: 110px;
     }
 
@@ -141,7 +148,7 @@
     }
 
     .search-hint strong {
-      color: white;
+      color: #fff;
     }
 
     .loading,
@@ -154,7 +161,7 @@
 
     .loading {
       background: rgba(255,255,255,0.14);
-      color: white;
+      color: #fff;
     }
 
     .error {
@@ -162,7 +169,9 @@
       color: #a63232;
     }
 
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     .jump-row {
       display: flex;
@@ -171,8 +180,8 @@
       margin: 16px 0 20px;
     }
 
-    .small-btn {
-      background: white;
+    .btn {
+      background: #fff;
       color: #27498f;
       box-shadow: 0 8px 20px rgba(22, 42, 85, 0.08);
     }
@@ -186,60 +195,33 @@
       margin-bottom: 18px;
     }
 
-    .result-top {
+    .result-grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 18px;
       align-items: start;
     }
 
     .result-title {
       margin: 0;
-      font-size: 32px;
-      line-height: 1.1;
+      font-size: 34px;
+      line-height: 1.05;
     }
 
-    .result-copy {
+    .result-summary {
       margin: 10px 0 0;
       color: var(--muted);
       line-height: 1.55;
       max-width: 700px;
+      font-size: 15px;
     }
 
-    .main-stat {
-      background: linear-gradient(135deg, #eff5ff 0%, #f7f3ff 100%);
-      border: 1px solid #dfe8fb;
-      border-radius: 20px;
-      padding: 18px;
-    }
-
-    .main-stat-label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    .main-stat-value {
-      font-size: 56px;
-      line-height: 1;
-      font-weight: 800;
-      color: #15316d;
-    }
-
-    .main-stat-note {
-      margin-top: 10px;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #51627f;
-    }
-
-    .meta-pills {
+    .pill-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 14px;
+      margin-bottom: 14px;
     }
 
     .pill {
@@ -265,23 +247,53 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 14px;
     }
 
-    .share-btn {
+    .share-primary {
       background: var(--blue);
-      color: white;
+      color: #fff;
     }
 
-    .share-btn.secondary {
+    .share-secondary {
       background: var(--blue-soft);
       color: #224594;
     }
 
-    .result-mid {
-      margin-top: 18px;
+    .score-card {
+      background: linear-gradient(135deg, #eff5ff 0%, #f7f3ff 100%);
+      border: 1px solid #dfe8fb;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .score-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .score-value {
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 800;
+      color: #15316d;
+      letter-spacing: -0.03em;
+    }
+
+    .score-note {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #51627f;
+      max-width: 320px;
+    }
+
+    .mini-stats {
+      margin-top: 16px;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -289,10 +301,10 @@
       background: #f8fbff;
       border: 1px solid #e3ebf6;
       border-radius: 16px;
-      padding: 16px;
+      padding: 15px;
     }
 
-    .mini-stat-label {
+    .mini-label {
       font-size: 12px;
       color: var(--muted);
       margin-bottom: 8px;
@@ -302,21 +314,21 @@
       line-height: 1.4;
     }
 
-    .mini-stat-value {
-      font-size: 27px;
+    .mini-value {
+      font-size: 30px;
       font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 6px;
+      line-height: 1.05;
+      margin-bottom: 5px;
     }
 
-    .mini-stat-help {
+    .mini-help {
       font-size: 13px;
       color: #6d7c91;
-      line-height: 1.45;
+      line-height: 1.42;
     }
 
     .bar-wrap {
-      margin-top: 18px;
+      margin-top: 16px;
       background: #fbfcfe;
       border: 1px solid #e4ebf5;
       border-radius: 18px;
@@ -363,8 +375,8 @@
       color: #7a889c;
     }
 
-    .result-bottom {
-      margin-top: 18px;
+    .explain-grid {
+      margin-top: 16px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
@@ -386,6 +398,7 @@
       margin: 0;
       color: #536277;
       line-height: 1.6;
+      font-size: 15px;
     }
 
     .section-heading {
@@ -400,7 +413,7 @@
     .section-heading h2 {
       margin: 0;
       font-size: 28px;
-      line-height: 1.1;
+      line-height: 1.08;
     }
 
     .section-heading p {
@@ -408,6 +421,7 @@
       color: var(--muted);
       line-height: 1.5;
       max-width: 760px;
+      font-size: 15px;
     }
 
     .findings-grid {
@@ -425,15 +439,42 @@
 
     .finding strong {
       display: block;
-      margin-bottom: 6px;
-      font-size: 15px;
+      margin-bottom: 7px;
+      font-size: 16px;
+      line-height: 1.35;
     }
 
     .finding p {
       margin: 0;
       color: #57667c;
-      line-height: 1.55;
+      line-height: 1.58;
       font-size: 14px;
+    }
+
+    .insight-box {
+      border: 1px solid #e3ebf7;
+      border-radius: 18px;
+      padding: 18px;
+      background: linear-gradient(180deg, #fbfdff 0%, #f7faff 100%);
+    }
+
+    .insight-box h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .insight-quote {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.65;
+      color: #223556;
+    }
+
+    .insight-attrib {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #66758b;
+      font-weight: 700;
     }
 
     .top-grid {
@@ -446,6 +487,13 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+    }
+
+    .ranking-note {
+      margin: -4px 0 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
     }
 
     .ranking-item {
@@ -512,7 +560,7 @@
 
     .toggle-btn.active {
       background: var(--blue);
-      color: white;
+      color: #fff;
       border-color: var(--blue);
     }
 
@@ -567,13 +615,15 @@
       color: #214a9c;
     }
 
-    .methodology {
+    .methodology,
+    .sources {
       line-height: 1.65;
       color: #526177;
       font-size: 15px;
     }
 
-    .methodology p {
+    .methodology p,
+    .sources p {
       margin: 0 0 12px;
     }
 
@@ -586,6 +636,44 @@
       margin-bottom: 10px;
     }
 
+    .quote-line {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f7faff;
+      border: 1px solid #e3ebf7;
+      font-weight: 700;
+      color: #1f3f84;
+      line-height: 1.5;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .source-card {
+      border: 1px solid #e5ecf6;
+      border-radius: 18px;
+      padding: 16px;
+      background: #fbfdff;
+    }
+
+    .source-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .source-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #5c6a80;
+    }
+
     .footer-note {
       margin-top: 12px;
       color: #6e7b90;
@@ -594,10 +682,11 @@
     }
 
     @media (max-width: 980px) {
-      .result-top,
-      .result-bottom,
+      .result-grid,
+      .explain-grid,
       .findings-grid,
-      .top-grid {
+      .top-grid,
+      .source-grid {
         grid-template-columns: 1fr;
       }
 
@@ -629,11 +718,11 @@
       }
 
       .result-title {
-        font-size: 28px;
+        font-size: 29px;
       }
 
-      .main-stat-value {
-        font-size: 44px;
+      .score-value {
+        font-size: 50px;
       }
 
       .search-box {
@@ -645,7 +734,7 @@
         width: 100%;
       }
 
-      .result-mid {
+      .mini-stats {
         grid-template-columns: 1fr;
       }
 
@@ -663,10 +752,10 @@
 <body>
   <div class="page">
     <header class="hero">
-      <div class="eyebrow">AI Job Odds Tool</div>
+      <div class="eyebrow">Vegas Insider AI Job Odds Tool</div>
       <h1>What Are the Odds AI Replaces Your Job?</h1>
       <p class="subhead">
-        Search your job to see the estimated odds AI takes over major parts of it.
+        Search your occupation to see <strong>Vegas Insider’s modeled odds</strong> AI replaces major parts of it, built from occupation-level AI exposure data from Anthropic.
       </p>
 
       <div class="search-panel">
@@ -692,63 +781,59 @@
     </header>
 
     <div class="jump-row">
-      <button class="small-btn" onclick="scrollToSection('resultSection')">Result</button>
-      <button class="small-btn" onclick="scrollToSection('findingsSection')">Key findings</button>
-      <button class="small-btn" onclick="scrollToSection('topSection')">Top 10s</button>
-      <button class="small-btn" onclick="scrollToSection('rankingSection')">Full ranking</button>
-      <button class="small-btn" onclick="scrollToSection('methodSection')">How we built this tool</button>
+      <button class="btn" onclick="scrollToSection('resultSection')">Result</button>
+      <button class="btn" onclick="scrollToSection('findingsSection')">Key findings</button>
+      <button class="btn" onclick="scrollToSection('insightSection')">Expert insight</button>
+      <button class="btn" onclick="scrollToSection('topSection')">Top 10s</button>
+      <button class="btn" onclick="scrollToSection('rankingSection')">Full ranking</button>
+      <button class="btn" onclick="scrollToSection('methodSection')">Methodology</button>
+      <button class="btn" onclick="scrollToSection('sourceSection')">Sources</button>
     </div>
 
     <main>
       <section id="resultSection" class="section-card hidden">
-        <div class="result-top">
+        <div class="result-grid">
           <div>
             <h2 class="result-title" id="jobTitle">Job Title</h2>
-            <p class="result-copy" id="jobIntro"></p>
+            <p class="result-summary" id="jobIntro"></p>
 
-            <div class="meta-pills">
+            <div class="pill-row">
               <span id="riskLevel" class="pill neutral">Risk</span>
               <span id="jobFamily" class="pill neutral">Job family</span>
             </div>
 
             <div class="share-row">
-              <button class="share-btn small-btn" id="copyShareTextBtn">Copy share text</button>
-              <button class="share-btn secondary small-btn" id="copyLinkBtn">Copy result link</button>
+              <button class="btn share-primary" id="copyShareTextBtn">Copy share text</button>
+              <button class="btn share-secondary" id="copyLinkBtn">Copy result link</button>
             </div>
           </div>
 
-          <div class="main-stat">
-            <div class="main-stat-label">Odds AI Replaces Major Parts of Your Job</div>
-            <div class="main-stat-value" id="jobProbability">0%</div>
-            <div class="main-stat-note">
-              A modeled estimate based on how exposed this job’s tasks are to AI.
+          <div class="score-card">
+            <div class="score-label">Vegas Insider Modeled Odds AI Replaces Major Parts of Your Job</div>
+            <div class="score-value" id="jobProbability">0%</div>
+            <div class="score-note">
+              Our probability-style metric built from Anthropic’s occupation-level AI exposure data.
             </div>
           </div>
         </div>
 
-        <div class="result-mid">
+        <div class="mini-stats">
           <div class="mini-stat">
-            <div class="mini-stat-label">Risk Rank</div>
-            <div class="mini-stat-value" id="jobRank">#0</div>
-            <div class="mini-stat-help">Position in the full ranking based on our modeled odds number.</div>
+            <div class="mini-label">Risk Rank</div>
+            <div class="mini-value" id="jobRank">#0</div>
+            <div class="mini-help">Position in the full ranking based on Vegas Insider’s modeled odds figure.</div>
           </div>
 
           <div class="mini-stat">
-            <div class="mini-stat-label">Higher Than</div>
-            <div class="mini-stat-value" id="jobPercentile">0%</div>
-            <div class="mini-stat-help">Share of jobs with lower AI exposure than this one.</div>
-          </div>
-
-          <div class="mini-stat">
-            <div class="mini-stat-label">AI Exposure Score</div>
-            <div class="mini-stat-value" id="jobExposure">0.00</div>
-            <div class="mini-stat-help">The underlying research score from the source dataset.</div>
+            <div class="mini-label">Anthropic Exposure Score</div>
+            <div class="mini-value" id="jobExposure">0.00</div>
+            <div class="mini-help">The underlying occupation-level source score from Anthropic’s research.</div>
           </div>
         </div>
 
         <div class="bar-wrap">
           <div class="bar-head">
-            <span>Odds AI Replaces Major Parts of Your Job</span>
+            <span>Vegas Insider Modeled Odds AI Replaces Major Parts of Your Job</span>
             <span class="bar-number" id="jobProbabilityBarValue">0%</span>
           </div>
           <div class="bar">
@@ -760,7 +845,7 @@
           </div>
         </div>
 
-        <div class="result-bottom">
+        <div class="explain-grid">
           <div class="copy-box">
             <h3>Why this job ranks here</h3>
             <p id="jobExplanation"></p>
@@ -777,27 +862,57 @@
         <div class="section-heading">
           <div>
             <h2>Key Findings</h2>
-            <p>The broad patterns in the dataset are clear and consistent.</p>
+            <p>What stands out most when occupations are ranked by Vegas Insider’s modeled AI replacement odds.</p>
           </div>
         </div>
 
         <div class="findings-grid">
           <div class="finding">
-            <strong>Digital desk jobs dominate the high-risk end.</strong>
-            <p>Roles involving writing, coding, analysis, customer support, and admin work tend to show the highest modeled odds of AI replacement.</p>
+            <strong>Computer and office-based jobs dominate the top of the ranking.</strong>
+            <p>Vegas Insider’s ranking shows Computer Programmers at <strong>45% modeled odds</strong>, followed by Customer Service Representatives at <strong>42%</strong> and Data Entry Keyers at <strong>40%</strong>.</p>
           </div>
+
           <div class="finding">
-            <strong>Physical and in-person jobs cluster at the safer end.</strong>
-            <p>Jobs that rely on manual skill, on-site problem-solving, or real-world care generally rank much lower.</p>
+            <strong>Administrative and documentation-heavy work appears especially exposed.</strong>
+            <p>Medical Records Specialists carry <strong>40% modeled odds</strong>, while Medical Transcriptionists sit at <strong>38%</strong>, showing how strongly AI overlaps with structured information work.</p>
           </div>
+
           <div class="finding">
-            <strong>Our tool leads with modeled odds, not just exposure.</strong>
-            <p>We transformed the source exposure score into a clearer probability-style number for comparison and ranking.</p>
+            <strong>Marketing, research, and communications roles also rank surprisingly high.</strong>
+            <p>Market Research Analysts and Marketing Specialists show <strong>39%</strong> modeled odds, while Public Relations Specialists reach <strong>27%</strong>.</p>
           </div>
+
           <div class="finding">
-            <strong>High odds do not guarantee job loss.</strong>
-            <p>This tool estimates task takeover risk — not whether a job disappears completely.</p>
+            <strong>Healthcare splits into two very different risk profiles.</strong>
+            <p>Medical Records Specialists rank at <strong>40%</strong> modeled odds, while Registered Nurses sit near <strong>4%</strong>, highlighting the divide between documentation-heavy and hands-on care roles.</p>
           </div>
+
+          <div class="finding">
+            <strong>Physical, manual, and in-person jobs dominate the safest end.</strong>
+            <p>Many of the lowest-ranked roles cluster at <strong>0%</strong> modeled odds, including Bartenders, Dishwashers, Electricians, and Firefighters.</p>
+          </div>
+
+          <div class="finding">
+            <strong>High modeled odds do not mean a job disappears completely.</strong>
+            <p>This tool estimates the odds AI replaces major parts of a role, not whether the occupation vanishes entirely.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="insightSection" class="section-card">
+        <div class="section-heading">
+          <div>
+            <h2>Vegas Insider Expert Insight</h2>
+            <p>A quote-ready explanation of what this tool adds beyond the source data.</p>
+          </div>
+        </div>
+
+        <div class="insight-box">
+          <h3>Expert Insight</h3>
+          <p class="insight-quote">
+            “Anthropic’s exposure data shows where AI already overlaps with job tasks. Vegas Insider’s contribution was to turn that into a clearer, more shareable measure of risk — the odds AI replaces major parts of a role. The result is a ranking that makes complex labor market research easier for everyday readers to understand.”
+          </p>
+          <div class="insight-attrib">— Vegas Insider analysis team</div>
         </div>
       </section>
 
@@ -820,6 +935,7 @@
                 <p>Jobs with the lowest modeled odds AI replaces major parts of them.</p>
               </div>
             </div>
+            <div class="ranking-note">Many of the lowest-ranked jobs cluster at 0% because they depend heavily on physical work or real-world interaction that AI cannot directly perform.</div>
             <div id="safeJobs" class="ranking-list"></div>
           </div>
         </div>
@@ -829,7 +945,7 @@
         <div class="section-heading">
           <div>
             <h2>Full Ranking</h2>
-            <p>All occupations ranked by our modeled odds AI replaces major parts of the job.</p>
+            <p>All occupations ranked by Vegas Insider’s modeled odds AI replaces major parts of the role.</p>
           </div>
         </div>
 
@@ -844,8 +960,8 @@
               <tr>
                 <th>Rank</th>
                 <th>Job</th>
-                <th>Odds AI Replaces Major Parts</th>
-                <th>AI Exposure Score</th>
+                <th>Vegas Insider Modeled Odds</th>
+                <th>Anthropic Exposure Score</th>
                 <th>Risk Level</th>
               </tr>
             </thead>
@@ -858,37 +974,70 @@
         <div class="section-heading">
           <div>
             <h2>How We Built This Tool</h2>
-            <p>A simple explanation of the methodology behind the page.</p>
+            <p>A journalist-friendly explanation of the methodology behind the ranking.</p>
           </div>
         </div>
 
         <div class="methodology">
           <p>
-            This tool starts with occupation-level AI exposure data from Anthropic’s labor market research.
+            This tool begins with <strong>occupation-level AI exposure data from Anthropic</strong>, which estimates how much of each job overlaps with tasks AI can already perform or assist with.
+          </p>
+
+          <p>
+            <strong>Vegas Insider then transformed that source data into a modeled ranking system</strong> we call:
+            <strong>“Odds AI Replaces Major Parts of Your Job.”</strong>
           </p>
 
           <ol>
-            <li>
-              Anthropic provides an <strong>AI exposure score</strong> for each job. That score reflects how much of the work in that occupation overlaps with tasks AI can already perform or assist with.
-            </li>
-            <li>
-              We then convert that research score into our own modeled number: <strong>“Odds AI Replaces Major Parts of Your Job.”</strong>
-            </li>
-            <li>
-              Jobs are ranked from highest to lowest using that modeled odds number, not the raw exposure score alone.
-            </li>
-            <li>
-              The result is a simpler, more shareable way to compare occupations across the full dataset.
-            </li>
+            <li>Anthropic provides the source exposure score for each occupation.</li>
+            <li>Vegas Insider uses that score as the base signal of AI task overlap.</li>
+            <li>Vegas Insider converts that score into a probability-style metric for easier comparison across jobs.</li>
+            <li>Vegas Insider ranks occupations from highest to lowest using that modeled odds figure.</li>
           </ol>
 
+          <div class="quote-line">
+            This tool measures the odds AI replaces major parts of a job, not the odds a job disappears completely.
+          </div>
+
           <p>
-            This tool estimates <strong>task takeover risk</strong>, not guaranteed unemployment or total job loss.
+            In practice, a higher score suggests AI could absorb a larger share of the tasks in a role. It does not guarantee unemployment or total occupation loss.
+          </p>
+        </div>
+      </section>
+
+      <section id="sourceSection" class="section-card">
+        <div class="section-heading">
+          <div>
+            <h2>Sources</h2>
+            <p>The underlying data, occupational framework, and Vegas Insider modeling layer behind the tool.</p>
+          </div>
+        </div>
+
+        <div class="sources">
+          <p>
+            This tool uses occupation-level AI exposure data from Anthropic as its base measure, while Vegas Insider created the modeled odds, rankings, editorial findings, and page design.
           </p>
         </div>
 
+        <div class="source-grid">
+          <div class="source-card">
+            <strong>Source data</strong>
+            <p>Anthropic — <em>Labor Market Impacts of AI: A New Measure and Early Evidence</em></p>
+          </div>
+
+          <div class="source-card">
+            <strong>Occupational framework</strong>
+            <p>O*NET occupation codes and titles used to structure the jobs across the dataset.</p>
+          </div>
+
+          <div class="source-card">
+            <strong>Vegas Insider analysis</strong>
+            <p>Modeled odds conversion, rankings, editorial findings, and presentation layer.</p>
+          </div>
+        </div>
+
         <div class="footer-note">
-          Source pipeline: Anthropic occupation data → processed dataset → modeled odds → rankings and search tool.
+          Source pipeline: Anthropic occupation data → Vegas Insider modeling → rankings and search tool.
         </div>
       </section>
     </main>
@@ -945,11 +1094,11 @@
     window.scrollToSection = scrollToSection;
 
     function buildIntro(job) {
-      return `${job.title} has ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} modeled odds of AI replacing major parts of it and ranks #${job.ai_risk_rank} overall.`;
+      return `${job.title} has ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} modeled odds of AI replacing major parts of the role, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length} occupations in Vegas Insider’s dataset.`;
     }
 
     function buildShareText(job) {
-      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} odds AI replaces major parts of this job. Rank #${job.ai_risk_rank}. AI exposure score ${formatExposureDecimal(job.observed_exposure)}.`;
+      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} Vegas Insider modeled odds AI replaces major parts of this role. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Anthropic exposure score: ${formatExposureDecimal(job.observed_exposure)}. Check yours: ${window.location.origin}${window.location.pathname}?job=${encodeURIComponent(job.title)}`;
     }
 
     function renderResult(job) {
@@ -960,7 +1109,6 @@
       document.getElementById("jobIntro").textContent = buildIntro(job);
       document.getElementById("jobProbability").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
       document.getElementById("jobRank").textContent = `#${job.ai_risk_rank}`;
-      document.getElementById("jobPercentile").textContent = `${job.more_ai_exposed_than_pct_of_jobs}%`;
       document.getElementById("jobExposure").textContent = formatExposureDecimal(job.observed_exposure);
       document.getElementById("jobExplanation").textContent = job.explanation;
       document.getElementById("jobComparison").textContent = job.comparison_text;
@@ -990,7 +1138,7 @@
           <div class="ranking-number">${rankNumber}</div>
           <div class="ranking-main">
             <div class="ranking-title">${escapeHtml(job.title)}</div>
-            <div class="ranking-sub">${escapeHtml(job.job_family)} · Exposure ${formatExposureDecimal(job.observed_exposure)}</div>
+            <div class="ranking-sub">${escapeHtml(job.job_family)} · Anthropic score ${formatExposureDecimal(job.observed_exposure)}</div>
           </div>
           <div class="ranking-score">${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}</div>
         </div>
@@ -1092,9 +1240,7 @@
     async function loadData() {
       try {
         const response = await fetch("./data/enriched_jobs.json");
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         enrichedJobs = await response.json();
 
