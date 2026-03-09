@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Are the Odds AI Replaces Your Job?</title>
+  <meta
+    name="description"
+    content="Search your occupation to see the estimated odds AI replaces major parts of it, how exposed it is to AI, and where it ranks against other occupations."
+  />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #152033;
+      --muted: #60708a;
+      --border: #dfe7f1;
+      --blue: #1f5eff;
+      --blue-2: #4f8cff;
+      --purple: #6c4cff;
+      --purple-2: #9b7bff;
+      --green: #1f9d63;
+      --yellow: #c98a12;
+      --red: #d64545;
+      --shadow: 0 14px 36px rgba(20, 35, 60, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(79, 140, 255, 0.10), transparent 30%),
+        radial-gradient(circle at top right, rgba(108, 76, 255, 0.08), transparent 28%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0f1a2d 0%, #17315f 55%, #2a4da6 100%);
+      color: #fff;
+      border-radius: 28px;
+      padding: 28px 20px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(8px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 220px;
+      height: 220px;
+      right: -60px;
+      top: -40px;
+      background: radial-gradient(circle, #9b7bff 0%, transparent 70%);
+    }
+
+    .hero::after {
+      width: 220px;
+      height: 220px;
+      left: -70px;
+      bottom: -80px;
+      background: radial-gradient(circle, #4f8cff 0%, transparent 70%);
+    }
+
+    .hero-top {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.05;
+      max-width: 780px;
+    }
+
+    .subhead {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 760px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-mini-card {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 18px;
+      padding: 14px;
+      backdrop-filter: blur(6px);
+    }
+
+    .mini-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    .mini-value {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .mini-copy {
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .search-panel {
+      position: relative;
+      z-index: 1;
+      margin-top: 22px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 22px;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 240px;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 16px;
+      font-size: 16px;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .search-box button,
+    .share-btn,
+    .jump-btn,
+    .toggle-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .search-box button:hover,
+    .share-btn:hover,
+    .jump-btn:hover,
+    .toggle-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .search-box button {
+      background: #fff;
+      color: #13347f;
+      min-width: 120px;
+    }
+
+    .search-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .search-hint strong {
+      color: #fff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .quick-jumps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+
+    .jump-btn {
+      background: #fff;
+      color: #18366f;
+      box-shadow: 0 8px 20px rgba(22, 42, 85, 0.08);
+    }
+
+    .section-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(223, 231, 241, 0.8);
+    }
+
+    .result-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .result-hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .result-hero h2 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.1;
+    }
+
+    .result-kicker {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 720px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #eef4ff;
+      color: #1747c8;
+    }
+
+    .pill.neutral {
+      background: #f2f4f8;
+      color: #4b5c78;
+    }
+
+    .pill.green {
+      background: #e9f8f0;
+      color: #15734b;
+    }
+
+    .pill.yellow {
+      background: #fff5df;
+      color: #9a6700;
+    }
+
+    .pill.red {
+      background: #ffe9e9;
+      color: #a52b2b;
+    }
+
+    .hero-stat {
+      min-width: 220px;
+      background: linear-gradient(135deg, #eff5ff 0%, #f7f4ff 100%);
+      border: 1px solid #dce7fb;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .hero-stat-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .hero-stat-value {
+      font-size: 56px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #152b66;
+    }
+
+    .hero-stat-copy {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #4f6080;
+    }
+
+    .share-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .share-btn {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .share-btn.secondary {
+      background: #edf3ff;
+      color: #2048a0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: #f8fbff;
+      border: 1px solid #e2ebf6;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+      line-height: 1.45;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 7px;
+      line-height: 1.1;
+    }
+
+    .help {
+      font-size: 13px;
+      color: #68788f;
+      line-height: 1.5;
+    }
+
+    .bar-card {
+      background: #fbfcfe;
+      border: 1px solid #e4ebf5;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .bar-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .bar-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #43536c;
+    }
+
+    .bar-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #173a89;
+    }
+
+    .bar {
+      width: 100%;
+      height: 16px;
+      border-radius: 999px;
+      background: #e7edf6;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.45s ease;
+      background: linear-gradient(90deg, var(--blue-2), var(--blue));
+    }
+
+    .bar-fill.alt {
+      background: linear-gradient(90deg, var(--purple-2), var(--purple));
+    }
+
+    .bar-scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #7b889d;
+    }
+
+    .comparison-card {
+      background: linear-gradient(180deg, #fbfdff 0%, #f6f9ff 100%);
+      border: 1px solid #e2ebf7;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .comparison-card h3,
+    .copy-card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .comparison-card p,
+    .copy-card p {
+      margin: 0;
+      line-height: 1.6;
+      color: #536277;
+    }
+
+    .copy-card {
+      background: #fff;
+      border: 1px solid #e5ecf6;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 700px;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ranking-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid #e5ecf7;
+      background: #fbfdff;
+    }
+
+    .ranking-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #1747c8;
+      background: #edf3ff;
+      flex-shrink: 0;
+    }
+
+    .ranking-main {
+      min-width: 0;
+    }
+
+    .ranking-title {
+      font-weight: 800;
+      font-size: 15px;
+      line-height: 1.35;
+      color: #18253a;
+    }
+
+    .ranking-sub {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #68788f;
+    }
+
+    .ranking-score {
+      font-size: 20px;
+      font-weight: 800;
+      color: #173a89;
+      white-space: nowrap;
+    }
+
+    .ranking-toggle {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .toggle-btn {
+      border: 1px solid #dce6f5;
+      background: #fff;
+      color: #335287;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .toggle-btn.active {
+      background: #1f5eff;
+      color: #fff;
+      border-color: #1f5eff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e5ecf7;
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2f8;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f7faff;
+      font-size: 12px;
+      color: #61708a;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      font-size: 14px;
+      color: #20304a;
+    }
+
+    tr:hover td {
+      background: #fbfdff;
+    }
+
+    .table-job {
+      font-weight: 700;
+    }
+
+    .table-chip {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #edf3ff;
+      color: #214a9c;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      color: #6e7b90;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .loading-state,
+    .error-state {
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      margin-top: 14px;
+    }
+
+    .loading-state {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+    .error-state {
+      background: #fff1f1;
+      color: #a12d2d;
+    }
+
+    @media (max-width: 980px) {
+      .hero-top,
+      .result-layout,
+      .highlight-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero-stat {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 14px 12px 40px;
+      }
+
+      .hero {
+        padding: 22px 16px 18px;
+        border-radius: 22px;
+      }
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      .subhead {
+        font-size: 16px;
+      }
+
+      .section-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .result-hero h2 {
+        font-size: 28px;
+      }
+
+      .hero-stat-value {
+        font-size: 46px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-box input,
+      .search-box button {
+        width: 100%;
+      }
+
+      .ranking-item {
+        grid-template-columns: auto 1fr;
+      }
+
+      .ranking-score {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .section-heading h2 {
+        font-size: 24px;
+      }
+
+      .hero-stat-value {
+        font-size: 40px;
+      }
+
+      .value {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">AI Job Odds Tool</div>
+          <h1>What Are the Odds AI Replaces Your Job?</h1>
+          <p class="subhead">
+            Search your occupation to see how exposed it is to AI, the estimated odds AI takes over major parts of it, and how it compares with hundreds of other jobs.
+          </p>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-mini-card">
+            <div class="mini-label">What this shows</div>
+            <div class="mini-value">Real occupation rankings</div>
+            <div class="mini-copy">Built from occupation-level AI exposure data and transformed into a searchable job-risk tool.</div>
+          </div>
+
+          <div class="hero-mini-card">
+            <div class="mini-label">Why it matters</div>
+            <div class="mini-value">Search → compare → share</div>
+            <div class="mini-copy">Each result includes a headline percentage, job ranking, short explanation, and comparison insight.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-panel">
+        <div class="search-box">
+          <input
+            type="text"
+            id="jobSearch"
+            placeholder="Search for a job title, e.g. teacher, programmer, nurse"
+          />
+          <button id="searchButton">Search</button>
+        </div>
+
+        <div class="search-meta">
+          <div class="search-hint">
+            Try: <strong>Computer Programmers</strong>, <strong>Bartenders</strong>, <strong>Registered Nurses</strong>, <strong>Customer Service Representatives</strong>
+          </div>
+          <div id="datasetCount">Loading dataset...</div>
+        </div>
+
+        <div id="loadingState" class="loading-state">Loading AI job dataset...</div>
+        <div id="noResults" class="error-state hidden">
+          No matching job found. Try a more exact title from the dataset.
+        </div>
+      </div>
+    </header>
+
+    <div class="quick-jumps">
+      <button class="jump-btn" onclick="scrollToSection('resultSection')">Jump to result</button>
+      <button class="jump-btn" onclick="scrollToSection('topExposedSection')">See most exposed jobs</button>
+      <button class="jump-btn" onclick="scrollToSection('safestSection')">See safest jobs</button>
+      <button class="jump-btn" onclick="scrollToSection('fullRankingSection')">Browse full ranking</button>
+    </div>
+
+    <main>
+      <section id="resultSection" class="section-card hidden">
+        <div class="result-layout">
+          <div>
+            <div class="result-hero">
+              <div>
+                <h2 id="jobTitle">Job Title</h2>
+                <p class="result-kicker" id="jobIntro">
+                  This result shows how likely AI is to replace major parts of this job, how exposed the role is to AI-supported tasks, and where it ranks across the broader labor market.
+                </p>
+
+                <div class="badge-row">
+                  <span class="pill" id="riskLevel">Risk Level</span>
+                  <span class="pill neutral" id="jobFamily">Job Family</span>
+                  <span class="pill green" id="jobRankBadge">Rank</span>
+                </div>
+              </div>
+
+              <div class="hero-stat">
+                <div class="hero-stat-label">Odds AI Replaces Major Parts of Your Job</div>
+                <div class="hero-stat-value" id="jobProbability">0%</div>
+                <div class="hero-stat-copy">
+                  Estimated probability AI could take over a meaningful share of this job’s tasks.
+                </div>
+              </div>
+            </div>
+
+            <div class="share-row">
+              <button class="share-btn" id="copyShareTextBtn">Copy share text</button>
+              <button class="share-btn secondary" id="copyLinkBtn">Copy page link</button>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat">
+                <div class="label">AI Exposure Score</div>
+                <div class="value" id="jobExposure">0.00</div>
+                <div class="help">
+                  The underlying research score showing how much of this job’s tasks overlap with work AI can already perform or assist with.
+                </div>
+              </div>
+
+              <div class="stat">
+                <div class="label">AI Risk Rank</div>
+                <div class="value" id="jobRank">#0</div>
+                <div class="help">
+                  This job’s position in the dataset when occupations are ranked by AI exposure.
+                </div>
+              </div>
+
+              <div class="stat">
+                <div class="label">More AI-Exposed Than</div>
+                <div class="value" id="jobPercentile">0%</div>
+                <div class="help">
+                  The share of jobs in the dataset with lower AI exposure than this one.
+                </div>
+              </div>
+
+              <div class="stat">
+                <div class="label">What this means</div>
+                <div class="value" id="jobRiskSummary">Low</div>
+                <div class="help">
+                  A quick summary label that helps interpret the result at a glance.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="bar-card">
+              <div class="bar-top">
+                <div class="bar-label">AI Exposure</div>
+                <div class="bar-value" id="jobExposureBarValue">0%</div>
+              </div>
+              <div class="bar">
+                <div id="exposureBar" class="bar-fill"></div>
+              </div>
+              <div class="bar-scale">
+                <span>Low overlap</span>
+                <span>High overlap</span>
+              </div>
+            </div>
+
+            <div class="bar-card">
+              <div class="bar-top">
+                <div class="bar-label">Estimated AI Replacement Probability</div>
+                <div class="bar-value" id="jobProbabilityBarValue">0%</div>
+              </div>
+              <div class="bar">
+                <div id="probabilityBar" class="bar-fill alt"></div>
+              </div>
+              <div class="bar-scale">
+                <span>Less likely</span>
+                <span>More likely</span>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h3>Why this job ranks here</h3>
+              <p id="jobExplanation"></p>
+            </div>
+
+            <div class="copy-card">
+              <h3>How this compares</h3>
+              <p id="jobComparison"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="highlight-grid">
+        <section id="topExposedSection" class="section-card">
+          <div class="section-heading">
+            <div>
+              <h2>Top 10 Most AI-Exposed Jobs</h2>
+              <p>These occupations currently show the strongest overlap with tasks AI can already perform or assist with.</p>
+            </div>
+          </div>
+          <div id="topJobs" class="ranking-list"></div>
+        </section>
+
+        <section id="safestSection" class="section-card">
+          <div class="section-heading">
+            <div>
+              <h2>Top 10 Safest Jobs From AI</h2>
+              <p>These jobs tend to rely more on physical work, real-world interaction, or manual skill that AI cannot easily perform.</p>
+            </div>
+          </div>
+          <div id="safeJobs" class="ranking-list"></div>
+        </section>
+      </div>
+
+      <section id="fullRankingSection" class="section-card">
+        <div class="section-heading">
+          <div>
+            <h2>Full AI Job Ranking</h2>
+            <p>Browse the full occupation dataset and compare jobs by exposure, estimated probability, and risk level.</p>
+          </div>
+        </div>
+
+        <div class="ranking-toggle">
+          <button class="toggle-btn active" id="sortMostExposedBtn">Most exposed first</button>
+          <button class="toggle-btn" id="sortSafestBtn">Safest first</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Job</th>
+                <th>AI Exposure</th>
+                <th>Odds AI Replaces Major Parts</th>
+                <th>Risk Level</th>
+              </tr>
+            </thead>
+            <tbody id="fullRankingBody"></tbody>
+          </table>
+        </div>
+
+        <div class="footer-note">
+          “Odds AI Replaces Major Parts of Your Job” is a modeled estimate derived from occupation-level AI exposure data. It reflects task takeover risk, not guaranteed job loss.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let enrichedJobs = [];
+    let currentSortMode = "most-exposed";
+
+    function clamp(value, min = 0, max = 1) {
+      return Math.max(min, Math.min(value, max));
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getRiskPillClass(level) {
+      if (level === "Very High" || level === "High") return "pill red";
+      if (level === "Moderate") return "pill yellow";
+      if (level === "Low") return "pill green";
+      return "pill neutral";
+    }
+
+    function formatProbabilityPercent(value) {
+      return `${Math.round(clamp(Number(value)) * 100)}%`;
+    }
+
+    function formatExposureDecimal(value) {
+      return Number(value).toFixed(2);
+    }
+
+    function formatExposurePercent(value) {
+      return `${Math.round(Number(value) * 100)}%`;
+    }
+
+    function setActiveSortButton(mode) {
+      document.getElementById("sortMostExposedBtn").classList.toggle("active", mode === "most-exposed");
+      document.getElementById("sortSafestBtn").classList.toggle("active", mode === "safest");
+    }
+
+    function buildIntro(job) {
+      return `${job.title} sits in the ${job.risk_level.toLowerCase()} AI risk band, with stronger task overlap than ${job.more_ai_exposed_than_pct_of_jobs}% of jobs in the dataset.`;
+    }
+
+    function buildShareText(job) {
+      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} odds AI replaces major parts of this job. AI exposure score: ${formatExposureDecimal(job.observed_exposure)}. Rank: #${job.ai_risk_rank}. More AI-exposed than ${job.more_ai_exposed_than_pct_of_jobs}% of jobs.`;
+    }
+
+    function copyText(text, successMessage) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert(successMessage);
+      }).catch(() => {
+        alert("Could not copy automatically. Please try again.");
+      });
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    window.scrollToSection = scrollToSection;
+
+    function renderResult(job) {
+      document.getElementById("resultSection").classList.remove("hidden");
+      document.getElementById("noResults").classList.add("hidden");
+
+      document.getElementById("jobTitle").textContent = job.title;
+      document.getElementById("jobIntro").textContent = buildIntro(job);
+
+      document.getElementById("jobProbability").textContent =
+        formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+
+      document.getElementById("jobExposure").textContent =
+        formatExposureDecimal(job.observed_exposure);
+
+      document.getElementById("jobRank").textContent =
+        `#${job.ai_risk_rank}`;
+
+      document.getElementById("jobPercentile").textContent =
+        `${job.more_ai_exposed_than_pct_of_jobs}%`;
+
+      document.getElementById("jobRiskSummary").textContent =
+        job.risk_level;
+
+      const riskLevel = document.getElementById("riskLevel");
+      riskLevel.textContent = `${job.risk_level} Risk`;
+      riskLevel.className = getRiskPillClass(job.risk_level);
+
+      document.getElementById("jobFamily").textContent = job.job_family;
+      document.getElementById("jobRankBadge").textContent = `Rank #${job.ai_risk_rank}`;
+
+      document.getElementById("jobExplanation").textContent = job.explanation;
+      document.getElementById("jobComparison").textContent = job.comparison_text;
+
+      document.getElementById("jobExposureBarValue").textContent =
+        formatExposurePercent(job.observed_exposure);
+
+      document.getElementById("jobProbabilityBarValue").textContent =
+        formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+
+      document.getElementById("exposureBar").style.width =
+        `${clamp(job.observed_exposure) * 100}%`;
+
+      document.getElementById("probabilityBar").style.width =
+        `${clamp(job.odds_ai_replaces_major_parts_of_job) * 100}%`;
+
+      document.getElementById("copyShareTextBtn").onclick = () => {
+        copyText(buildShareText(job), "Share text copied.");
+      };
+
+      document.getElementById("copyLinkBtn").onclick = () => {
+        const url = `${window.location.origin}${window.location.pathname}?job=${encodeURIComponent(job.title)}`;
+        copyText(url, "Page link copied.");
+      };
+    }
+
+    function createRankingItem(job, indexOverride = null) {
+      const rankNumber = indexOverride ?? job.ai_risk_rank;
+      const score = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+
+      return `
+        <div class="ranking-item">
+          <div class="ranking-number">${rankNumber}</div>
+          <div class="ranking-main">
+            <div class="ranking-title">${escapeHtml(job.title)}</div>
+            <div class="ranking-sub">${escapeHtml(job.job_family)} · Exposure ${formatExposurePercent(job.observed_exposure)}</div>
+          </div>
+          <div class="ranking-score">${score}</div>
+        </div>
+      `;
+    }
+
+    function renderRankings() {
+      const topJobs = enrichedJobs
+        .slice()
+        .sort((a, b) => b.observed_exposure - a.observed_exposure)
+        .slice(0, 10);
+
+      const safeJobs = enrichedJobs
+        .slice()
+        .sort((a, b) => a.observed_exposure - b.observed_exposure || a.ai_risk_rank - b.ai_risk_rank)
+        .slice(0, 10);
+
+      document.getElementById("topJobs").innerHTML =
+        topJobs.map(job => createRankingItem(job)).join("");
+
+      document.getElementById("safeJobs").innerHTML =
+        safeJobs.map((job, index) => createRankingItem(job, index + 1)).join("");
+    }
+
+    function renderFullRanking() {
+      const jobsToRender = enrichedJobs.slice();
+
+      if (currentSortMode === "most-exposed") {
+        jobsToRender.sort((a, b) => b.observed_exposure - a.observed_exposure);
+      } else {
+        jobsToRender.sort((a, b) => a.observed_exposure - b.observed_exposure || a.ai_risk_rank - b.ai_risk_rank);
+      }
+
+      const html = jobsToRender.map((job, index) => {
+        const displayRank = currentSortMode === "most-exposed" ? job.ai_risk_rank : index + 1;
+        return `
+          <tr>
+            <td>${displayRank}</td>
+            <td>
+              <div class="table-job">${escapeHtml(job.title)}</div>
+              <div style="margin-top: 4px; color:#6f7d92; font-size:12px;">${escapeHtml(job.job_family)}</div>
+            </td>
+            <td>${formatExposurePercent(job.observed_exposure)}</td>
+            <td>${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}</td>
+            <td><span class="table-chip">${escapeHtml(job.risk_level)}</span></td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("fullRankingBody").innerHTML = html;
+    }
+
+    function findJob(searchTerm) {
+      const query = searchTerm.trim().toLowerCase();
+      if (!query) return null;
+
+      const exact = enrichedJobs.find(job => job.title.toLowerCase() === query);
+      if (exact) return exact;
+
+      const startsWith = enrichedJobs.find(job => job.title.toLowerCase().startsWith(query));
+      if (startsWith) return startsWith;
+
+      const contains = enrichedJobs.find(job => job.title.toLowerCase().includes(query));
+      if (contains) return contains;
+
+      return null;
+    }
+
+    function runSearch() {
+      const input = document.getElementById("jobSearch").value;
+      const result = findJob(input);
+
+      if (result) {
+        renderResult(result);
+        const url = new URL(window.location);
+        url.searchParams.set("job", result.title);
+        window.history.replaceState({}, "", url);
+        scrollToSection("resultSection");
+      } else {
+        document.getElementById("resultSection").classList.add("hidden");
+        document.getElementById("noResults").classList.remove("hidden");
+      }
+    }
+
+    function applyJobFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const jobName = params.get("job");
+      if (!jobName) return false;
+
+      const job = findJob(jobName);
+      if (job) {
+        document.getElementById("jobSearch").value = job.title;
+        renderResult(job);
+        return true;
+      }
+      return false;
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch("./data/enriched_jobs.json");
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        enrichedJobs = await response.json();
+
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("datasetCount").textContent =
+          `${enrichedJobs.length} jobs in dataset`;
+
+        renderRankings();
+        renderFullRanking();
+
+        const loadedFromUrl = applyJobFromUrl();
+        if (!loadedFromUrl && enrichedJobs.length > 0) {
+          renderResult(enrichedJobs[0]);
+        }
+      } catch (error) {
+        console.error("Failed to load dataset:", error);
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("datasetCount").textContent = "Dataset unavailable";
+        document.getElementById("noResults").classList.remove("hidden");
+        document.getElementById("noResults").textContent =
+          "Could not load the AI job dataset.";
+      }
+    }
+
+    document.getElementById("searchButton").addEventListener("click", runSearch);
+
+    document.getElementById("jobSearch").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        runSearch();
+      }
+    });
+
+    document.getElementById("sortMostExposedBtn").addEventListener("click", function () {
+      currentSortMode = "most-exposed";
+      setActiveSortButton(currentSortMode);
+      renderFullRanking();
+    });
+
+    document.getElementById("sortSafestBtn").addEventListener("click", function () {
+      currentSortMode = "safest";
+      setActiveSortButton(currentSortMode);
+      renderFullRanking();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
