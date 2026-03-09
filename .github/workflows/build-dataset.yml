@@ -1,0 +1,32 @@
+name: Build AI Job Dataset
+
+on:
+  push:
+    paths:
+      - data/anthropic_jobs.csv
+      - scripts/build_dataset.py
+      - .github/workflows/build-dataset.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Run dataset builder
+        run: python scripts/build_dataset.py
+
+      - name: Commit dataset
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add data/enriched_jobs.json
+          git commit -m "Update AI job dataset" || echo "No changes"
+          git push
