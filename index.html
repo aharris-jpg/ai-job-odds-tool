@@ -6,7 +6,7 @@
   <title>Will AI Replace Your Job?</title>
   <meta
     name="description"
-    content="Search your occupation to see the implied odds AI replaces your job, based on Action Network modeling built from Anthropic occupation-level AI exposure data."
+    content="Search your occupation to see the implied odds AI replaces your job, based on Action Network modeling built from occupation-level AI exposure data."
   />
 
   <meta property="og:title" content="Will AI Replace Your Job?" />
@@ -218,22 +218,6 @@
       font-size: 12px;
       color: var(--muted);
     }
-
-    .nearby-name {
-  font-size: 13px;
-  line-height: 1.35;
-  color: #17261f;
-  font-weight: 600;
-}
-
-.nearby-odds {
-  font-size: 13px;
-  line-height: 1.2;
-  color: #667872;
-  font-weight: 700;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
 
     .search-meta {
       display: flex;
@@ -573,6 +557,40 @@
       color: #53645f;
       line-height: 1.55;
       font-size: 15px;
+    }
+
+    .nearby-list {
+      margin-top: 8px;
+    }
+
+    .nearby-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid #eef2ef;
+    }
+
+    .nearby-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .nearby-name {
+      font-size: 13px;
+      line-height: 1.35;
+      color: #17261f;
+      font-weight: 600;
+    }
+
+    .nearby-odds {
+      font-size: 13px;
+      line-height: 1.2;
+      color: #667872;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .quote-section-below {
@@ -1158,16 +1176,54 @@
               <span id="jobFamily" class="pill neutral">Job family</span>
             </div>
 
-            <div style="margin-top:14px;">
-  <button onclick="copyResultLink()" class="btn">
-    Copy Link to This Result
-  </button>
-</div>
+            <div class="share-block">
+              <div class="share-row">
+                <button class="btn share-primary" id="copyShareTextBtn">Copy share text</button>
+              </div>
+
+              <div class="share-inline">
+                <span class="share-label">Share this result</span>
+
+                <div class="share-social">
+                  <button class="share-icon-btn" id="shareXBtn" type="button" aria-label="Share on X" title="Share on X">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.1L5.8 22H2.7l7.3-8.4L1 2h6.4l4.4 6.5L18.9 2Zm-1.1 18h1.7L6.5 3.9H4.7L17.8 20Z"/>
+                    </svg>
+                  </button>
+
+                  <button class="share-icon-btn" id="shareFacebookBtn" type="button" aria-label="Share on Facebook" title="Share on Facebook">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M13.5 22v-8.2h2.8l.4-3.2h-3.2V8.6c0-.9.2-1.6 1.5-1.6h1.8V4.1c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.4-4.1 4.2v2.4H7.5v3.2h2.8V22h3.2Z"/>
+                    </svg>
+                  </button>
+
+                  <button class="share-icon-btn" id="shareLinkedInBtn" type="button" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6.2 8.6A1.9 1.9 0 1 1 6.2 4.8a1.9 1.9 0 0 1 0 3.8ZM4.7 20V10h3V20h-3Zm5.1 0V10h2.9v1.4h.1c.4-.8 1.4-1.7 2.9-1.7 3.1 0 3.7 2 3.7 4.7V20h-3v-5c0-1.2 0-2.8-1.7-2.8s-1.9 1.3-1.9 2.7V20h-3Z"/>
+                    </svg>
+                  </button>
+
+                  <button class="share-icon-btn" id="shareWhatsAppBtn" type="button" aria-label="Share on WhatsApp" title="Share on WhatsApp">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M20 11.9A8 8 0 0 0 6.4 6.3 7.8 7.8 0 0 0 4 12a7.9 7.9 0 0 0 1.1 4L4 20l4.2-1.1A8 8 0 1 0 20 11.9Zm-8 6.6a6.7 6.7 0 0 1-3.4-.9l-.2-.1-2.5.7.7-2.4-.1-.2a6.7 6.7 0 1 1 5.5 2.9Zm3.7-5c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.4.1s-.5.7-.6.8c-.1.1-.2.1-.4 0a5.4 5.4 0 0 1-1.6-1 5.8 5.8 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.3.2-.3c.1-.1.1-.2 0-.3l-.7-1.7c-.1-.2-.2-.2-.4-.2h-.3c-.1 0-.3 0-.4.2-.2.2-.7.7-.7 1.6s.7 1.9.8 2 .2.2.4.5a7.3 7.3 0 0 0 2.8 2.5c1.6.7 1.6.5 1.9.5.3 0 1.2-.5 1.4-.9.2-.4.2-.8.1-.9-.1-.1-.2-.1-.4-.2Z"/>
+                    </svg>
+                  </button>
+
+                  <button class="share-icon-btn" id="copyLinkBtn" type="button" aria-label="Copy result link" title="Copy result link">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a3 3 0 1 1 4.2 4.2l-2.1 2.1a3 3 0 0 1-4.2 0 .999.999 0 1 1 1.4-1.4 1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0-1.4-1.4L12 13.4a1 1 0 0 1-1.4 0Zm2.8-2.8a1 1 0 0 1 0 1.4L10 15.4a3 3 0 0 1-4.2-4.2l2.1-2.1a3 3 0 0 1 4.2 0 1 1 0 0 1-1.4 1.4 1 1 0 0 0-1.4 0l-2.1 2.1a1 1 0 0 0 1.4 1.4l3.4-3.4a1 1 0 0 1 1.4 0Z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="score-card">
             <div class="score-label">Implied Odds AI Replaces Your Job</div>
             <div class="score-value" id="jobProbability">0%</div>
             <div class="score-note">
-              Action Network modeled this score using occupation-level AI exposure data from Anthropic.
+              Action Network modeled this score using occupation-level AI exposure data.
             </div>
           </div>
         </div>
@@ -1180,7 +1236,7 @@
           </div>
 
           <div class="mini-stat">
-            <div class="mini-label">Anthropic Exposure Score</div>
+            <div class="mini-label">Exposure Score</div>
             <div class="mini-value" id="jobExposure">0.00</div>
             <div class="mini-help">The underlying source score.</div>
           </div>
@@ -1207,9 +1263,9 @@
           </div>
 
           <div class="copy-box">
-  <h3>Nearby Roles in the Ranking</h3>
-  <div id="jobComparison"></div>
-</div>
+            <h3>Jobs With Similar AI Exposure</h3>
+            <div id="jobComparison"></div>
+          </div>
         </div>
 
         <div class="quote-section-below">
@@ -1323,7 +1379,7 @@
                 <th>Rank</th>
                 <th>Job</th>
                 <th>Implied Odds</th>
-                <th>Anthropic Score</th>
+                <th>Exposure Score</th>
                 <th>Risk Level</th>
               </tr>
             </thead>
@@ -1338,13 +1394,13 @@
             <summary>
               <span>
                 How We Built This Tool
-                <span class="summary-sub">What comes from Anthropic, and what Action Network added.</span>
+                <span class="summary-sub">What comes from the source dataset, and what Action Network added.</span>
               </span>
               <span class="summary-mark">+</span>
             </summary>
             <div class="accordion-body">
               <p>
-                This tool starts with <strong>occupation-level AI exposure data from Anthropic</strong>, which estimates how much of each job overlaps with tasks AI can already perform or assist with.
+                This tool starts with <strong>occupation-level AI exposure data</strong>, which estimates how much of each job overlaps with tasks AI can already perform or assist with.
               </p>
 
               <p>
@@ -1352,7 +1408,7 @@
               </p>
 
               <ol>
-                <li>Anthropic provides the source exposure score for each occupation.</li>
+                <li>The source dataset provides the exposure score for each occupation.</li>
                 <li>Action Network uses that score as the base signal of AI task overlap.</li>
                 <li>Action Network converts it into a probability-style metric for easier comparison across jobs.</li>
                 <li>Action Network ranks occupations from highest to lowest using that implied odds figure.</li>
@@ -1376,7 +1432,7 @@
               <div class="source-grid">
                 <div class="source-card">
                   <strong>Source data</strong>
-                  <p>Anthropic — <em>Labor Market Impacts of AI: A New Measure and Early Evidence</em></p>
+                  <p>Occupation-level AI exposure dataset.</p>
                 </div>
 
                 <div class="source-card">
@@ -1391,7 +1447,7 @@
               </div>
 
               <div class="footer-note">
-                Source pipeline: Anthropic occupation data → Action Network modeling → rankings and search tool.
+                Source pipeline: occupation data → Action Network modeling → rankings and search tool.
               </div>
             </div>
           </details>
@@ -1414,40 +1470,6 @@
       return Math.max(min, Math.min(value, max));
     }
 
-    function buildNearbyRoles(job) {
-  const sorted = enrichedJobs
-    .slice()
-    .sort((a, b) => a.ai_risk_rank - b.ai_risk_rank);
-
-  const index = sorted.findIndex(item => item.title === job.title);
-
-  if (index === -1) {
-    return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
-  }
-
-  const nearby = [
-    sorted[index - 2],
-    sorted[index - 1],
-    sorted[index + 1],
-    sorted[index + 2]
-  ].filter(Boolean);
-
-  if (!nearby.length) {
-    return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
-  }
-
-  return `
-    <div class="nearby-list">
-      ${nearby.map(item => `
-        <div class="nearby-row">
-          <span class="nearby-name">${escapeHtml(item.title)}</span>
-          <span class="nearby-odds">${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}</span>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-    
     function escapeHtml(text) {
       return String(text)
         .replaceAll("&", "&amp;")
@@ -1476,15 +1498,18 @@
     function isPluralJobTitle(title) {
       const cleaned = String(title).trim().toLowerCase();
       const lastWord = cleaned.split(/\s+/).pop() || "";
-
       if (cleaned.includes(" and ")) return true;
       if (lastWord.endsWith("ss")) return false;
-
       return lastWord.endsWith("s");
     }
 
-    function getJobSubject(job) {
-      return isPluralJobTitle(job.title) ? "These jobs" : "This job";
+    function titleGrammar(title) {
+      const plural = isPluralJobTitle(title);
+      return {
+        have: plural ? "have" : "has",
+        rank: plural ? "rank" : "ranks",
+        show: plural ? "show" : "shows"
+      };
     }
 
     function copyText(text, message) {
@@ -1508,127 +1533,110 @@
       return `${FINAL_SHARE_BASE_URL}?job=${encodeURIComponent(jobTitle)}`;
     }
 
-    function copyResultLink() {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url);
-  alert("Link copied. You can share this result.");
-}
-
     function buildIntro(job) {
       const plural = isPluralJobTitle(job.title);
       const verb = plural ? "have" : "has";
       const pronoun = plural ? "them" : "it";
-
       return `${job.title} ${verb} ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
     }
 
     function buildShareText(job) {
       const plural = isPluralJobTitle(job.title);
       const pronoun = plural ? "them" : "it";
-
       return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
     }
 
-   function buildExplanation(job) {
-  const title = job.title;
-  const probability = Number(job.odds_ai_replaces_major_parts_of_job || 0);
-  const family = (job.job_family || "").trim();
+    function buildExplanation(job) {
+      const title = job.title;
+      const g = titleGrammar(title);
+      const probability = Number(job.odds_ai_replaces_major_parts_of_job || 0);
+      const family = (job.job_family || "").trim();
 
-  if (["Computer & Math", "Office & Admin", "Business & Finance", "Arts & Media", "Sales"].includes(family)) {
-    if (probability >= 0.45) {
-      return `${title} rank highly for AI exposure because the role centers on structured digital, text-based, or analytical work that AI can already help perform.`;
+      if (["Computer & Math", "Office & Admin", "Business & Finance", "Arts & Media", "Sales"].includes(family)) {
+        if (probability >= 0.45) {
+          return `${title} ${g.rank} highly for AI exposure because the role centers on structured digital, text-based, or analytical work that AI can already help perform.`;
+        }
+        if (probability >= 0.20) {
+          return `${title} ${g.show} moderate AI exposure because parts of the role overlap with work AI can already help perform, while other responsibilities still depend on human judgment.`;
+        }
+        return `${title} ${g.show} relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
+      }
+
+      if (["Construction", "Repair & Maintenance", "Food Service", "Cleaning & Grounds", "Transportation", "Farming & Forestry"].includes(family)) {
+        return `${title} ${g.rank} lower for AI exposure because the work depends on physical skill, manual movement, and on-site problem-solving that AI cannot directly perform.`;
+      }
+
+      if (["Healthcare Practitioners", "Healthcare Support", "Community & Social Service", "Protective Service"].includes(family)) {
+        return `${title} ${g.show} lower AI exposure because the role relies on in-person care, physical procedures, and real-world decision-making that still requires human presence.`;
+      }
+
+      if (["Education", "Legal", "Science", "Engineering"].includes(family)) {
+        if (probability >= 0.30) {
+          return `${title} ${g.show} moderate to elevated AI exposure because parts of the job involve research, writing, analysis, or structured information work that AI tools can increasingly support.`;
+        }
+        return `${title} ${g.show} relatively limited AI exposure because core responsibilities depend on expert judgment, specialized knowledge, or real-world interaction.`;
+      }
+
+      return `${title} ${g.show} a mixed level of AI exposure compared with other occupations in the dataset.`;
     }
-    if (probability >= 0.20) {
-      return `${title} show moderate AI exposure because parts of the role overlap with work AI can already help perform, while other responsibilities still depend on human judgment.`;
+
+    function buildNearbyRoles(job) {
+      const sorted = enrichedJobs
+        .slice()
+        .sort((a, b) => a.ai_risk_rank - b.ai_risk_rank);
+
+      const index = sorted.findIndex(item => item.title === job.title);
+
+      if (index === -1) {
+        return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+      }
+
+      const nearby = [
+        sorted[index - 2],
+        sorted[index - 1],
+        sorted[index + 1],
+        sorted[index + 2]
+      ].filter(Boolean);
+
+      if (!nearby.length) {
+        return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+      }
+
+      return `
+        <div class="nearby-list">
+          ${nearby.map(item => `
+            <div class="nearby-row">
+              <span class="nearby-name">${escapeHtml(item.title)}</span>
+              <span class="nearby-odds">${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
     }
-    return `${title} show relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
-  }
 
-  if (["Construction", "Repair & Maintenance", "Food Service", "Cleaning & Grounds", "Transportation", "Farming & Forestry"].includes(family)) {
-    return `${title} rank lower for AI exposure because the work depends on physical skill, manual movement, and on-site problem-solving that AI cannot directly perform.`;
-  }
-
-  if (["Healthcare Practitioners", "Healthcare Support", "Community & Social Service", "Protective Service"].includes(family)) {
-    return `${title} show lower AI exposure because the role relies on in-person care, physical procedures, and real-world decision-making that still requires human presence.`;
-  }
-
-  if (["Education", "Legal", "Science", "Engineering"].includes(family)) {
-    if (probability >= 0.30) {
-      return `${title} show moderate to elevated AI exposure because parts of the job involve research, writing, analysis, or structured information work that AI tools can increasingly support.`;
+    function openShareWindow(url) {
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = url;
+          return;
+        }
+      } catch (e) {
+        // ignore and fallback below
+      }
+      window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
     }
-    return `${title} show relatively limited AI exposure because core responsibilities depend on expert judgment, specialized knowledge, or real-world interaction.`;
-  }
-
-  return `${title} show a mixed level of AI exposure compared with other occupations in the dataset.`;
-}
-
- function buildComparison(job) {
-  const totalJobs = enrichedJobs.length;
-  const rank = Number(job.ai_risk_rank || 0);
-
-  if (!totalJobs || !rank) {
-    return "Comparison data is unavailable for this occupation.";
-  }
-
-  const percentile = Math.round(((totalJobs - rank) / totalJobs) * 100);
-  const plural = isPluralJobTitle(job.title);
-
-  if (percentile >= 95) {
-    return plural
-      ? `${job.title} rank among the most AI-exposed occupations in the dataset, appearing more exposed than about ${percentile}% of jobs.`
-      : `${job.title} ranks among the most AI-exposed occupations in the dataset, appearing more exposed than about ${percentile}% of jobs.`;
-  }
-
-  if (percentile >= 75) {
-    return plural
-      ? `${job.title} rank above average for AI exposure and appear more exposed than about ${percentile}% of occupations.`
-      : `${job.title} ranks above average for AI exposure and appears more exposed than about ${percentile}% of occupations.`;
-  }
-
-  if (percentile >= 40) {
-    return plural
-      ? `${job.title} sit near the middle of the dataset and show a typical level of AI exposure compared with other jobs.`
-      : `${job.title} sits near the middle of the dataset and shows a typical level of AI exposure compared with other jobs.`;
-  }
-
-  if (percentile >= 15) {
-    return plural
-      ? `${job.title} rank below most occupations for AI exposure and appear less exposed than about ${100 - percentile}% of jobs.`
-      : `${job.title} ranks below most occupations for AI exposure and appears less exposed than about ${100 - percentile}% of jobs.`;
-  }
-
-  return plural
-    ? `${job.title} rank among the least AI-exposed occupations in the dataset.`
-    : `${job.title} ranks among the least AI-exposed occupations in the dataset.`;
-}
-
-  function openShareWindow(url) {
-
-  try {
-    // if inside iframe, open in parent
-    window.top.location.href = url;
-  } catch (e) {
-    // fallback
-    window.open(url, "_blank");
-  }
-
-}
 
     function getShareUrls(job) {
+      const resultUrl = buildCanonicalUrl(job.title);
+      const shareText = `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job.`;
 
-  const resultUrl = `${FINAL_SHARE_BASE_URL}?job=${encodeURIComponent(job.title)}`;
-
-  const shareText =
-    `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job.`;
-
-  return {
-    x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resultUrl)}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultUrl)}`,
-    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + resultUrl)}`
-  };
-
-}
+      return {
+        x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resultUrl)}`,
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultUrl)}`,
+        whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + resultUrl)}`
+      };
+    }
 
     function renderResult(job) {
       document.getElementById("resultSection").classList.remove("hidden");
@@ -1651,20 +1659,27 @@
       document.getElementById("probabilityBar").style.width =
         `${clamp(job.odds_ai_replaces_major_parts_of_job) * 100}%`;
 
-      document.getElementById("copyShareTextBtn").onclick = () => {
-        copyText(buildShareText(job), "Share text copied.");
-      };
+      const copyShareTextBtn = document.getElementById("copyShareTextBtn");
+      const copyLinkBtn = document.getElementById("copyLinkBtn");
+      const shareXBtn = document.getElementById("shareXBtn");
+      const shareFacebookBtn = document.getElementById("shareFacebookBtn");
+      const shareLinkedInBtn = document.getElementById("shareLinkedInBtn");
+      const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
 
-      document.getElementById("copyLinkBtn").onclick = () => {
-        copyText(buildCanonicalUrl(job.title), "Result link copied.");
-      };
+      if (copyShareTextBtn) {
+        copyShareTextBtn.onclick = () => copyText(buildShareText(job), "Share text copied.");
+      }
+
+      if (copyLinkBtn) {
+        copyLinkBtn.onclick = () => copyText(buildCanonicalUrl(job.title), "Result link copied.");
+      }
 
       const shareUrls = getShareUrls(job);
 
-      document.getElementById("shareXBtn").onclick = () => openShareWindow(shareUrls.x);
-      document.getElementById("shareFacebookBtn").onclick = () => openShareWindow(shareUrls.facebook);
-      document.getElementById("shareLinkedInBtn").onclick = () => openShareWindow(shareUrls.linkedin);
-      document.getElementById("shareWhatsAppBtn").onclick = () => openShareWindow(shareUrls.whatsapp);
+      if (shareXBtn) shareXBtn.onclick = () => openShareWindow(shareUrls.x);
+      if (shareFacebookBtn) shareFacebookBtn.onclick = () => openShareWindow(shareUrls.facebook);
+      if (shareLinkedInBtn) shareLinkedInBtn.onclick = () => openShareWindow(shareUrls.linkedin);
+      if (shareWhatsAppBtn) shareWhatsAppBtn.onclick = () => openShareWindow(shareUrls.whatsapp);
     }
 
     function createRankingItem(job, rankNumber) {
