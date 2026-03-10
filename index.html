@@ -3,11 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What Are the Odds AI Replaces Your Job?</title>
+  <title>Will AI Replace Your Job?</title>
   <meta
     name="description"
     content="Search your occupation to see the implied odds AI replaces your job, based on Action Network modeling built from Anthropic occupation-level AI exposure data."
   />
+
+  <meta property="og:title" content="Will AI Replace Your Job?" />
+  <meta property="og:description" content="Search your job to see the implied odds AI replaces it." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Will AI Replace Your Job?" />
+  <meta name="twitter:description" content="Search your job to see the implied odds AI replaces it." />
+
   <style>
     :root {
       --bg: #f3f5f4;
@@ -21,7 +30,6 @@
       --brand-green-dark: #16714b;
       --brand-green-soft: #e8f5ef;
       --brand-charcoal: #1d2b26;
-      --brand-highlight: #dff7ea;
 
       --shadow: 0 14px 36px rgba(15, 31, 25, 0.08);
       --radius: 22px;
@@ -560,9 +568,8 @@
       min-height: 168px;
     }
 
-    .finding strong {
-      display: block;
-      margin-bottom: 8px;
+    .finding h3 {
+      margin: 0 0 8px;
       font-size: 17px;
       line-height: 1.28;
     }
@@ -572,6 +579,11 @@
       color: #566762;
       line-height: 1.55;
       font-size: 14px;
+    }
+
+    .finding p strong {
+      display: inline;
+      font-weight: 800;
     }
 
     .top-grid {
@@ -932,6 +944,20 @@
         grid-template-columns: 1fr;
       }
 
+      .finding {
+        min-height: auto;
+        padding: 15px;
+      }
+
+      .finding h3 {
+        font-size: 18px;
+      }
+
+      .finding p {
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
       .sticky-top-btn {
         right: 14px;
         bottom: 14px;
@@ -1062,32 +1088,32 @@
 
         <div class="findings-grid">
           <div class="finding">
-            <strong>Desk-based digital work dominates the top.</strong>
+            <h3>Desk-based digital work dominates the top.</h3>
             <p>Computer Programmers lead at <strong>45%</strong>, followed by Customer Service Representatives at <strong>42%</strong> and Data Entry Keyers at <strong>40%</strong>. These jobs revolve around structured digital tasks AI can already help perform.</p>
           </div>
 
           <div class="finding">
-            <strong>Documentation-heavy work looks especially exposed.</strong>
+            <h3>Documentation-heavy work looks especially exposed.</h3>
             <p>Medical Records Specialists sit at <strong>40%</strong>, while Medical Transcriptionists reach <strong>38%</strong>. Both roles rely heavily on organizing, processing, and documenting information in formats AI handles well.</p>
           </div>
 
           <div class="finding">
-            <strong>Communications and research jobs also rank high.</strong>
+            <h3>Communications and research jobs also rank high.</h3>
             <p>Market Research Analysts and Marketing Specialists show <strong>39%</strong>, while Public Relations Specialists sit at <strong>27%</strong>. These roles still require judgment, but they include writing, summarizing, and information synthesis that overlap with AI tools.</p>
           </div>
 
           <div class="finding">
-            <strong>Healthcare splits into two distinct groups.</strong>
+            <h3>Healthcare splits into two distinct groups.</h3>
             <p>Medical Records Specialists rank at <strong>40%</strong>, while Registered Nurses are near <strong>4%</strong>. Administrative healthcare work appears far more exposed than hands-on clinical care.</p>
           </div>
 
           <div class="finding">
-            <strong>The safest jobs tend to be physical and in-person.</strong>
+            <h3>The safest jobs tend to be physical and in-person.</h3>
             <p>Many of the lowest-ranked occupations sit at <strong>0%</strong>, including Bartenders, Dishwashers, Electricians, and Firefighters. These roles depend on real-world movement, manual skill, and human presence that AI cannot directly replace.</p>
           </div>
 
           <div class="finding">
-            <strong>Low implied odds do not mean no AI impact.</strong>
+            <h3>Low implied odds do not mean no AI impact.</h3>
             <p>Even the safest jobs may still use AI tools in parts of the workflow. This ranking measures the implied odds AI replaces the job overall, not whether AI can assist with smaller tasks inside it.</p>
           </div>
         </div>
