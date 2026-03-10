@@ -1,1672 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Will AI Replace Your Job?</title>
-  <meta
-    name="description"
-    content="Search your occupation to see the implied odds AI replaces your job, based on Action Network modeling built from Anthropic occupation-level AI exposure data."
-  />
-
-  <meta property="og:title" content="Will AI Replace Your Job?" />
-  <meta property="og:description" content="Search your job to see the implied odds AI replaces it." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Will AI Replace Your Job?" />
-  <meta name="twitter:description" content="Search your job to see the implied odds AI replaces it." />
-
-  <style>
-    :root {
-      --bg: #f3f5f4;
-      --card: #ffffff;
-      --text: #12211b;
-      --muted: #62726d;
-      --border: #dde6e1;
-
-      --brand-dark: #0f1f19;
-      --brand-green: #1f8f5f;
-      --brand-green-dark: #16714b;
-      --brand-green-soft: #e8f5ef;
-      --brand-charcoal: #1d2b26;
-
-      --shadow: 0 14px 36px rgba(15, 31, 25, 0.08);
-      --radius: 22px;
-
-      --minimal: #1f8f5f;
-      --minimal-bg: #e8f5ef;
-      --low: #2f9e8f;
-      --low-bg: #e7f7f4;
-      --moderate: #c0851a;
-      --moderate-bg: #fff4df;
-      --high: #d16436;
-      --high-bg: #fff0e9;
-      --veryhigh: #b23a2f;
-      --veryhigh-bg: #ffe8e5;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(31, 143, 95, 0.08), transparent 26%),
-        radial-gradient(circle at top right, rgba(15, 31, 25, 0.06), transparent 24%),
-        linear-gradient(180deg, #eef4f1 0%, #f3f5f4 20%, #f3f5f4 100%);
-    }
-
-    .page {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 18px 14px 56px;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #0b1814 0%, #123126 56%, #1a5c43 100%);
-      color: #fff;
-      border-radius: 30px;
-      padding: 24px 18px 16px;
-      box-shadow: var(--shadow);
-      margin-bottom: 16px;
-      position: relative;
-      overflow: visible;
-    }
-
-    .hero:before,
-    .hero:after {
-      content: "";
-      position: absolute;
-      border-radius: 999px;
-      pointer-events: none;
-      opacity: 0.22;
-      filter: blur(12px);
-    }
-
-    .hero:before {
-      width: 220px;
-      height: 220px;
-      right: -70px;
-      top: -60px;
-      background: #49d391;
-    }
-
-    .hero:after {
-      width: 180px;
-      height: 180px;
-      left: -50px;
-      bottom: -70px;
-      background: #2ba26f;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.11);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: 48px;
-      line-height: 0.97;
-      max-width: 720px;
-      letter-spacing: -0.03em;
-    }
-
-    .subhead {
-      margin: 0;
-      max-width: 760px;
-      color: rgba(255,255,255,0.92);
-      font-size: 18px;
-      line-height: 1.42;
-    }
-
-    .search-panel {
-      margin-top: 18px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.13);
-      border-radius: 20px;
-      padding: 14px;
-      backdrop-filter: blur(6px);
-      position: relative;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      position: relative;
-    }
-
-    .search-input-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 220px;
-    }
-
-    .search-box input {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 16px 18px;
-      font-size: 16px;
-      outline: none;
-      color: var(--text);
-    }
-
-    .search-box button,
-    .btn,
-    .toggle-btn,
-    .small-link-btn {
-      border: none;
-      border-radius: 16px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-    }
-
-    .search-box button:hover,
-    .btn:hover,
-    .toggle-btn:hover,
-    .small-link-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-    }
-
-    .search-box button {
-      background: #ffffff;
-      color: var(--brand-dark);
-      min-width: 116px;
-    }
-
-    .autocomplete {
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 16px 32px rgba(15, 31, 25, 0.12);
-      overflow: hidden;
-      z-index: 20;
-    }
-
-    .autocomplete-item {
-      padding: 12px 14px;
-      border-bottom: 1px solid #eef2ef;
-      cursor: pointer;
-      background: #fff;
-    }
-
-    .autocomplete-item:last-child {
-      border-bottom: none;
-    }
-
-    .autocomplete-item:hover,
-    .autocomplete-item.active {
-      background: #f5fbf8;
-    }
-
-    .autocomplete-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.3;
-    }
-
-    .autocomplete-sub {
-      margin-top: 3px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .search-meta {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.84);
-    }
-
-    .search-hint strong { color: #fff; }
-
-    .loading,
-    .error {
-      margin-top: 10px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-size: 14px;
-    }
-
-    .loading {
-      background: rgba(255,255,255,0.12);
-      color: #fff;
-    }
-
-    .error {
-      background: #fff1ef;
-      color: #9f342a;
-    }
-
-    .hidden { display: none !important; }
-
-    .jump-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 14px 0 18px;
-    }
-
-    .btn {
-      background: #ffffff;
-      color: var(--brand-charcoal);
-      box-shadow: 0 8px 20px rgba(18, 33, 27, 0.08);
-    }
-
-    .btn.primary {
-      background: var(--brand-green);
-      color: #fff;
-    }
-
-    .section-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      margin-bottom: 16px;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 16px;
-      align-items: stretch;
-    }
-
-    .result-title {
-      margin: 0;
-      font-size: 38px;
-      line-height: 1;
-      letter-spacing: -0.03em;
-    }
-
-    .result-summary {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.45;
-      max-width: 640px;
-      font-size: 18px;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-      margin-bottom: 14px;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .pill.neutral {
-      background: #f0f3f2;
-      color: #51615c;
-    }
-
-    .pill-minimal { background: var(--minimal-bg); color: var(--minimal); }
-    .pill-low { background: var(--low-bg); color: var(--low); }
-    .pill-moderate { background: var(--moderate-bg); color: var(--moderate); }
-    .pill-high { background: var(--high-bg); color: var(--high); }
-    .pill-veryhigh { background: var(--veryhigh-bg); color: var(--veryhigh); }
-
-    .share-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .share-primary {
-      background: var(--brand-green);
-      color: #fff;
-    }
-
-    .share-secondary {
-      background: var(--brand-green-soft);
-      color: var(--brand-green-dark);
-    }
-
-    .score-card {
-      background: linear-gradient(135deg, #eef9f3 0%, #f7fcf9 100%);
-      border: 1px solid #d7ebe0;
-      border-radius: 24px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 230px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .score-card:after {
-      content: "";
-      position: absolute;
-      right: -38px;
-      bottom: -38px;
-      width: 140px;
-      height: 140px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(31,143,95,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .score-label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      line-height: 1.35;
-      max-width: 270px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .score-value {
-      font-size: 82px;
-      line-height: 0.92;
-      font-weight: 800;
-      color: var(--brand-charcoal);
-      letter-spacing: -0.05em;
-      position: relative;
-      z-index: 1;
-    }
-
-    .score-note {
-      margin-top: 12px;
-      font-size: 14px;
-      line-height: 1.45;
-      color: #51615c;
-      max-width: 290px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .mini-stats {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .mini-stat {
-      background: #f8fbfa;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-    }
-
-    .mini-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      line-height: 1.35;
-    }
-
-    .mini-value {
-      font-size: 36px;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 4px;
-      letter-spacing: -0.03em;
-    }
-
-    .mini-help {
-      font-size: 13px;
-      color: #6d7c77;
-      line-height: 1.38;
-    }
-
-    .bar-wrap {
-      margin-top: 16px;
-      background: #fbfcfc;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-    }
-
-    .bar-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #455852;
-    }
-
-    .bar-head .bar-number {
-      color: var(--brand-charcoal);
-      font-weight: 800;
-    }
-
-    .bar {
-      width: 100%;
-      height: 16px;
-      border-radius: 999px;
-      background: #e4ece8;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      width: 0%;
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.45s ease;
-      background: linear-gradient(90deg, var(--brand-green), #22b16f);
-    }
-
-    .bar-scale {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 11px;
-      color: #7a8984;
-    }
-
-    .explain-grid {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .copy-box {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      background: #fff;
-      min-height: 120px;
-    }
-
-    .copy-box h3 {
-      margin: 0 0 8px;
-      font-size: 17px;
-    }
-
-    .copy-box p {
-      margin: 0;
-      color: #53645f;
-      line-height: 1.5;
-      font-size: 15px;
-    }
-
-    .section-heading {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .section-heading h2 {
-      margin: 0;
-      font-size: 32px;
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-    }
-
-    .section-heading p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.42;
-      max-width: 760px;
-      font-size: 15px;
-    }
-
-    .findings-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .finding {
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 16px;
-      background: linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
-      min-height: 168px;
-    }
-
-    .finding h3 {
-      margin: 0 0 8px;
-      font-size: 17px;
-      line-height: 1.28;
-    }
-
-    .finding p {
-      margin: 0;
-      color: #566762;
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .finding p strong {
-      display: inline;
-      font-weight: 800;
-    }
-
-    .top-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .ranking-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .ranking-note {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
-      min-height: 40px;
-    }
-
-    .ranking-item {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: #fbfdfc;
-      min-height: 88px;
-    }
-
-    .ranking-number {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--brand-green-dark);
-      background: var(--brand-green-soft);
-      flex-shrink: 0;
-    }
-
-    .ranking-main { min-width: 0; }
-
-    .ranking-title {
-      font-weight: 800;
-      font-size: 15px;
-      line-height: 1.28;
-      color: #182822;
-      margin-bottom: 4px;
-    }
-
-    .ranking-sub {
-      font-size: 13px;
-      color: #687a75;
-      line-height: 1.4;
-    }
-
-    .ranking-toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .ranking-toggle {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .toggle-btn {
-      border: 1px solid #d6e3dc;
-      background: #fff;
-      color: #355147;
-      border-radius: 999px;
-      padding: 10px 14px;
-    }
-
-    .toggle-btn.active {
-      background: var(--brand-green);
-      color: #fff;
-      border-color: var(--brand-green);
-    }
-
-    .small-link-btn {
-      background: #eef4f1;
-      color: #355147;
-      padding: 10px 14px;
-      border-radius: 999px;
-    }
-
-    .ranking-search-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .ranking-search-row input {
-      flex: 1;
-      min-width: 220px;
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 14px;
-      padding: 13px 14px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-      max-height: 760px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 760px;
-    }
-
-    th, td {
-      padding: 14px;
-      text-align: left;
-      border-bottom: 1px solid #edf2ef;
-      vertical-align: top;
-    }
-
-    th {
-      background: #f7faf8;
-      font-size: 12px;
-      color: #61726d;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    td {
-      font-size: 14px;
-      color: #20312c;
-    }
-
-    tr:hover td {
-      background: #fbfdfc;
-    }
-
-    .table-job {
-      font-weight: 700;
-    }
-
-    .table-chip {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      background: #eef4f1;
-      color: #325045;
-    }
-
-    .accordion {
-      display: grid;
-      gap: 12px;
-    }
-
-    details {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-      overflow: hidden;
-    }
-
-    summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 16px 18px;
-      font-weight: 800;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .summary-sub {
-      display: block;
-      margin-top: 4px;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 400;
-    }
-
-    .summary-mark {
-      font-size: 24px;
-      color: #6b7a75;
-      line-height: 1;
-    }
-
-    details[open] .summary-mark {
-      transform: rotate(45deg);
-    }
-
-    .accordion-body {
-      padding: 0 18px 18px;
-      color: #52635e;
-      font-size: 15px;
-      line-height: 1.58;
-    }
-
-    .accordion-body p {
-      margin: 0 0 12px;
-    }
-
-    .accordion-body ol {
-      margin: 8px 0 14px 20px;
-      padding: 0;
-    }
-
-    .accordion-body li {
-      margin-bottom: 10px;
-    }
-
-    .quote-line {
-      margin: 14px 0;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: #f4faf7;
-      border: 1px solid #dcede4;
-      font-weight: 700;
-      color: var(--brand-green-dark);
-      line-height: 1.5;
-    }
-
-    .source-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
-      margin-top: 10px;
-    }
-
-    .source-card {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      background: #fbfdfc;
-    }
-
-    .source-card strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-
-    .source-card p {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #5c6d68;
-    }
-
-    .footer-note {
-      margin-top: 12px;
-      color: #6e7e79;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .sticky-top-btn {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 100;
-      background: var(--brand-dark);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      box-shadow: 0 14px 30px rgba(15, 31, 25, 0.2);
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(8px);
-      transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
-    }
-
-    .sticky-top-btn.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 980px) {
-      .result-grid,
-      .explain-grid,
-      .findings-grid,
-      .top-grid,
-      .source-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .ranking-note {
-        min-height: auto;
-      }
-
-      h1 { font-size: 40px; }
-    }
-
-    @media (max-width: 720px) {
-      .page {
-        padding: 14px 12px 40px;
-      }
-
-      .hero {
-        padding: 18px 15px 14px;
-        border-radius: 24px;
-      }
-
-      h1 { font-size: 32px; }
-
-      .subhead { font-size: 16px; }
-
-      .section-card { padding: 16px; }
-
-      .result-title { font-size: 30px; }
-
-      .result-summary { font-size: 17px; }
-
-      .score-value { font-size: 58px; }
-
-      .search-box {
-        flex-direction: column;
-      }
-
-      .search-input-wrap,
-      .search-box button {
-        width: 100%;
-      }
-
-      .mini-stats {
-        grid-template-columns: 1fr;
-      }
-
-      .finding {
-        min-height: auto;
-        padding: 15px;
-      }
-
-      .finding h3 {
-        font-size: 18px;
-      }
-
-      .finding p {
-        font-size: 15px;
-        line-height: 1.55;
-      }
-
-      .sticky-top-btn {
-        right: 14px;
-        bottom: 14px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Will AI Replace Your Job?</title>
+
+<meta name="description" content="Search your job to see the implied odds AI replaces it.">
+
+<meta property="og:title" content="Will AI Replace Your Job?" />
+<meta property="og:description" content="Search your job to see the implied odds AI replaces it." />
+<meta property="og:url" content="https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job" />
+<meta property="og:type" content="website" />
+
+<style>
+
+:root{
+--green:#1f8f5f;
+--dark:#12211b;
+--muted:#667a74;
+--border:#e4ece8;
+--bg:#f5f7f6;
+--card:#ffffff;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:var(--bg);
+color:var(--dark);
+}
+
+.page{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.hero{
+background:linear-gradient(135deg,#0c1d17,#1a5c43);
+color:white;
+padding:28px;
+border-radius:24px;
+margin-bottom:18px;
+}
+
+.hero h1{
+margin:0;
+font-size:44px;
+line-height:1.1;
+}
+
+.subhead{
+margin-top:10px;
+font-size:18px;
+opacity:.9;
+}
+
+.search-panel{
+margin-top:20px;
+}
+
+.search-box{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.search-input-wrap{
+flex:1;
+position:relative;
+}
+
+.search-box input{
+width:100%;
+padding:16px;
+border-radius:14px;
+border:none;
+font-size:16px;
+}
+
+.search-box button{
+padding:16px 20px;
+border-radius:14px;
+border:none;
+background:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.autocomplete{
+position:absolute;
+background:white;
+border:1px solid var(--border);
+width:100%;
+border-radius:12px;
+margin-top:6px;
+box-shadow:0 8px 18px rgba(0,0,0,.08);
+z-index:5;
+}
+
+.autocomplete-item{
+padding:12px;
+border-bottom:1px solid var(--border);
+cursor:pointer;
+}
+
+.autocomplete-item:hover{
+background:#f2f6f4;
+}
+
+.quote-section{
+margin:16px 0;
+}
+
+.quote-card{
+background:white;
+border-radius:20px;
+padding:24px;
+border:1px solid var(--border);
+box-shadow:0 10px 24px rgba(0,0,0,.05);
+position:relative;
+}
+
+.quote-mark{
+position:absolute;
+left:16px;
+top:6px;
+font-size:56px;
+color:#e4f1ea;
+}
+
+.quote-text{
+font-size:20px;
+line-height:1.6;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.quote-source{
+font-size:14px;
+color:var(--muted);
+font-weight:bold;
+}
+
+.section-card{
+background:white;
+border-radius:20px;
+padding:20px;
+border:1px solid var(--border);
+margin-bottom:18px;
+}
+
+.result-title{
+font-size:34px;
+margin:0;
+}
+
+.score{
+font-size:72px;
+font-weight:800;
+margin:8px 0;
+}
+
+.bar{
+height:14px;
+background:#e7efe9;
+border-radius:100px;
+overflow:hidden;
+}
+
+.bar-fill{
+height:100%;
+background:linear-gradient(90deg,#1f8f5f,#22b16f);
+}
+
+.findings-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.finding{
+border:1px solid var(--border);
+padding:16px;
+border-radius:16px;
+}
+
+.finding h3{
+margin:0 0 6px;
+font-size:17px;
+}
+
+.finding p{
+margin:0;
+font-size:14px;
+line-height:1.55;
+}
+
+.ranking-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.ranking-item{
+display:grid;
+grid-template-columns:40px 1fr;
+gap:10px;
+padding:12px;
+border:1px solid var(--border);
+border-radius:14px;
+}
+
+.ranking-number{
+background:#e8f5ef;
+width:40px;
+height:40px;
+border-radius:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+}
+
+.table-wrap{
+overflow:auto;
+border-radius:16px;
+border:1px solid var(--border);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:14px;
+border-bottom:1px solid var(--border);
+font-size:14px;
+}
+
+th{
+background:#f7faf8;
+text-align:left;
+}
+
+.sticky-top-btn{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#0c1d17;
+color:white;
+border:none;
+padding:12px 16px;
+border-radius:999px;
+cursor:pointer;
+display:none;
+}
+
+@media(max-width:800px){
+
+.hero h1{font-size:34px}
+
+.findings-grid{
+grid-template-columns:1fr;
+}
+
+.quote-text{
+font-size:17px;
+}
+
+.score{
+font-size:54px;
+}
+
+}
+
+</style>
 </head>
+
 <body>
-  <div class="page" id="top">
-    <header class="hero">
-      <div class="hero-inner">
-        <div class="eyebrow">Action Network AI Job Odds Tool</div>
-        <h1>What Are the Odds AI Replaces Your Job?</h1>
-        <p class="subhead">
-          Search your job to see the implied odds AI replaces it.
-        </p>
 
-        <div class="search-panel">
-          <div class="search-box">
-            <div class="search-input-wrap">
-              <input
-                type="text"
-                id="jobSearch"
-                placeholder="Search for a job title"
-                autocomplete="off"
-              />
-              <div id="autocomplete" class="autocomplete hidden"></div>
-            </div>
-            <button id="searchButton">Search</button>
-          </div>
+<div class="page">
 
-          <div class="search-meta">
-            <div class="search-hint">
-              Try: <strong>Computer Programmers</strong>, <strong>Registered Nurses</strong>, <strong>Bartenders</strong>
-            </div>
-            <div id="datasetCount">Loading dataset...</div>
-          </div>
+<header class="hero">
 
-          <div id="loadingState" class="loading">Loading AI job dataset...</div>
-          <div id="noResults" class="error hidden">No matching job found. Try a more exact title from the dataset.</div>
-        </div>
-      </div>
-    </header>
+<h1>Will AI Replace Your Job?</h1>
 
-    <section class="quote-section">
-  <div class="quote-card">
-    <div class="quote-mark">“</div>
+<p class="subhead">
+Search your job to see the implied odds AI replaces it.
+</p>
 
-    <p class="quote-text">
-      The biggest surprise in the data is that some of the jobs people assume are safest because they’re skilled or white-collar actually rank among the most exposed, while many physical, in-person roles remain far harder for AI to replace.
-    </p>
+<div class="search-panel">
 
-    <div class="quote-source">
-      — Action Network analysis team
-    </div>
-  </div>
+<div class="search-box">
+
+<div class="search-input-wrap">
+
+<input id="jobSearch" placeholder="Search for a job title">
+
+<div id="autocomplete" class="autocomplete" style="display:none"></div>
+
+</div>
+
+<button id="searchButton">Search</button>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="quote-section">
+
+<div class="quote-card">
+
+<div class="quote-mark">“</div>
+
+<p class="quote-text">
+The biggest surprise in the data is that some of the jobs people assume are safest because they’re skilled or white-collar actually rank among the most exposed, while many physical, in-person roles remain far harder for AI to replace.
+</p>
+
+<div class="quote-source">
+— Action Network analysis team
+</div>
+
+</div>
+
 </section>
 
-    <div class="jump-row">
-      <button class="btn" onclick="scrollToSection('resultSection')">Result</button>
-      <button class="btn" onclick="scrollToSection('findingsSection')">Key findings</button>
-      <button class="btn" onclick="scrollToSection('topSection')">Top 10s</button>
-      <button class="btn" onclick="scrollToSection('rankingSection')">Full ranking</button>
-      <button class="btn" onclick="scrollToSection('methodSection')">Methodology</button>
-    </div>
-
-    <main>
-      <section id="resultSection" class="section-card hidden">
-        <div class="result-grid">
-          <div>
-            <h2 class="result-title" id="jobTitle">Job Title</h2>
-            <p class="result-summary" id="jobIntro"></p>
-
-            <div class="pill-row">
-              <span id="riskLevel" class="pill neutral">Risk</span>
-              <span id="jobFamily" class="pill neutral">Job family</span>
-            </div>
-
-            <div class="share-row">
-              <button class="btn share-primary" id="copyShareTextBtn">Copy share text</button>
-              <button class="btn share-secondary" id="copyLinkBtn">Copy result link</button>
-            </div>
-          </div>
-
-          <div class="score-card">
-            <div class="score-label">Implied Odds AI Replaces Your Job</div>
-            <div class="score-value" id="jobProbability">0%</div>
-            <div class="score-note">
-              Action Network modeled this score using occupation-level AI exposure data from Anthropic.
-            </div>
-          </div>
-        </div>
-
-        <div class="mini-stats">
-          <div class="mini-stat">
-            <div class="mini-label">Risk Rank</div>
-            <div class="mini-value" id="jobRank">#0</div>
-            <div class="mini-help">Position in the full ranking.</div>
-          </div>
-
-          <div class="mini-stat">
-            <div class="mini-label">Anthropic Exposure Score</div>
-            <div class="mini-value" id="jobExposure">0.00</div>
-            <div class="mini-help">The underlying source score.</div>
-          </div>
-        </div>
-
-        <div class="bar-wrap">
-          <div class="bar-head">
-            <span>Implied Odds AI Replaces Your Job</span>
-            <span class="bar-number" id="jobProbabilityBarValue">0%</span>
-          </div>
-          <div class="bar">
-            <div id="probabilityBar" class="bar-fill"></div>
-          </div>
-          <div class="bar-scale">
-            <span>Lower odds</span>
-            <span>Higher odds</span>
-          </div>
-        </div>
-
-        <div class="explain-grid">
-          <div class="copy-box">
-            <h3>Why this job ranks here</h3>
-            <p id="jobExplanation"></p>
-          </div>
-
-          <div class="copy-box">
-            <h3>How this compares</h3>
-            <p id="jobComparison"></p>
-          </div>
-        </div>
-      </section>
-
-      <section id="findingsSection" class="section-card">
-        <div class="section-heading">
-          <div>
-            <h2>Key Findings</h2>
-            <p>The clearest patterns in the ranking.</p>
-          </div>
-        </div>
-
-        <div class="findings-grid">
-          <div class="finding">
-            <h3>Desk-based digital work dominates the top.</h3>
-            <p>Computer Programmers lead at <strong>45%</strong>, followed by Customer Service Representatives at <strong>42%</strong> and Data Entry Keyers at <strong>40%</strong>. These jobs revolve around structured digital tasks AI can already help perform.</p>
-          </div>
-
-          <div class="finding">
-            <h3>Documentation-heavy work looks especially exposed.</h3>
-            <p>Medical Records Specialists sit at <strong>40%</strong>, while Medical Transcriptionists reach <strong>38%</strong>. Both roles rely heavily on organizing, processing, and documenting information in formats AI handles well.</p>
-          </div>
-
-          <div class="finding">
-            <h3>Communications and research jobs also rank high.</h3>
-            <p>Market Research Analysts and Marketing Specialists show <strong>39%</strong>, while Public Relations Specialists sit at <strong>27%</strong>. These roles still require judgment, but they include writing, summarizing, and information synthesis that overlap with AI tools.</p>
-          </div>
-
-          <div class="finding">
-            <h3>Healthcare splits into two distinct groups.</h3>
-            <p>Medical Records Specialists rank at <strong>40%</strong>, while Registered Nurses are near <strong>4%</strong>. Administrative healthcare work appears far more exposed than hands-on clinical care.</p>
-          </div>
-
-          <div class="finding">
-            <h3>The safest jobs tend to be physical and in-person.</h3>
-            <p>Many of the lowest-ranked occupations sit at <strong>0%</strong>, including Bartenders, Dishwashers, Electricians, and Firefighters. These roles depend on real-world movement, manual skill, and human presence that AI cannot directly replace.</p>
-          </div>
-
-          <div class="finding">
-            <h3>Low implied odds do not mean no AI impact.</h3>
-            <p>Even the safest jobs may still use AI tools in parts of the workflow. This ranking measures the implied odds AI replaces the job overall, not whether AI can assist with smaller tasks inside it.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="topSection" class="section-card">
-        <div class="top-grid">
-          <div>
-            <div class="section-heading">
-              <div>
-                <h2>Top 10 Highest Odds</h2>
-                <p>Jobs with the highest implied odds AI replaces them.</p>
-              </div>
-            </div>
-            <div class="ranking-note">The most exposed jobs tend to be digital, text-heavy, and highly structured.</div>
-            <div id="topJobs" class="ranking-list"></div>
-          </div>
-
-          <div>
-            <div class="section-heading">
-              <div>
-                <h2>Top 10 Lowest Odds</h2>
-                <p>Jobs with the lowest implied odds AI replaces them.</p>
-              </div>
-            </div>
-            <div class="ranking-note">These roles cluster at the safer end because they depend on physical work or real-world interaction.</div>
-            <div id="safeJobs" class="ranking-list"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="rankingSection" class="section-card">
-        <div class="section-heading">
-          <div>
-            <h2>Full Ranking</h2>
-            <p>All occupations ranked by implied odds.</p>
-          </div>
-        </div>
-
-        <div class="ranking-toggle-row">
-          <div class="ranking-toggle">
-            <button class="toggle-btn active" id="sortMostExposedBtn">Highest odds first</button>
-            <button class="toggle-btn" id="sortSafestBtn">Lowest odds first</button>
-          </div>
-
-          <button class="small-link-btn" onclick="scrollToSection('top')">Back to top</button>
-        </div>
-
-        <div class="ranking-search-row">
-          <input
-            type="text"
-            id="rankingSearch"
-            placeholder="Search the full ranking"
-          />
-          <button class="small-link-btn" id="clearRankingSearch">Clear</button>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Job</th>
-                <th>Implied Odds</th>
-                <th>Anthropic Score</th>
-                <th>Risk Level</th>
-              </tr>
-            </thead>
-            <tbody id="fullRankingBody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section id="methodSection" class="section-card">
-        <div class="accordion">
-          <details>
-            <summary>
-              <span>
-                How We Built This Tool
-                <span class="summary-sub">What comes from Anthropic, and what Action Network added.</span>
-              </span>
-              <span class="summary-mark">+</span>
-            </summary>
-            <div class="accordion-body">
-              <p>
-                This tool starts with <strong>occupation-level AI exposure data from Anthropic</strong>, which estimates how much of each job overlaps with tasks AI can already perform or assist with.
-              </p>
-
-              <p>
-                <strong>Action Network then transformed that source data into this odds-based ranking.</strong>
-              </p>
-
-              <ol>
-                <li>Anthropic provides the source exposure score for each occupation.</li>
-                <li>Action Network uses that score as the base signal of AI task overlap.</li>
-                <li>Action Network converts it into a probability-style metric for easier comparison across jobs.</li>
-                <li>Action Network ranks occupations from highest to lowest using that implied odds figure.</li>
-              </ol>
-
-              <div class="quote-line">
-                This tool measures the implied odds AI replaces a job, not the odds a job disappears completely.
-              </div>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              <span>
-                Sources
-                <span class="summary-sub">The underlying data and modeling layer behind the page.</span>
-              </span>
-              <span class="summary-mark">+</span>
-            </summary>
-            <div class="accordion-body">
-              <div class="source-grid">
-                <div class="source-card">
-                  <strong>Source data</strong>
-                  <p>Anthropic — <em>Labor Market Impacts of AI: A New Measure and Early Evidence</em></p>
-                </div>
-
-                <div class="source-card">
-                  <strong>Occupational framework</strong>
-                  <p>O*NET occupation codes and titles used to structure the jobs across the dataset.</p>
-                </div>
-
-                <div class="source-card">
-                  <strong>Action Network analysis</strong>
-                  <p>Implied odds conversion, rankings, editorial findings, and page design.</p>
-                </div>
-              </div>
-
-              <div class="footer-note">
-                Source pipeline: Anthropic occupation data → Action Network modeling → rankings and search tool.
-              </div>
-            </div>
-          </details>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <button id="stickyTopBtn" class="sticky-top-btn" type="button">↑ Back to top</button>
-
-  <script>
-    const FINAL_SHARE_BASE_URL = "https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job";
-
-    let enrichedJobs = [];
-    let currentSortMode = "highest";
-    let rankingSearchTerm = "";
-    let autocompleteIndex = -1;
-
-    function clamp(value, min = 0, max = 1) {
-      return Math.max(min, Math.min(value, max));
-    }
-
-    function escapeHtml(text) {
-      return String(text)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function formatProbabilityPercent(value) {
-      return `${Math.round(clamp(Number(value)) * 100)}%`;
-    }
-
-    function formatExposureDecimal(value) {
-      return Number(value).toFixed(2);
-    }
-
-    function getRiskPillClass(level) {
-      if (level === "Very High") return "pill pill-veryhigh";
-      if (level === "High") return "pill pill-high";
-      if (level === "Moderate") return "pill pill-moderate";
-      if (level === "Low") return "pill pill-low";
-      return "pill pill-minimal";
-    }
-
-    function copyText(text, message) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert(message);
-      }).catch(() => {
-        alert("Could not copy automatically. Please try again.");
-      });
-    }
-
-    function scrollToSection(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-
-    window.scrollToSection = scrollToSection;
-
-    function buildCanonicalUrl(jobTitle) {
-      return `${FINAL_SHARE_BASE_URL}?job=${encodeURIComponent(jobTitle)}`;
-    }
-
-    function buildIntro(job) {
-      return `${job.title} has ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing it, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
-    }
-
-    function buildShareText(job) {
-      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
-    }
-
-    function renderResult(job) {
-      document.getElementById("resultSection").classList.remove("hidden");
-      document.getElementById("noResults").classList.add("hidden");
-
-      document.getElementById("jobTitle").textContent = job.title;
-      document.getElementById("jobIntro").textContent = buildIntro(job);
-      document.getElementById("jobProbability").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
-      document.getElementById("jobRank").textContent = `#${job.ai_risk_rank}`;
-      document.getElementById("jobExposure").textContent = formatExposureDecimal(job.observed_exposure);
-      document.getElementById("jobExplanation").textContent = job.explanation;
-      document.getElementById("jobComparison").textContent = job.comparison_text;
-      document.getElementById("jobFamily").textContent = job.job_family;
-      document.getElementById("jobProbabilityBarValue").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
-
-      const risk = document.getElementById("riskLevel");
-      risk.textContent = `${job.risk_level} Risk`;
-      risk.className = getRiskPillClass(job.risk_level);
-
-      document.getElementById("probabilityBar").style.width =
-        `${clamp(job.odds_ai_replaces_major_parts_of_job) * 100}%`;
-
-      document.getElementById("copyShareTextBtn").onclick = () => {
-        copyText(buildShareText(job), "Share text copied.");
-      };
-
-      document.getElementById("copyLinkBtn").onclick = () => {
-        copyText(buildCanonicalUrl(job.title), "Result link copied.");
-      };
-    }
-
-    function createRankingItem(job, rankNumber) {
-      return `
-        <div class="ranking-item">
-          <div class="ranking-number">${rankNumber}</div>
-          <div class="ranking-main">
-            <div class="ranking-title">${escapeHtml(job.title)}</div>
-            <div class="ranking-sub">${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} · Score ${formatExposureDecimal(job.observed_exposure)}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderRankings() {
-      const highest = enrichedJobs
-        .slice()
-        .sort((a, b) => b.odds_ai_replaces_major_parts_of_job - a.odds_ai_replaces_major_parts_of_job)
-        .slice(0, 10);
-
-      const lowest = enrichedJobs
-        .slice()
-        .sort((a, b) => a.odds_ai_replaces_major_parts_of_job - b.odds_ai_replaces_major_parts_of_job || a.ai_risk_rank - b.ai_risk_rank)
-        .slice(0, 10);
-
-      document.getElementById("topJobs").innerHTML =
-        highest.map((job, index) => createRankingItem(job, index + 1)).join("");
-
-      document.getElementById("safeJobs").innerHTML =
-        lowest.map((job, index) => createRankingItem(job, index + 1)).join("");
-    }
-
-    function getFilteredRankingJobs() {
-      let jobs = enrichedJobs.slice();
-
-      if (currentSortMode === "highest") {
-        jobs.sort((a, b) => b.odds_ai_replaces_major_parts_of_job - a.odds_ai_replaces_major_parts_of_job);
-      } else {
-        jobs.sort((a, b) => a.odds_ai_replaces_major_parts_of_job - b.odds_ai_replaces_major_parts_of_job || a.ai_risk_rank - b.ai_risk_rank);
-      }
-
-      if (rankingSearchTerm.trim()) {
-        const q = rankingSearchTerm.trim().toLowerCase();
-        jobs = jobs.filter(job =>
-          job.title.toLowerCase().includes(q) ||
-          (job.job_family || "").toLowerCase().includes(q)
-        );
-      }
-
-      return jobs;
-    }
-
-    function renderFullRanking() {
-      const jobs = getFilteredRankingJobs();
-
-      document.getElementById("fullRankingBody").innerHTML = jobs.map((job, index) => `
-        <tr>
-          <td>${index + 1}</td>
-          <td>
-            <div class="table-job">${escapeHtml(job.title)}</div>
-            <div style="margin-top:4px;color:#6f7d92;font-size:12px;">${escapeHtml(job.job_family)}</div>
-          </td>
-          <td>${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}</td>
-          <td>${formatExposureDecimal(job.observed_exposure)}</td>
-          <td><span class="table-chip">${escapeHtml(job.risk_level)}</span></td>
-        </tr>
-      `).join("");
-
-      if (!jobs.length) {
-        document.getElementById("fullRankingBody").innerHTML = `
-          <tr>
-            <td colspan="5">No matching jobs found.</td>
-          </tr>
-        `;
-      }
-    }
-
-    function findJob(searchTerm) {
-      const query = searchTerm.trim().toLowerCase();
-      if (!query) return null;
-
-      const exact = enrichedJobs.find(job => job.title.toLowerCase() === query);
-      if (exact) return exact;
-
-      const startsWith = enrichedJobs.find(job => job.title.toLowerCase().startsWith(query));
-      if (startsWith) return startsWith;
-
-      const contains = enrichedJobs.find(job => job.title.toLowerCase().includes(query));
-      if (contains) return contains;
-
-      return null;
-    }
-
-    function getAutocompleteMatches(searchTerm) {
-      const q = searchTerm.trim().toLowerCase();
-      if (!q) return [];
-
-      const startsWith = enrichedJobs.filter(job => job.title.toLowerCase().startsWith(q));
-      const contains = enrichedJobs.filter(job => !job.title.toLowerCase().startsWith(q) && job.title.toLowerCase().includes(q));
-
-      return [...startsWith, ...contains].slice(0, 8);
-    }
-
-    function hideAutocomplete() {
-      const box = document.getElementById("autocomplete");
-      box.classList.add("hidden");
-      box.innerHTML = "";
-      autocompleteIndex = -1;
-    }
-
-    function renderAutocomplete(matches) {
-      const box = document.getElementById("autocomplete");
-
-      if (!matches.length) {
-        hideAutocomplete();
-        return;
-      }
-
-      box.innerHTML = matches.map((job, index) => `
-        <div class="autocomplete-item ${index === autocompleteIndex ? "active" : ""}" data-title="${escapeHtml(job.title)}">
-          <div class="autocomplete-title">${escapeHtml(job.title)}</div>
-          <div class="autocomplete-sub">${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}</div>
-        </div>
-      `).join("");
-
-      box.classList.remove("hidden");
-
-      box.querySelectorAll(".autocomplete-item").forEach(item => {
-        item.addEventListener("mousedown", function (e) {
-          e.preventDefault();
-          const title = this.getAttribute("data-title");
-          selectAutocomplete(title);
-        });
-      });
-    }
-
-    function selectAutocomplete(title) {
-      document.getElementById("jobSearch").value = title;
-      hideAutocomplete();
-      const result = findJob(title);
-      if (result) {
-        renderResult(result);
-        const url = new URL(window.location);
-        url.searchParams.set("job", result.title);
-        window.history.replaceState({}, "", url);
-        scrollToSection("resultSection");
-      }
-    }
-
-    function runSearch() {
-      const input = document.getElementById("jobSearch").value;
-      const result = findJob(input);
-
-      if (result) {
-        renderResult(result);
-        const url = new URL(window.location);
-        url.searchParams.set("job", result.title);
-        window.history.replaceState({}, "", url);
-        hideAutocomplete();
-        scrollToSection("resultSection");
-      } else {
-        document.getElementById("resultSection").classList.add("hidden");
-        document.getElementById("noResults").classList.remove("hidden");
-      }
-    }
-
-    function applyJobFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      const jobName = params.get("job");
-      if (!jobName) return false;
-
-      const job = findJob(jobName);
-      if (job) {
-        document.getElementById("jobSearch").value = job.title;
-        renderResult(job);
-        return true;
-      }
-      return false;
-    }
-
-    function setSortButtons() {
-      document.getElementById("sortMostExposedBtn").classList.toggle("active", currentSortMode === "highest");
-      document.getElementById("sortSafestBtn").classList.toggle("active", currentSortMode === "lowest");
-    }
-
-    function updateStickyTopButton() {
-      const btn = document.getElementById("stickyTopBtn");
-      if (window.scrollY > 700) {
-        btn.classList.add("show");
-      } else {
-        btn.classList.remove("show");
-      }
-    }
-
-    async function loadData() {
-      try {
-        const response = await fetch("./data/enriched_jobs.json");
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        enrichedJobs = await response.json();
-
-        document.getElementById("loadingState").classList.add("hidden");
-        document.getElementById("datasetCount").textContent = `${enrichedJobs.length} jobs in dataset`;
-
-        renderRankings();
-        setSortButtons();
-        renderFullRanking();
-
-        const loadedFromUrl = applyJobFromUrl();
-        if (!loadedFromUrl && enrichedJobs.length > 0) {
-          renderResult(
-            enrichedJobs
-              .slice()
-              .sort((a, b) => b.odds_ai_replaces_major_parts_of_job - a.odds_ai_replaces_major_parts_of_job)[0]
-          );
-        }
-      } catch (error) {
-        console.error("Failed to load dataset:", error);
-        document.getElementById("loadingState").classList.add("hidden");
-        document.getElementById("datasetCount").textContent = "Dataset unavailable";
-        document.getElementById("noResults").classList.remove("hidden");
-        document.getElementById("noResults").textContent = "Could not load the AI job dataset.";
-      }
-    }
-
-    document.getElementById("searchButton").addEventListener("click", runSearch);
-
-    document.getElementById("jobSearch").addEventListener("input", function (e) {
-      const matches = getAutocompleteMatches(e.target.value);
-      autocompleteIndex = -1;
-      renderAutocomplete(matches);
-    });
-
-    document.getElementById("jobSearch").addEventListener("keydown", function (e) {
-      const matches = getAutocompleteMatches(e.target.value);
-
-      if (e.key === "ArrowDown" && matches.length) {
-        e.preventDefault();
-        autocompleteIndex = (autocompleteIndex + 1) % matches.length;
-        renderAutocomplete(matches);
-        return;
-      }
-
-      if (e.key === "ArrowUp" && matches.length) {
-        e.preventDefault();
-        autocompleteIndex = autocompleteIndex <= 0 ? matches.length - 1 : autocompleteIndex - 1;
-        renderAutocomplete(matches);
-        return;
-      }
-
-      if (e.key === "Enter") {
-        if (matches.length && autocompleteIndex >= 0) {
-          e.preventDefault();
-          selectAutocomplete(matches[autocompleteIndex].title);
-          return;
-        }
-        runSearch();
-      }
-
-      if (e.key === "Escape") {
-        hideAutocomplete();
-      }
-    });
-
-    document.addEventListener("click", function (e) {
-      const wrap = document.querySelector(".search-input-wrap");
-      if (!wrap.contains(e.target)) {
-        hideAutocomplete();
-      }
-    });
-
-    document.getElementById("sortMostExposedBtn").addEventListener("click", function () {
-      currentSortMode = "highest";
-      setSortButtons();
-      renderFullRanking();
-    });
-
-    document.getElementById("sortSafestBtn").addEventListener("click", function () {
-      currentSortMode = "lowest";
-      setSortButtons();
-      renderFullRanking();
-    });
-
-    document.getElementById("rankingSearch").addEventListener("input", function (e) {
-      rankingSearchTerm = e.target.value;
-      renderFullRanking();
-    });
-
-    document.getElementById("clearRankingSearch").addEventListener("click", function () {
-      rankingSearchTerm = "";
-      document.getElementById("rankingSearch").value = "";
-      renderFullRanking();
-    });
-
-    document.getElementById("stickyTopBtn").addEventListener("click", function () {
-      scrollToSection("top");
-    });
-
-    window.addEventListener("scroll", updateStickyTopButton);
-
-    loadData();
-    updateStickyTopButton();
-  </script>
+
+<section class="section-card">
+
+<h2>Key Findings</h2>
+
+<div class="findings-grid">
+
+<div class="finding">
+<h3>Desk-based digital work dominates the top.</h3>
+<p>Computer Programmers lead at <strong>45%</strong>, followed by Customer Service Representatives at <strong>42%</strong> and Data Entry Keyers at <strong>40%</strong>.</p>
+</div>
+
+<div class="finding">
+<h3>Documentation-heavy work is highly exposed.</h3>
+<p>Medical Records Specialists rank around <strong>40%</strong> because these roles revolve around organizing structured information.</p>
+</div>
+
+<div class="finding">
+<h3>Communications roles appear surprisingly exposed.</h3>
+<p>Market Research Analysts and Public Relations Specialists both rank above <strong>25%</strong> due to writing and research overlap.</p>
+</div>
+
+<div class="finding">
+<h3>Healthcare shows a major split.</h3>
+<p>Administrative healthcare jobs rank high, while clinical roles like nurses rank closer to <strong>4%</strong>.</p>
+</div>
+
+<div class="finding">
+<h3>Physical work appears far safer.</h3>
+<p>Jobs like bartenders, electricians, and firefighters sit near <strong>0%</strong> because they require real-world activity.</p>
+</div>
+
+<div class="finding">
+<h3>Low odds doesn’t mean zero AI impact.</h3>
+<p>Even safer roles will still see AI tools assist tasks inside the job.</p>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section-card">
+
+<h2>Top 10 Highest Odds</h2>
+
+<div id="topJobs" class="ranking-list"></div>
+
+</section>
+
+
+<section class="section-card">
+
+<h2>Top 10 Lowest Odds</h2>
+
+<div id="safeJobs" class="ranking-list"></div>
+
+</section>
+
+
+<section class="section-card">
+
+<h2>Full Ranking</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Rank</th>
+<th>Job</th>
+<th>Implied Odds</th>
+</tr>
+
+</thead>
+
+<tbody id="rankingBody"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</div>
+
+<button id="topBtn" class="sticky-top-btn">↑ Top</button>
+
+<script>
+
+const FINAL_URL="https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job"
+
+let jobs=[]
+
+fetch("./data/enriched_jobs.json")
+.then(r=>r.json())
+.then(data=>{
+
+jobs=data
+
+renderLists()
+
+})
+
+function renderLists(){
+
+let sorted=[...jobs].sort((a,b)=>b.odds_ai_replaces_major_parts_of_job-a.odds_ai_replaces_major_parts_of_job)
+
+let top=sorted.slice(0,10)
+
+let safe=[...sorted].reverse().slice(0,10)
+
+document.getElementById("topJobs").innerHTML=top.map((j,i)=>`
+<div class="ranking-item">
+<div class="ranking-number">${i+1}</div>
+<div>
+<strong>${j.title}</strong>
+<div>Odds: ${Math.round(j.odds_ai_replaces_major_parts_of_job*100)}%</div>
+</div>
+</div>
+`).join("")
+
+document.getElementById("safeJobs").innerHTML=safe.map((j,i)=>`
+<div class="ranking-item">
+<div class="ranking-number">${i+1}</div>
+<div>
+<strong>${j.title}</strong>
+<div>Odds: ${Math.round(j.odds_ai_replaces_major_parts_of_job*100)}%</div>
+</div>
+</div>
+`).join("")
+
+document.getElementById("rankingBody").innerHTML=sorted.map((j,i)=>`
+<tr>
+<td>${i+1}</td>
+<td>${j.title}</td>
+<td>${Math.round(j.odds_ai_replaces_major_parts_of_job*100)}%</td>
+</tr>
+`).join("")
+
+}
+
+const btn=document.getElementById("topBtn")
+
+window.addEventListener("scroll",()=>{
+
+if(window.scrollY>600){
+btn.style.display="block"
+}else{
+btn.style.display="none"
+}
+
+})
+
+btn.onclick=()=>window.scrollTo({top:0,behavior:"smooth"})
+
+</script>
+
 </body>
 </html>
