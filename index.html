@@ -137,7 +137,7 @@
 
     .search-panel {
       margin-top: 18px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.13);
       border-radius: 20px;
       padding: 14px;
@@ -230,49 +230,76 @@
       color: var(--text);
       line-height: 1.3;
     }
-    
-    .quote-section{
-  margin:18px 0 10px;
-}
-
-.quote-card{
-  background:#ffffff;
-  border-radius:22px;
-  padding:26px 28px;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  position:relative;
-}
-
-.quote-mark{
-  position:absolute;
-  top:10px;
-  left:16px;
-  font-size:60px;
-  color:#e6efe9;
-  font-weight:800;
-  line-height:1;
-}
-
-.quote-text{
-  font-size:20px;
-  line-height:1.6;
-  font-weight:600;
-  color:var(--brand-charcoal);
-  margin:0 0 14px;
-  max-width:900px;
-}
-
-.quote-source{
-  font-size:14px;
-  color:var(--muted);
-  font-weight:700;
-}
 
     .autocomplete-sub {
       margin-top: 3px;
       font-size: 12px;
       color: var(--muted);
+    }
+
+    .quote-section {
+      margin: 0 0 16px;
+    }
+
+    .quote-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
+      border-radius: 22px;
+      padding: 26px 28px 22px 32px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(31,143,95,0.06), rgba(31,143,95,0));
+      pointer-events: none;
+    }
+
+    .quote-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 18px;
+      bottom: 18px;
+      width: 4px;
+      border-radius: 999px;
+      background: var(--brand-green);
+    }
+
+    .quote-mark {
+      position: absolute;
+      top: 8px;
+      left: 18px;
+      font-size: 62px;
+      color: #d7ebe0;
+      font-weight: 800;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .quote-text {
+      position: relative;
+      z-index: 1;
+      font-size: 20px;
+      line-height: 1.6;
+      font-weight: 700;
+      color: var(--brand-charcoal);
+      margin: 0 0 14px 18px;
+      max-width: 930px;
+      letter-spacing: -0.01em;
+    }
+
+    .quote-source {
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-left: 18px;
     }
 
     .search-meta {
@@ -318,11 +345,6 @@
       background: #ffffff;
       color: var(--brand-charcoal);
       box-shadow: 0 8px 20px rgba(18, 33, 27, 0.08);
-    }
-
-    .btn.primary {
-      background: var(--brand-green);
-      color: #fff;
     }
 
     .section-card {
@@ -945,6 +967,10 @@
       }
 
       h1 { font-size: 40px; }
+
+      .quote-text {
+        font-size: 18px;
+      }
     }
 
     @media (max-width: 720px) {
@@ -980,6 +1006,26 @@
 
       .mini-stats {
         grid-template-columns: 1fr;
+      }
+
+      .quote-card {
+        padding: 20px 18px 18px 22px;
+      }
+
+      .quote-mark {
+        font-size: 48px;
+        top: 6px;
+        left: 12px;
+      }
+
+      .quote-text {
+        font-size: 17px;
+        line-height: 1.55;
+        margin-left: 12px;
+      }
+
+      .quote-source {
+        margin-left: 12px;
       }
 
       .finding {
@@ -1039,19 +1085,18 @@
         </div>
       </div>
     </header>
+
     <section class="quote-section">
-  <div class="quote-card">
-    <div class="quote-mark">“</div>
-
-    <p class="quote-text">
-      The real dividing line in the AI job race isn’t education level or salary. It’s whether the work happens mainly on a screen or in the real world. Jobs built around digital information rank far higher in exposure than many physical, in-person roles people rarely think of as future-proof.
-    </p>
-
-    <div class="quote-source">
-      — Action Network analysis team
-    </div>
-  </div>
-</section>
+      <div class="quote-card">
+        <div class="quote-mark">“</div>
+        <p class="quote-text">
+          The real dividing line in the AI job race isn’t education level or salary. It’s whether the work happens mainly on a screen or in the real world. Jobs built around digital information rank far higher in exposure than many physical, in-person roles people rarely think of as future-proof.
+        </p>
+        <div class="quote-source">
+          — Action Network analysis team
+        </div>
+      </div>
+    </section>
 
     <div class="jump-row">
       <button class="btn" onclick="scrollToSection('resultSection')">Result</button>
