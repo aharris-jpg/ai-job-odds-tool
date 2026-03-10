@@ -1511,39 +1511,37 @@
       return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
     }
 
-    function buildExplanation(job) {
+   function buildExplanation(job) {
   const title = job.title;
-  const plural = isPluralJobTitle(title);
-  const verb = plural ? "have" : "has";
   const probability = Number(job.odds_ai_replaces_major_parts_of_job || 0);
   const family = (job.job_family || "").trim();
 
   if (["Computer & Math", "Office & Admin", "Business & Finance", "Arts & Media", "Sales"].includes(family)) {
     if (probability >= 0.45) {
-      return `${title} ${verb} high AI exposure because the role centers on structured digital, text-based, or analytical work that AI can already help perform.`;
+      return `${title} rank highly for AI exposure because the role centers on structured digital, text-based, or analytical work that AI can already help perform.`;
     }
     if (probability >= 0.20) {
-      return `${title} ${verb} moderate AI exposure because some parts of the role overlap with work AI can already help perform, while other responsibilities still depend on human judgment.`;
+      return `${title} show moderate AI exposure because parts of the role overlap with work AI can already help perform, while other responsibilities still depend on human judgment.`;
     }
-    return `${title} ${verb} relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
+    return `${title} show relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
   }
 
   if (["Construction", "Repair & Maintenance", "Food Service", "Cleaning & Grounds", "Transportation", "Farming & Forestry"].includes(family)) {
-    return `${title} ${verb} lower AI exposure because the role depends on physical work, manual skill, or on-site problem-solving that current AI systems cannot perform directly.`;
+    return `${title} rank lower for AI exposure because the work depends on physical skill, manual movement, and on-site problem-solving that AI cannot directly perform.`;
   }
 
   if (["Healthcare Practitioners", "Healthcare Support", "Community & Social Service", "Protective Service"].includes(family)) {
-    return `${title} ${verb} lower AI exposure because the role involves in-person care, physical procedures, or real-world decision-making that still relies heavily on human presence.`;
+    return `${title} show lower AI exposure because the role relies on in-person care, physical procedures, and real-world decision-making that still requires human presence.`;
   }
 
   if (["Education", "Legal", "Science", "Engineering"].includes(family)) {
     if (probability >= 0.30) {
-      return `${title} ${verb} moderate to elevated AI exposure because parts of the role involve research, writing, analysis, or structured information work that AI can increasingly support.`;
+      return `${title} show moderate to elevated AI exposure because parts of the job involve research, writing, analysis, or structured information work that AI tools can increasingly support.`;
     }
-    return `${title} ${verb} relatively limited AI exposure because many core parts of the role still depend on expert judgment, specialized knowledge, or real-world interaction.`;
+    return `${title} show relatively limited AI exposure because core responsibilities depend on expert judgment, specialized knowledge, or real-world interaction.`;
   }
 
-  return `${title} ${verb} a mixed level of AI exposure compared with other occupations in the dataset.`;
+  return `${title} show a mixed level of AI exposure compared with other occupations in the dataset.`;
 }
 
     function buildComparison(job) {
