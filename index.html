@@ -1544,30 +1544,44 @@
   return `${title} show a mixed level of AI exposure compared with other occupations in the dataset.`;
 }
 
-   function buildComparison(job) {
-
+ function buildComparison(job) {
   const totalJobs = enrichedJobs.length;
-  const rank = Number(job.ai_risk_rank);
+  const rank = Number(job.ai_risk_rank || 0);
+
+  if (!totalJobs || !rank) {
+    return "Comparison data is unavailable for this occupation.";
+  }
 
   const percentile = Math.round(((totalJobs - rank) / totalJobs) * 100);
+  const plural = isPluralJobTitle(job.title);
 
   if (percentile >= 95) {
-    return `${job.title} are among the most AI-exposed occupations in the dataset, ranking higher than about ${percentile}% of jobs.`;
+    return plural
+      ? `${job.title} rank among the most AI-exposed occupations in the dataset, appearing more exposed than about ${percentile}% of jobs.`
+      : `${job.title} ranks among the most AI-exposed occupations in the dataset, appearing more exposed than about ${percentile}% of jobs.`;
   }
 
   if (percentile >= 75) {
-    return `${job.title} rank above average for AI exposure and appear more exposed than about ${percentile}% of occupations.`;
+    return plural
+      ? `${job.title} rank above average for AI exposure and appear more exposed than about ${percentile}% of occupations.`
+      : `${job.title} ranks above average for AI exposure and appears more exposed than about ${percentile}% of occupations.`;
   }
 
   if (percentile >= 40) {
-    return `${job.title} sit near the middle of the dataset and show a typical level of AI exposure compared with other jobs.`;
+    return plural
+      ? `${job.title} sit near the middle of the dataset and show a typical level of AI exposure compared with other jobs.`
+      : `${job.title} sits near the middle of the dataset and shows a typical level of AI exposure compared with other jobs.`;
   }
 
   if (percentile >= 15) {
-    return `${job.title} rank below most occupations for AI exposure and appear less exposed than about ${100 - percentile}% of jobs.`;
+    return plural
+      ? `${job.title} rank below most occupations for AI exposure and appear less exposed than about ${100 - percentile}% of jobs.`
+      : `${job.title} ranks below most occupations for AI exposure and appears less exposed than about ${100 - percentile}% of jobs.`;
   }
 
-  return `${job.title} rank among the least AI-exposed occupations in the dataset.`;
+  return plural
+    ? `${job.title} rank among the least AI-exposed occupations in the dataset.`
+    : `${job.title} ranks among the least AI-exposed occupations in the dataset.`;
 }
 
     function openShareWindow(url) {
