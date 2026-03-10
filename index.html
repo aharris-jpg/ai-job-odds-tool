@@ -1440,10 +1440,9 @@
 
   const sorted = enrichedJobs
     .slice()
-    .sort((a, b) => a.ai_risk_rank - b.ai_risk_rank);
+    .sort((a,b) => a.ai_risk_rank - b.ai_risk_rank);
 
-  const index = sorted.findIndex(item => item.title === job.title);
-
+  const index = sorted.findIndex(j => j.title === job.title);
   if (index === -1) return "";
 
   const nearby = [
@@ -1454,19 +1453,17 @@
   ].filter(Boolean);
 
   return `
-    <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
-      ${nearby.map(item => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eef2ef;">
-          <span style="font-weight:600;">${escapeHtml(item.title)}</span>
-          <span style="color:#667872;font-weight:700;">
-            ${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}
-          </span>
+    <div style="margin-top:6px;">
+      ${nearby.map(j => `
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2ef;font-size:14px;">
+          <span>${escapeHtml(j.title)}</span>
+          <strong>${formatProbabilityPercent(j.odds_ai_replaces_major_parts_of_job)}</strong>
         </div>
       `).join("")}
     </div>
   `;
 }
-
+    
     function escapeHtml(text) {
       return String(text)
         .replaceAll("&", "&amp;")
