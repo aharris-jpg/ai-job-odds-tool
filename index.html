@@ -1437,13 +1437,15 @@
     }
 
     function buildNearbyRoles(job) {
-
   const sorted = enrichedJobs
     .slice()
-    .sort((a,b) => a.ai_risk_rank - b.ai_risk_rank);
+    .sort((a, b) => a.ai_risk_rank - b.ai_risk_rank);
 
-  const index = sorted.findIndex(j => j.title === job.title);
-  if (index === -1) return "";
+  const index = sorted.findIndex(item => item.title === job.title);
+
+  if (index === -1) {
+    return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+  }
 
   const nearby = [
     sorted[index - 2],
@@ -1452,12 +1454,16 @@
     sorted[index + 2]
   ].filter(Boolean);
 
+  if (!nearby.length) {
+    return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+  }
+
   return `
-    <div style="margin-top:6px;">
-      ${nearby.map(j => `
-        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eef2ef;font-size:14px;">
-          <span>${escapeHtml(j.title)}</span>
-          <strong>${formatProbabilityPercent(j.odds_ai_replaces_major_parts_of_job)}</strong>
+    <div class="nearby-list">
+      ${nearby.map(item => `
+        <div class="nearby-row">
+          <span class="nearby-name">${escapeHtml(item.title)}</span>
+          <span class="nearby-odds">${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}</span>
         </div>
       `).join("")}
     </div>
