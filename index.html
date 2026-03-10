@@ -1544,27 +1544,31 @@
   return `${title} show a mixed level of AI exposure compared with other occupations in the dataset.`;
 }
 
-    function buildComparison(job) {
-      const subject = getJobSubject(job);
-      const percentile = Number(job.percentile ?? 0);
+   function buildComparison(job) {
 
-      if (percentile >= 99) {
-        return `${subject} are more AI-exposed than almost every occupation in the dataset.`;
-      }
-      if (percentile >= 90) {
-        return `${subject} are more AI-exposed than ${percentile}% of jobs in the dataset.`;
-      }
-      if (percentile >= 60) {
-        return `${subject} rank above average for AI exposure and are more exposed than ${percentile}% of occupations.`;
-      }
-      if (percentile >= 40) {
-        return `${subject} sit near the middle of the dataset and show a typical level of AI exposure.`;
-      }
-      if (percentile >= 10) {
-        return `${subject} are less AI-exposed than most occupations and sit below the middle of the dataset.`;
-      }
-      return `${subject} rank among the least AI-exposed occupations in the dataset.`;
-    }
+  const totalJobs = enrichedJobs.length;
+  const rank = Number(job.ai_risk_rank);
+
+  const percentile = Math.round(((totalJobs - rank) / totalJobs) * 100);
+
+  if (percentile >= 95) {
+    return `${job.title} are among the most AI-exposed occupations in the dataset, ranking higher than about ${percentile}% of jobs.`;
+  }
+
+  if (percentile >= 75) {
+    return `${job.title} rank above average for AI exposure and appear more exposed than about ${percentile}% of occupations.`;
+  }
+
+  if (percentile >= 40) {
+    return `${job.title} sit near the middle of the dataset and show a typical level of AI exposure compared with other jobs.`;
+  }
+
+  if (percentile >= 15) {
+    return `${job.title} rank below most occupations for AI exposure and appear less exposed than about ${100 - percentile}% of jobs.`;
+  }
+
+  return `${job.title} rank among the least AI-exposed occupations in the dataset.`;
+}
 
     function openShareWindow(url) {
       window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
