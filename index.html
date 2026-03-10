@@ -1447,22 +1447,24 @@
   if (index === -1) return "";
 
   const nearby = [
+    sorted[index - 2],
     sorted[index - 1],
     sorted[index + 1],
-    sorted[index - 2]
+    sorted[index + 2]
   ].filter(Boolean);
 
-  return nearby.map(item => `
-    <div class="ranking-item">
-      <div class="ranking-main">
-        <div class="ranking-title">${escapeHtml(item.title)}</div>
-        <div class="ranking-sub">
-          Odds: ${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}
+  return `
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+      ${nearby.map(item => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eef2ef;">
+          <span style="font-weight:600;">${escapeHtml(item.title)}</span>
+          <span style="color:#667872;font-weight:700;">
+            ${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}
+          </span>
         </div>
-      </div>
+      `).join("")}
     </div>
-  `).join("");
-
+  `;
 }
 
     function escapeHtml(text) {
