@@ -1015,15 +1015,10 @@
       }
 
       h1 { font-size: 34px; }
-
       .subhead { font-size: 16px; }
-
       .section-card { padding: 16px; }
-
       .result-title { font-size: 30px; }
-
       .result-summary { font-size: 17px; }
-
       .score-value { font-size: 62px; }
 
       .search-box {
@@ -1476,6 +1471,10 @@
       return lastWord.endsWith("s");
     }
 
+    function getJobSubject(job) {
+      return isPluralJobTitle(job.title) ? "These jobs" : "This job";
+    }
+
     function copyText(text, message) {
       navigator.clipboard.writeText(text).then(() => {
         alert(message);
@@ -1512,6 +1511,61 @@
       return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
     }
 
+    function buildExplanation(job) {
+      const subject = getJobSubject(job);
+      const family = (job.job_family || "").trim();
+      const probability = Number(job.odds_ai_replaces_major_parts_of_job || 0);
+
+      if (["Computer & Math", "Office & Admin", "Business & Finance", "Arts & Media", "Sales"].includes(family)) {
+        if (probability >= 0.45) {
+          return `${subject} rank highly for AI exposure because the role centers on structured digital, text-based, or analytical work that AI can already help perform.`;
+        }
+        if (probability >= 0.20) {
+          return `${subject} have moderate AI exposure because some parts of the role overlap with work AI can already help perform, while other responsibilities still depend on human judgment.`;
+        }
+        return `${subject} have relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
+      }
+
+      if (["Construction", "Repair & Maintenance", "Food Service", "Cleaning & Grounds", "Transportation", "Farming & Forestry"].includes(family)) {
+        return `${subject} rank lower for AI exposure because the role depends on physical work, manual skill, or on-site problem-solving that current AI systems cannot perform directly.`;
+      }
+
+      if (["Healthcare Practitioners", "Healthcare Support", "Community & Social Service", "Protective Service"].includes(family)) {
+        return `${subject} tend to be less exposed to AI because the role involves in-person care, physical procedures, or real-world decision-making that still relies heavily on human presence.`;
+      }
+
+      if (["Education", "Legal", "Science", "Engineering"].includes(family)) {
+        if (probability >= 0.30) {
+          return `${subject} show moderate to elevated AI exposure because parts of the role involve research, writing, analysis, or structured information work that AI can increasingly support.`;
+        }
+        return `${subject} have relatively limited AI exposure because many core parts of the role still depend on expert judgment, specialized knowledge, or real-world interaction.`;
+      }
+
+      return `${subject} show a mixed level of AI exposure compared with other occupations in the dataset.`;
+    }
+
+    function buildComparison(job) {
+      const subject = getJobSubject(job);
+      const percentile = Number(job.percentile ?? 0);
+
+      if (percentile >= 99) {
+        return `${subject} are more AI-exposed than almost every occupation in the dataset.`;
+      }
+      if (percentile >= 90) {
+        return `${subject} are more AI-exposed than ${percentile}% of jobs in the dataset.`;
+      }
+      if (percentile >= 60) {
+        return `${subject} rank above average for AI exposure and are more exposed than ${percentile}% of occupations.`;
+      }
+      if (percentile >= 40) {
+        return `${subject} sit near the middle of the dataset and show a typical level of AI exposure.`;
+      }
+      if (percentile >= 10) {
+        return `${subject} are less AI-exposed than most occupations and sit below the middle of the dataset.`;
+      }
+      return `${subject} rank among the least AI-exposed occupations in the dataset.`;
+    }
+
     function openShareWindow(url) {
       window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
     }
@@ -1537,8 +1591,8 @@
       document.getElementById("jobProbability").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
       document.getElementById("jobRank").textContent = `#${job.ai_risk_rank}`;
       document.getElementById("jobExposure").textContent = formatExposureDecimal(job.observed_exposure);
-      document.getElementById("jobExplanation").textContent = job.explanation;
-      document.getElementById("jobComparison").textContent = job.comparison_text;
+      document.getElementById("jobExplanation").textContent = buildExplanation(job);
+      document.getElementById("jobComparison").textContent = buildComparison(job);
       document.getElementById("jobFamily").textContent = job.job_family;
       document.getElementById("jobProbabilityBarValue").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
 
