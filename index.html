@@ -1639,16 +1639,20 @@
     }
 
     function getShareUrls(job) {
-      const resultUrl = buildCanonicalUrl(job.title);
-      const shareText = buildShareText(job);
 
-      return {
-        x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resultUrl)}`,
-        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultUrl)}`,
-        whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + resultUrl)}`
-      };
-    }
+  const resultUrl = `${FINAL_SHARE_BASE_URL}?job=${encodeURIComponent(job.title)}`;
+
+  const shareText =
+    `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job.`;
+
+  return {
+    x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resultUrl)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultUrl)}`,
+    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + resultUrl)}`
+  };
+
+}
 
     function renderResult(job) {
       document.getElementById("resultSection").classList.remove("hidden");
