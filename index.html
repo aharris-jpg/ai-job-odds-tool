@@ -1634,17 +1634,14 @@
     : `${job.title} ranks among the least AI-exposed occupations in the dataset.`;
 }
 
-    function openShareWindow(url) {
+  function openShareWindow(url) {
 
-  const isMobile =
-    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-  if (isMobile) {
-    // mobile browsers prefer direct navigation
-    window.location.href = url;
-  } else {
-    // desktop works better with popup
-    window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
+  try {
+    // if inside iframe, open in parent
+    window.top.location.href = url;
+  } catch (e) {
+    // fallback
+    window.open(url, "_blank");
   }
 
 }
