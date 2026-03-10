@@ -1286,7 +1286,7 @@
 
           <div class="finding">
             <h3>Low implied odds do not mean no AI impact.</h3>
-            <p>Even the safest jobs may still use AI tools in parts of the workflow. This ranking measures the implied odds AI replaces the job overall, not whether AI can assist with smaller tasks inside it.</p>
+            <p>Even the safest jobs may still use AI tools in parts of the workflow. This ranking measures the implied odds of AI replacing the job overall, not whether AI can assist with smaller tasks inside it.</p>
           </div>
         </div>
       </section>
@@ -1297,7 +1297,7 @@
             <div class="section-heading">
               <div>
                 <h2>Top 10 Highest Odds</h2>
-                <p>Jobs with the highest implied odds AI replaces them.</p>
+                <p>Jobs with the highest implied odds of AI replacing them.</p>
               </div>
             </div>
             <div class="ranking-note">The most exposed jobs tend to be digital, text-heavy, and highly structured.</div>
@@ -1308,7 +1308,7 @@
             <div class="section-heading">
               <div>
                 <h2>Top 10 Lowest Odds</h2>
-                <p>Jobs with the lowest implied odds AI replaces them.</p>
+                <p>Jobs with the lowest implied odds of AI replacing them.</p>
               </div>
             </div>
             <div class="ranking-note">These roles cluster at the safer end because they depend on physical work or real-world interaction.</div>
@@ -1386,7 +1386,7 @@
               </ol>
 
               <div class="quote-line">
-                This tool measures the implied odds AI replaces a job, not the odds a job disappears completely.
+                This tool measures the implied odds of AI replacing a job, not the odds a job disappears completely.
               </div>
             </div>
           </details>
@@ -1466,6 +1466,16 @@
       return "pill pill-minimal";
     }
 
+    function isPluralJobTitle(title) {
+      const cleaned = String(title).trim().toLowerCase();
+      const lastWord = cleaned.split(/\s+/).pop() || "";
+
+      if (cleaned.includes(" and ")) return true;
+      if (lastWord.endsWith("ss")) return false;
+
+      return lastWord.endsWith("s");
+    }
+
     function copyText(text, message) {
       navigator.clipboard.writeText(text).then(() => {
         alert(message);
@@ -1488,11 +1498,18 @@
     }
 
     function buildIntro(job) {
-      return `${job.title} have ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing it, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
+      const plural = isPluralJobTitle(job.title);
+      const verb = plural ? "have" : "has";
+      const pronoun = plural ? "them" : "it";
+
+      return `${job.title} ${verb} ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
     }
 
     function buildShareText(job) {
-      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
+      const plural = isPluralJobTitle(job.title);
+      const pronoun = plural ? "them" : "it";
+
+      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
     }
 
     function openShareWindow(url) {
@@ -1501,7 +1518,7 @@
 
     function getShareUrls(job) {
       const resultUrl = buildCanonicalUrl(job.title);
-      const shareText = `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
+      const shareText = buildShareText(job);
 
       return {
         x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
