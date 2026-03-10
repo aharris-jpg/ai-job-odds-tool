@@ -1635,7 +1635,18 @@
 }
 
     function openShareWindow(url) {
-  window.location.href = url;
+
+  const isMobile =
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // mobile browsers prefer direct navigation
+    window.location.href = url;
+  } else {
+    // desktop works better with popup
+    window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
+  }
+
 }
 
     function getShareUrls(job) {
