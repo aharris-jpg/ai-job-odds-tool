@@ -20,7 +20,7 @@
   <style>
     :root {
       --bg: #f2f5f3;
-      --card: rgba(255,255,255,0.88);
+      --card: rgba(255,255,255,0.90);
       --card-solid: #ffffff;
       --text: #102019;
       --muted: #667872;
@@ -362,6 +362,7 @@
       border: 1px solid #e3ece7;
       min-width: 54px;
       font-size: 14px;
+      line-height: 1;
     }
 
     .share-icon-btn:hover {
@@ -1140,10 +1141,10 @@
               </div>
 
               <div class="share-social">
-                <button class="share-icon-btn" id="shareXBtn" type="button">X</button>
-                <button class="share-icon-btn" id="shareFacebookBtn" type="button">Facebook</button>
-                <button class="share-icon-btn" id="shareLinkedInBtn" type="button">LinkedIn</button>
-                <button class="share-icon-btn" id="shareWhatsAppBtn" type="button">WhatsApp</button>
+                <button class="share-icon-btn" id="shareXBtn" type="button" aria-label="Share on X">X</button>
+                <button class="share-icon-btn" id="shareFacebookBtn" type="button" aria-label="Share on Facebook">Facebook</button>
+                <button class="share-icon-btn" id="shareLinkedInBtn" type="button" aria-label="Share on LinkedIn">LinkedIn</button>
+                <button class="share-icon-btn" id="shareWhatsAppBtn" type="button" aria-label="Share on WhatsApp">WhatsApp</button>
               </div>
             </div>
           </div>
@@ -1770,7 +1771,7 @@
 
     document.addEventListener("click", function (e) {
       const wrap = document.querySelector(".search-input-wrap");
-      if (!wrap.contains(e.target)) {
+      if (wrap && !wrap.contains(e.target)) {
         hideAutocomplete();
       }
     });
