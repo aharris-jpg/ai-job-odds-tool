@@ -149,9 +149,9 @@ def normalize_state(value: Any) -> str:
 
 
 def normalize_row_keys(row: Dict[str, Any]) -> Dict[str, Any]:
-    normalized = {}
+    normalized: Dict[str, Any] = {}
     for key, value in row.items():
-      normalized[str(key).strip().lower()] = value
+        normalized[str(key).strip().lower()] = value
     return normalized
 
 
@@ -252,8 +252,8 @@ def load_state_wage_data(filepath: str) -> Dict[str, Dict[str, Dict[str, Any]]]:
 
     results: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
-    with open(filepath, "r", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
+    with open(filepath, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter="\t")
         for raw_row in reader:
             row = normalize_row_keys(raw_row)
 
@@ -290,8 +290,8 @@ def load_state_projection_data(filepath: str) -> Dict[str, Dict[str, Dict[str, A
 
     results: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
-    with open(filepath, "r", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
+    with open(filepath, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, delimiter="\t")
         for raw_row in reader:
             row = normalize_row_keys(raw_row)
 
@@ -410,7 +410,6 @@ def main():
     jobs.sort(key=lambda x: x["observed_exposure"], reverse=True)
 
     total_jobs = len(jobs)
-
     matched_jobs = 0
 
     for index, job in enumerate(jobs):
