@@ -32,6 +32,10 @@
       line-height: 1.15;
     }
 
+    h2 {
+      margin-top: 0;
+    }
+
     .subhead {
       font-size: 18px;
       line-height: 1.5;
@@ -46,13 +50,15 @@
       flex-wrap: wrap;
     }
 
-    .search-box input {
+    .search-box input,
+    .search-box select {
       flex: 1;
-      min-width: 280px;
+      min-width: 220px;
       padding: 14px 16px;
       border: 1px solid #ccd3df;
       border-radius: 10px;
       font-size: 16px;
+      background: white;
     }
 
     .search-box button {
@@ -95,6 +101,11 @@
       border: 1px solid #e1e7f0;
       border-radius: 14px;
       padding: 16px;
+    }
+
+    .state-stat {
+      background: #f6f9ff;
+      border: 1px solid #d8e5ff;
     }
 
     .label {
@@ -146,6 +157,10 @@
 
     .bar-fill.alt {
       background: linear-gradient(90deg, #7c5cff, #5b3df5);
+    }
+
+    .bar-fill.state {
+      background: linear-gradient(90deg, #11a36a, #0c7a50);
     }
 
     .meta-row {
@@ -211,12 +226,39 @@
 
     .ranking-title {
       font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .ranking-sub {
+      color: #60708a;
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .ranking-score {
       color: #1747c8;
       font-weight: bold;
       white-space: nowrap;
+    }
+
+    .section-intro {
+      color: #4e596d;
+      line-height: 1.6;
+      margin-top: -6px;
+      margin-bottom: 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e5ebf3;
+      margin: 28px 0 20px;
+    }
+
+    .methodology-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #4e596d;
+      line-height: 1.7;
     }
 
     .no-results {
@@ -242,7 +284,7 @@
       <h1>What Are the Odds AI Replaces Your Job?</h1>
       <p class="subhead">
         Search your job to see its AI exposure score, our estimated probability AI could replace
-        major parts of it, and how it ranks against other occupations.
+        major parts of it, and how the implied odds may shift in your state.
       </p>
 
       <div class="search-box">
@@ -251,6 +293,9 @@
           id="jobSearch"
           placeholder="Search for a job title, e.g. teacher, programmer, nurse"
         />
+        <select id="stateSelect">
+          <option value="">Select a state for local results</option>
+        </select>
         <button id="searchButton">Search</button>
       </div>
 
@@ -269,10 +314,10 @@
 
         <div class="stats-grid">
           <div class="stat">
-            <div class="label">Odds AI Replaces Major Parts of Your Job</div>
+            <div class="label">National Implied Odds</div>
             <div class="value" id="jobProbability">0%</div>
             <div class="help">
-              Estimated probability AI could take over a significant share of this job’s tasks.
+              Estimated national probability AI could take over a significant share of this job’s tasks.
             </div>
           </div>
 
@@ -329,51 +374,127 @@
           <h3>How this compares</h3>
           <p id="jobComparison"></p>
         </div>
+
+        <div id="stateResultBlock" class="hidden">
+          <div class="divider"></div>
+
+          <div class="text-block">
+            <h3 id="stateHeadline">How this job looks in your state</h3>
+            <p id="stateNarrative"></p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat state-stat">
+              <div class="label">Implied Odds in This State</div>
+              <div class="value" id="stateProbability">0%</div>
+              <div class="help">
+                State-adjusted estimate based on the national baseline plus local wage, growth, openings, and concentration data.
+              </div>
+            </div>
+
+            <div class="stat state-stat">
+              <div class="label">Mean Annual Wage</div>
+              <div class="value" id="stateMeanWage">$0</div>
+              <div class="help">
+                Mean annual pay for this occupation in the selected state.
+              </div>
+            </div>
+
+            <div class="stat state-stat">
+              <div class="label">Projected Growth</div>
+              <div class="value" id="stateGrowth">0%</div>
+              <div class="help">
+                Long-term projected percent change for this occupation in the selected state.
+              </div>
+            </div>
+
+            <div class="stat state-stat">
+              <div class="label">Annual Openings</div>
+              <div class="value" id="stateOpenings">0</div>
+              <div class="help">
+                Average annual openings projected for this occupation in the selected state.
+              </div>
+            </div>
+          </div>
+
+          <div class="bar-section">
+            <div class="bar-label">State-Adjusted Implied Odds</div>
+            <div class="bar">
+              <div id="stateProbabilityBar" class="bar-fill state"></div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="rankings">
         <div class="ranking-column card">
           <h2>Top 10 Most AI-Exposed Jobs</h2>
+          <p class="section-intro">
+            National baseline rankings based on occupation-level AI exposure.
+          </p>
           <div id="topJobs" class="ranking-list"></div>
         </div>
 
         <div class="ranking-column card">
           <h2>Top 10 Safest Jobs</h2>
+          <p class="section-intro">
+            Nationally, the lowest-risk jobs tend to depend on physical work, real-world movement, or hands-on care.
+          </p>
           <div id="safeJobs" class="ranking-list"></div>
         </div>
+      </section>
+
+      <section class="rankings">
+        <div class="ranking-column card">
+          <h2 id="stateTopTitle">Top 10 Most at Risk in Your State</h2>
+          <p class="section-intro" id="stateTopIntro">
+            Select a state above to see the occupations with the highest state-adjusted implied odds.
+          </p>
+          <div id="stateTopJobs" class="ranking-list"></div>
+        </div>
+
+        <div class="ranking-column card">
+          <h2 id="stateSafeTitle">Top 10 Lowest Risk in Your State</h2>
+          <p class="section-intro" id="stateSafeIntro">
+            These rankings update using the selected state’s wage, growth, openings, and concentration data.
+          </p>
+          <div id="stateSafeJobs" class="ranking-list"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Methodology</h2>
+        <p class="section-intro">
+          This tool combines a national occupation-level AI exposure baseline with state labor-market data to estimate how implied odds may shift locally.
+        </p>
+        <ul class="methodology-list">
+          <li>National implied odds are based on each job’s underlying AI exposure score and converted into an estimated probability scale.</li>
+          <li>State-adjusted implied odds start with the national baseline and then apply a local modifier using state wage, projected growth, annual openings, and occupational concentration.</li>
+          <li>Higher projected growth and stronger annual openings tend to reduce implied replacement pressure, while higher wages and stronger concentration can modestly increase it.</li>
+          <li>State rankings are editorial estimates built from these combined signals, not official government AI replacement forecasts.</li>
+        </ul>
       </section>
     </main>
   </div>
 
   <script>
-    const jobs = [
-      { occ_code: "15-1251", title: "Computer Programmers", observed_exposure: 0.7451 },
-      { occ_code: "43-4051", title: "Customer Service Representatives", observed_exposure: 0.7011 },
-      { occ_code: "43-9021", title: "Data Entry Keyers", observed_exposure: 0.6707 },
-      { occ_code: "29-2072", title: "Medical Records Specialists", observed_exposure: 0.6674 },
-      { occ_code: "13-1161", title: "Market Research Analysts and Marketing Specialists", observed_exposure: 0.6483 },
-      { occ_code: "41-4012", title: "Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products", observed_exposure: 0.6279 },
-      { occ_code: "13-2051", title: "Financial and Investment Analysts", observed_exposure: 0.5716 },
-      { occ_code: "15-1253", title: "Software Quality Assurance Analysts and Testers", observed_exposure: 0.5195 },
-      { occ_code: "43-9111", title: "Statistical Assistants", observed_exposure: 0.5099 },
-      { occ_code: "15-1212", title: "Information Security Analysts", observed_exposure: 0.4859 },
-      { occ_code: "15-1232", title: "Computer User Support Specialists", observed_exposure: 0.4685 },
-      { occ_code: "27-3031", title: "Public Relations Specialists", observed_exposure: 0.4530 },
-      { occ_code: "43-6014", title: "Secretaries and Administrative Assistants, Except Legal, Medical, and Executive", observed_exposure: 0.4528 },
-      { occ_code: "43-9061", title: "Office Clerks, General", observed_exposure: 0.4504 },
-      { occ_code: "19-4061", title: "Social Science Research Assistants", observed_exposure: 0.4393 },
-      { occ_code: "43-4171", title: "Receptionists and Information Clerks", observed_exposure: 0.4338 },
-      { occ_code: "15-2051", title: "Data Scientists", observed_exposure: 0.4605 },
-      { occ_code: "29-1141", title: "Registered Nurses", observed_exposure: 0.0595 },
-      { occ_code: "47-2111", title: "Electricians", observed_exposure: 0.0 },
-      { occ_code: "35-3011", title: "Bartenders", observed_exposure: 0.0 },
-      { occ_code: "35-9021", title: "Dishwashers", observed_exposure: 0.0 },
-      { occ_code: "33-2011", title: "Firefighters", observed_exposure: 0.0 },
-      { occ_code: "47-2031", title: "Carpenters", observed_exposure: 0.0 },
-      { occ_code: "49-3023", title: "Automotive Service Technicians and Mechanics", observed_exposure: 0.0 },
-      { occ_code: "53-3032", title: "Heavy and Tractor-Trailer Truck Drivers", observed_exposure: 0.0 },
-      { occ_code: "25-2031", title: "Secondary School Teachers, Except Special and Career/Technical Education", observed_exposure: 0.2901 }
-    ];
+    let jobs = [];
+    let selectedJob = null;
+
+    const STATE_NAMES = {
+      AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+      CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
+      FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
+      IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+      ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+      MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+      NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+      NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma",
+      OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+      SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+      VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin",
+      WY: "Wyoming", PR: "Puerto Rico"
+    };
 
     function clamp(value, min = 0, max = 1) {
       return Math.max(min, Math.min(value, max));
@@ -381,6 +502,25 @@
 
     function getProbability(exposure) {
       return clamp(exposure * 0.6);
+    }
+
+    function formatPercent(decimal) {
+      return `${Math.round(decimal * 100)}%`;
+    }
+
+    function formatCurrency(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      return `$${Number(value).toLocaleString()}`;
+    }
+
+    function formatNumber(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      return Number(value).toLocaleString();
+    }
+
+    function formatGrowth(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "—";
+      return `${value > 0 ? "+" : ""}${Number(value).toFixed(1)}%`;
     }
 
     function getRiskLevel(probability) {
@@ -477,31 +617,142 @@
       return "This job ranks among the least AI-exposed occupations in the dataset.";
     }
 
-    const sortedJobs = [...jobs].sort((a, b) => b.observed_exposure - a.observed_exposure);
+    function getStateModifier(stateData) {
+      if (!stateData) return 1;
 
-    const enrichedJobs = sortedJobs.map((job, index) => {
-      const probability = getProbability(job.observed_exposure);
-      const percentile = getPercentile(index, sortedJobs.length);
+      let modifier = 1;
 
-      return {
-        ...job,
-        probability,
-        riskLevel: getRiskLevel(probability),
-        rank: index + 1,
-        percentile,
-        jobFamily: getJobFamily(job.occ_code),
-        explanation: buildExplanation(job),
-        comparisonText: buildComparisonText(percentile)
-      };
-    });
+      const meanWage = Number(stateData.mean_wage);
+      const growth = Number(stateData.percent_change);
+      const openings = Number(stateData.avg_annual_openings);
+      const lq = Number(stateData.location_quotient);
+
+      if (!Number.isNaN(meanWage)) {
+        if (meanWage >= 120000) modifier += 0.08;
+        else if (meanWage >= 90000) modifier += 0.05;
+        else if (meanWage <= 45000) modifier -= 0.03;
+      }
+
+      if (!Number.isNaN(growth)) {
+        if (growth >= 10) modifier -= 0.12;
+        else if (growth >= 5) modifier -= 0.07;
+        else if (growth > 0) modifier -= 0.03;
+        else if (growth < 0) modifier += 0.08;
+      }
+
+      if (!Number.isNaN(openings)) {
+        if (openings >= 10000) modifier -= 0.08;
+        else if (openings >= 3000) modifier -= 0.04;
+        else if (openings < 500) modifier += 0.04;
+      }
+
+      if (!Number.isNaN(lq)) {
+        if (lq >= 1.5) modifier += 0.05;
+        else if (lq >= 1.2) modifier += 0.03;
+        else if (lq <= 0.8) modifier -= 0.02;
+      }
+
+      return clamp(modifier, 0.7, 1.3);
+    }
+
+    function getStateAdjustedProbability(job, stateCode) {
+      const baseProbability = Number(job.odds_ai_replaces_major_parts_of_job ?? getProbability(job.observed_exposure));
+      if (!stateCode || !job.state_data || !job.state_data[stateCode]) {
+        return baseProbability;
+      }
+      const modifier = getStateModifier(job.state_data[stateCode]);
+      return clamp(baseProbability * modifier);
+    }
+
+    function buildStateNarrative(job, stateCode, stateData, adjustedProbability) {
+      const stateName = STATE_NAMES[stateCode] || stateCode;
+      const nationalProbability = Number(job.odds_ai_replaces_major_parts_of_job ?? getProbability(job.observed_exposure));
+      const difference = adjustedProbability - nationalProbability;
+      const direction = difference > 0.01 ? "higher" : difference < -0.01 ? "lower" : "roughly in line";
+
+      const reasons = [];
+      if (typeof stateData.percent_change === "number") {
+        if (stateData.percent_change >= 5) reasons.push("projected growth is relatively strong");
+        else if (stateData.percent_change < 0) reasons.push("projected growth is weak");
+      }
+      if (typeof stateData.avg_annual_openings === "number") {
+        if (stateData.avg_annual_openings >= 3000) reasons.push("annual openings remain solid");
+        else if (stateData.avg_annual_openings < 500) reasons.push("annual openings are limited");
+      }
+      if (typeof stateData.mean_wage === "number") {
+        if (stateData.mean_wage >= 90000) reasons.push("local wage pressure is higher");
+      }
+      if (typeof stateData.location_quotient === "number") {
+        if (stateData.location_quotient >= 1.2) reasons.push("the job is relatively concentrated in the state");
+      }
+
+      const reasonText = reasons.length
+        ? reasons.slice(0, 2).join(" and ")
+        : "local labor-market signals are close to the national baseline";
+
+      return `In ${stateName}, the implied odds for ${job.title.toLowerCase()} are ${direction} than the national baseline because ${reasonText}.`;
+    }
+
+    function buildEnrichedJobs(rawJobs) {
+      const sorted = [...rawJobs].sort((a, b) => b.observed_exposure - a.observed_exposure);
+
+      return sorted.map((job, index) => {
+        const probability = Number(job.odds_ai_replaces_major_parts_of_job ?? getProbability(job.observed_exposure));
+        const percentile = getPercentile(index, sorted.length);
+        return {
+          ...job,
+          probability,
+          rank: Number(job.ai_risk_rank ?? index + 1),
+          percentile: Number(job.more_ai_exposed_than_pct_of_jobs ?? percentile),
+          riskLevel: job.risk_level || getRiskLevel(probability),
+          jobFamily: job.job_family || getJobFamily(job.occ_code),
+          explanation: job.explanation || buildExplanation(job),
+          comparisonText: job.comparison_text || buildComparisonText(percentile)
+        };
+      });
+    }
+
+    async function loadJobs() {
+      const response = await fetch("../data/enriched_jobs.json");
+      if (!response.ok) {
+        throw new Error("Could not load enriched_jobs.json");
+      }
+
+      const rawJobs = await response.json();
+      jobs = buildEnrichedJobs(rawJobs);
+    }
+
+    function populateStateSelect() {
+      const stateSelect = document.getElementById("stateSelect");
+      const allStates = new Set();
+
+      jobs.forEach(job => {
+        if (job.state_data) {
+          Object.keys(job.state_data).forEach(state => allStates.add(state));
+        }
+      });
+
+      [...allStates]
+        .sort((a, b) => (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b))
+        .forEach(state => {
+          const option = document.createElement("option");
+          option.value = state;
+          option.textContent = STATE_NAMES[state] || state;
+          stateSelect.appendChild(option);
+        });
+    }
 
     function renderResult(job) {
+      const stateCode = document.getElementById("stateSelect").value;
+      const stateData = stateCode && job.state_data ? job.state_data[stateCode] : null;
+      const stateProbability = stateData ? getStateAdjustedProbability(job, stateCode) : null;
+
       document.getElementById("resultSection").classList.remove("hidden");
       document.getElementById("noResults").classList.add("hidden");
 
       document.getElementById("jobTitle").textContent = job.title;
-      document.getElementById("jobProbability").textContent = `${Math.round(job.probability * 100)}%`;
-      document.getElementById("jobExposure").textContent = job.observed_exposure.toFixed(2);
+      document.getElementById("jobProbability").textContent = formatPercent(job.probability);
+      document.getElementById("jobExposure").textContent = Number(job.observed_exposure).toFixed(2);
       document.getElementById("jobRank").textContent = `#${job.rank}`;
       document.getElementById("jobPercentile").textContent = `${job.percentile}%`;
       document.getElementById("riskLevel").textContent = `${job.riskLevel} Risk`;
@@ -509,13 +760,29 @@
       document.getElementById("jobExplanation").textContent = job.explanation;
       document.getElementById("jobComparison").textContent = job.comparisonText;
 
-      document.getElementById("exposureBar").style.width = `${job.observed_exposure * 100}%`;
+      document.getElementById("exposureBar").style.width = `${Number(job.observed_exposure) * 100}%`;
       document.getElementById("probabilityBar").style.width = `${job.probability * 100}%`;
+
+      const stateBlock = document.getElementById("stateResultBlock");
+
+      if (stateData) {
+        const stateName = STATE_NAMES[stateCode] || stateCode;
+        stateBlock.classList.remove("hidden");
+        document.getElementById("stateHeadline").textContent = `How this job looks in ${stateName}`;
+        document.getElementById("stateProbability").textContent = formatPercent(stateProbability);
+        document.getElementById("stateMeanWage").textContent = formatCurrency(stateData.mean_wage);
+        document.getElementById("stateGrowth").textContent = formatGrowth(stateData.percent_change);
+        document.getElementById("stateOpenings").textContent = formatNumber(stateData.avg_annual_openings);
+        document.getElementById("stateNarrative").textContent = buildStateNarrative(job, stateCode, stateData, stateProbability);
+        document.getElementById("stateProbabilityBar").style.width = `${stateProbability * 100}%`;
+      } else {
+        stateBlock.classList.add("hidden");
+      }
     }
 
-    function renderRankings() {
-      const topJobs = enrichedJobs.slice(0, 10);
-      const safeJobs = [...enrichedJobs].sort((a, b) => a.observed_exposure - b.observed_exposure).slice(0, 10);
+    function renderNationalRankings() {
+      const topJobs = jobs.slice(0, 10);
+      const safeJobs = [...jobs].sort((a, b) => a.observed_exposure - b.observed_exposure).slice(0, 10);
 
       const topJobsContainer = document.getElementById("topJobs");
       const safeJobsContainer = document.getElementById("safeJobs");
@@ -529,8 +796,9 @@
         div.innerHTML = `
           <div>
             <div class="ranking-title">#${job.rank} ${job.title}</div>
+            <div class="ranking-sub">${job.jobFamily} · Score ${Number(job.observed_exposure).toFixed(2)}</div>
           </div>
-          <div class="ranking-score">${Math.round(job.probability * 100)}%</div>
+          <div class="ranking-score">${formatPercent(job.probability)}</div>
         `;
         topJobsContainer.appendChild(div);
       });
@@ -541,10 +809,85 @@
         div.innerHTML = `
           <div>
             <div class="ranking-title">#${index + 1} ${job.title}</div>
+            <div class="ranking-sub">${job.jobFamily} · Score ${Number(job.observed_exposure).toFixed(2)}</div>
           </div>
-          <div class="ranking-score">${Math.round(job.probability * 100)}%</div>
+          <div class="ranking-score">${formatPercent(job.probability)}</div>
         `;
         safeJobsContainer.appendChild(div);
+      });
+    }
+
+    function renderStateRankings() {
+      const stateCode = document.getElementById("stateSelect").value;
+      const stateTopTitle = document.getElementById("stateTopTitle");
+      const stateSafeTitle = document.getElementById("stateSafeTitle");
+      const stateTopIntro = document.getElementById("stateTopIntro");
+      const stateSafeIntro = document.getElementById("stateSafeIntro");
+      const topContainer = document.getElementById("stateTopJobs");
+      const safeContainer = document.getElementById("stateSafeJobs");
+
+      topContainer.innerHTML = "";
+      safeContainer.innerHTML = "";
+
+      if (!stateCode) {
+        stateTopTitle.textContent = "Top 10 Most at Risk in Your State";
+        stateSafeTitle.textContent = "Top 10 Lowest Risk in Your State";
+        stateTopIntro.textContent = "Select a state above to see the occupations with the highest state-adjusted implied odds.";
+        stateSafeIntro.textContent = "These rankings update using the selected state’s wage, growth, openings, and concentration data.";
+        return;
+      }
+
+      const stateName = STATE_NAMES[stateCode] || stateCode;
+      stateTopTitle.textContent = `Top 10 Most at Risk in ${stateName}`;
+      stateSafeTitle.textContent = `Top 10 Lowest Risk in ${stateName}`;
+      stateTopIntro.textContent = `These occupations have the highest state-adjusted implied odds in ${stateName}.`;
+      stateSafeIntro.textContent = `These occupations remain at the safer end of the scale in ${stateName}.`;
+
+      const jobsWithState = jobs
+        .filter(job => job.state_data && job.state_data[stateCode])
+        .map(job => ({
+          ...job,
+          stateProbability: getStateAdjustedProbability(job, stateCode)
+        }));
+
+      const topJobs = [...jobsWithState]
+        .sort((a, b) => b.stateProbability - a.stateProbability)
+        .slice(0, 10);
+
+      const safeJobs = [...jobsWithState]
+        .sort((a, b) => a.stateProbability - b.stateProbability)
+        .slice(0, 10);
+
+      topJobs.forEach((job, index) => {
+        const stateData = job.state_data[stateCode];
+        const div = document.createElement("div");
+        div.className = "ranking-item";
+        div.innerHTML = `
+          <div>
+            <div class="ranking-title">#${index + 1} ${job.title}</div>
+            <div class="ranking-sub">
+              ${job.jobFamily} · Growth ${formatGrowth(stateData.percent_change)} · Openings ${formatNumber(stateData.avg_annual_openings)}
+            </div>
+          </div>
+          <div class="ranking-score">${formatPercent(job.stateProbability)}</div>
+        `;
+        topContainer.appendChild(div);
+      });
+
+      safeJobs.forEach((job, index) => {
+        const stateData = job.state_data[stateCode];
+        const div = document.createElement("div");
+        div.className = "ranking-item";
+        div.innerHTML = `
+          <div>
+            <div class="ranking-title">#${index + 1} ${job.title}</div>
+            <div class="ranking-sub">
+              ${job.jobFamily} · Growth ${formatGrowth(stateData.percent_change)} · Openings ${formatNumber(stateData.avg_annual_openings)}
+            </div>
+          </div>
+          <div class="ranking-score">${formatPercent(job.stateProbability)}</div>
+        `;
+        safeContainer.appendChild(div);
       });
     }
 
@@ -552,10 +895,10 @@
       const query = searchTerm.trim().toLowerCase();
       if (!query) return null;
 
-      let exact = enrichedJobs.find(job => job.title.toLowerCase() === query);
+      let exact = jobs.find(job => job.title.toLowerCase() === query);
       if (exact) return exact;
 
-      let contains = enrichedJobs.find(job => job.title.toLowerCase().includes(query));
+      let contains = jobs.find(job => job.title.toLowerCase().includes(query));
       if (contains) return contains;
 
       return null;
@@ -566,10 +909,31 @@
       const result = findJob(input);
 
       if (result) {
+        selectedJob = result;
         renderResult(result);
       } else {
         document.getElementById("resultSection").classList.add("hidden");
         document.getElementById("noResults").classList.remove("hidden");
+      }
+
+      renderStateRankings();
+    }
+
+    async function initApp() {
+      try {
+        await loadJobs();
+        populateStateSelect();
+        renderNationalRankings();
+        renderStateRankings();
+
+        if (jobs.length > 0) {
+          selectedJob = jobs[0];
+          renderResult(selectedJob);
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById("noResults").classList.remove("hidden");
+        document.getElementById("noResults").textContent = "Could not load job data.";
       }
     }
 
@@ -581,8 +945,14 @@
       }
     });
 
-    renderRankings();
-    renderResult(enrichedJobs[0]);
+    document.getElementById("stateSelect").addEventListener("change", function () {
+      renderStateRankings();
+      if (selectedJob) {
+        renderResult(selectedJob);
+      }
+    });
+
+    initApp();
   </script>
 </body>
 </html>
