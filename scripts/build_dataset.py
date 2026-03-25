@@ -4,6 +4,7 @@ import os
 import re
 from typing import Any, Dict, Optional
 
+
 INPUT_CSV = "data/anthropic_jobs.csv"
 STATE_WAGE_CSV = "data/state_wage_employment.csv"
 STATE_PROJECTIONS_CSV = "data/state_projections.csv"
@@ -19,6 +20,61 @@ STATE_FIPS_TO_ABBR = {
     "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD",
     "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV",
     "55": "WI", "56": "WY", "72": "PR",
+}
+
+STATE_NAME_TO_ABBR = {
+    "alabama": "AL",
+    "alaska": "AK",
+    "arizona": "AZ",
+    "arkansas": "AR",
+    "california": "CA",
+    "colorado": "CO",
+    "connecticut": "CT",
+    "delaware": "DE",
+    "district of columbia": "DC",
+    "florida": "FL",
+    "georgia": "GA",
+    "hawaii": "HI",
+    "idaho": "ID",
+    "illinois": "IL",
+    "indiana": "IN",
+    "iowa": "IA",
+    "kansas": "KS",
+    "kentucky": "KY",
+    "louisiana": "LA",
+    "maine": "ME",
+    "maryland": "MD",
+    "massachusetts": "MA",
+    "michigan": "MI",
+    "minnesota": "MN",
+    "mississippi": "MS",
+    "missouri": "MO",
+    "montana": "MT",
+    "nebraska": "NE",
+    "nevada": "NV",
+    "new hampshire": "NH",
+    "new jersey": "NJ",
+    "new mexico": "NM",
+    "new york": "NY",
+    "north carolina": "NC",
+    "north dakota": "ND",
+    "ohio": "OH",
+    "oklahoma": "OK",
+    "oregon": "OR",
+    "pennsylvania": "PA",
+    "rhode island": "RI",
+    "south carolina": "SC",
+    "south dakota": "SD",
+    "tennessee": "TN",
+    "texas": "TX",
+    "utah": "UT",
+    "vermont": "VT",
+    "virginia": "VA",
+    "washington": "WA",
+    "west virginia": "WV",
+    "wisconsin": "WI",
+    "wyoming": "WY",
+    "puerto rico": "PR",
 }
 
 
@@ -50,6 +106,60 @@ def parse_int(value: Any) -> Optional[int]:
     if number is None:
         return None
     return int(round(number))
+
+
+def normalize_occ_code(value: Any) -> str:
+    if value is None:
+        return ""
+    text = str(value).strip()
+    if not text:
+        return ""
+
+    text = text.replace(".00", "")
+    text = re.sub(r"\.0+$", "", text)
+
+    match = re.search(r"(\d{2}-\d{4})", text)
+    if match:
+        return match.group(1)
+
+    return text
+
+
+def normalize_state(value: Any) -> str:
+    if value is None:
+        return ""
+
+    text = str(value).strip()
+    if not text:
+        return ""
+
+    upper = text.upper()
+    if upper in STATE_NAME_TO_ABBR.values():
+        return upper
+
+    numeric = parse_int(text)
+    if numeric is not None:
+        return STATE_FIPS_TO_ABBR.get(str(numeric), "")
+
+    lower = text.lower()
+    if lower in STATE_NAME_TO_ABBR:
+        return STATE_NAME_TO_ABBR[lower]
+
+    return ""
+
+
+def normalize_row_keys(row: Dict[str, Any]) -> Dict[str, Any]:
+    normalized = {}
+    for key, value in row.items():
+      normalized[str(key).strip().lower()] = value
+    return normalized
+
+
+def get_first(row: Dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        if key in row and row[key] not in (None, ""):
+            return row[key]
+    return None
 
 
 def calculate_probability(observed_exposure: float) -> float:
@@ -144,24 +254,29 @@ def load_state_wage_data(filepath: str) -> Dict[str, Dict[str, Dict[str, Any]]]:
 
     with open(filepath, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            state = (row.get("PRIM_STATE") or "").strip()
-            occ_code = (row.get("OCC_CODE") or "").strip()
+        for raw_row in reader:
+            row = normalize_row_keys(raw_row)
+
+            state = normalize_state(get_first(row, "prim_state", "state", "state_abbr", "statecode", "state_code"))
+            occ_code = normalize_occ_code(get_first(row, "occ_code", "occcode", "soc_code", "soccode"))
+
+            if not state:
+                state = normalize_state(get_first(row, "area_title", "area", "state_name"))
 
             if not state or not occ_code:
                 continue
 
             entry = {
-                "title": (row.get("OCC_TITLE") or "").strip() or None,
-                "employment": parse_int(row.get("TOT_EMP")),
-                "mean_wage": parse_int(row.get("A_MEAN")),
-                "median_wage": parse_int(row.get("A_MEDIAN")),
-                "annual_p10": parse_int(row.get("A_PCT10")),
-                "annual_p25": parse_int(row.get("A_PCT25")),
-                "annual_p75": parse_int(row.get("A_PCT75")),
-                "annual_p90": parse_int(row.get("A_PCT90")),
-                "jobs_per_1000": parse_float(row.get("JOBS_1000")),
-                "location_quotient": parse_float(row.get("LOC_QUOTIENT")),
+                "title": (get_first(row, "occ_title", "title", "occupation_title") or "").strip() or None,
+                "employment": parse_int(get_first(row, "tot_emp", "employment")),
+                "mean_wage": parse_int(get_first(row, "a_mean", "mean_wage")),
+                "median_wage": parse_int(get_first(row, "a_median", "median_wage")),
+                "annual_p10": parse_int(get_first(row, "a_pct10")),
+                "annual_p25": parse_int(get_first(row, "a_pct25")),
+                "annual_p75": parse_int(get_first(row, "a_pct75")),
+                "annual_p90": parse_int(get_first(row, "a_pct90")),
+                "jobs_per_1000": parse_float(get_first(row, "jobs_1000")),
+                "location_quotient": parse_float(get_first(row, "loc_quotient", "location_quotient")),
             }
 
             results.setdefault(occ_code, {})[state] = entry
@@ -177,26 +292,25 @@ def load_state_projection_data(filepath: str) -> Dict[str, Dict[str, Dict[str, A
 
     with open(filepath, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            stfips_raw = (row.get("STFIPS") or "").strip()
-            occ_code = (row.get("OccCode") or "").strip()
+        for raw_row in reader:
+            row = normalize_row_keys(raw_row)
 
-            if not stfips_raw or not occ_code:
-                continue
+            stfips_raw = get_first(row, "stfips", "statefips", "state_fips")
+            occ_code = normalize_occ_code(get_first(row, "occcode", "occ_code", "soc_code"))
+            state = normalize_state(stfips_raw)
 
-            if stfips_raw == "0":
-                continue
-
-            state = STATE_FIPS_TO_ABBR.get(stfips_raw)
             if not state:
+                state = normalize_state(get_first(row, "area", "state", "state_name"))
+
+            if not state or not occ_code:
                 continue
 
             entry = {
-                "title": (row.get("Title") or "").strip() or None,
-                "projected_base_employment": parse_int(row.get("Base")),
-                "projected_employment": parse_int(row.get("Projected")),
-                "percent_change": parse_float(row.get("PercentChange")),
-                "avg_annual_openings": parse_int(row.get("AvgAnnualOpenings")),
+                "title": (get_first(row, "title", "occ_title", "occupation_title") or "").strip() or None,
+                "projected_base_employment": parse_int(get_first(row, "base")),
+                "projected_employment": parse_int(get_first(row, "projected")),
+                "percent_change": parse_float(get_first(row, "percentchange", "percent_change")),
+                "avg_annual_openings": parse_int(get_first(row, "avgannualopenings", "avg_annual_openings")),
             }
 
             results.setdefault(occ_code, {})[state] = entry
@@ -271,13 +385,19 @@ def main():
     projection_data = load_state_projection_data(STATE_PROJECTIONS_CSV)
     merged_state_data = merge_state_data(wage_data, projection_data)
 
+    print("Sample wage occ codes:", list(wage_data.keys())[:8])
+    print("Sample projection occ codes:", list(projection_data.keys())[:8])
+    print("States for 15-1251 in wage data:", list(wage_data.get("15-1251", {}).keys())[:10])
+    print("States for 15-1251 in projection data:", list(projection_data.get("15-1251", {}).keys())[:10])
+    print("States for 15-1251 after merge:", list(merged_state_data.get("15-1251", {}).keys())[:10])
+
     jobs = []
 
     with open(INPUT_CSV, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            occ_code = row["occ_code"].strip()
-            title = row["title"].strip()
+            occ_code = normalize_occ_code(row.get("occ_code"))
+            title = (row.get("title") or "").strip()
             observed_exposure = float(row["observed_exposure"])
 
             jobs.append({
@@ -291,11 +411,16 @@ def main():
 
     total_jobs = len(jobs)
 
+    matched_jobs = 0
+
     for index, job in enumerate(jobs):
         probability = calculate_probability(job["observed_exposure"])
         percentile = round(((total_jobs - index - 1) / max(total_jobs - 1, 1)) * 100)
         family = get_job_family(job["occ_code"])
         state_data = merged_state_data.get(job["occ_code"], {})
+
+        if state_data:
+            matched_jobs += 1
 
         job["odds_ai_replaces_major_parts_of_job"] = probability
         job["ai_risk_rank"] = index + 1
@@ -315,6 +440,7 @@ def main():
     print(f"Built {len(jobs)} jobs")
     print(f"Loaded wage states for {len(wage_data)} occupation codes")
     print(f"Loaded projection states for {len(projection_data)} occupation codes")
+    print(f"Matched state data for {matched_jobs} jobs")
     print(f"Saved output to {OUTPUT_JSON}")
 
 
