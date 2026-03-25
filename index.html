@@ -2211,7 +2211,6 @@
       if (result) {
         renderResult(result);
         updateUrlState(result.title, getSelectedStateCode());
-        scrollToSection("resultSection");
       }
     }
 
@@ -2234,7 +2233,6 @@
         renderResult(result);
         updateUrlState(result.title, getSelectedStateCode());
         hideAutocomplete();
-        scrollToSection("resultSection");
       } else {
         document.getElementById("resultSection").classList.add("hidden");
         document.getElementById("noResults").classList.remove("hidden");
