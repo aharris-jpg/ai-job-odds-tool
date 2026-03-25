@@ -2,9 +2,24 @@ import csv
 import json
 import os
 import re
+from typing import Any, Dict, Optional
 
 INPUT_CSV = "data/anthropic_jobs.csv"
+STATE_WAGE_CSV = "data/state_wage_employment.csv"
+STATE_PROJECTIONS_CSV = "data/state_projections.csv"
 OUTPUT_JSON = "data/enriched_jobs.json"
+
+
+STATE_FIPS_TO_ABBR = {
+    "1": "AL", "2": "AK", "4": "AZ", "5": "AR", "6": "CA", "8": "CO", "9": "CT",
+    "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL",
+    "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD",
+    "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE",
+    "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND",
+    "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD",
+    "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV",
+    "55": "WI", "56": "WY", "72": "PR",
+}
 
 
 def slugify(text: str) -> str:
@@ -16,6 +31,25 @@ def slugify(text: str) -> str:
 
 def clamp(value: float, min_value: float = 0.0, max_value: float = 1.0) -> float:
     return max(min_value, min(value, max_value))
+
+
+def parse_float(value: Any) -> Optional[float]:
+    if value is None:
+        return None
+    text = str(value).strip().replace(",", "")
+    if not text or text == "#":
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def parse_int(value: Any) -> Optional[int]:
+    number = parse_float(value)
+    if number is None:
+        return None
+    return int(round(number))
 
 
 def calculate_probability(observed_exposure: float) -> float:
@@ -82,7 +116,7 @@ def build_explanation(title: str, probability: float, family: str) -> str:
 
     if family in ["Education", "Legal", "Science", "Engineering"]:
         if probability >= 0.30:
-            return f"{title} shows moderate to elevated AI exposure because parts of the job involve research, writing, analysis, or structured information work that AI can increasingly support."
+            return f"{title} shows moderate to elevated AI exposure because parts of the role involve research, writing, analysis, or structured information work that AI can increasingly support."
         return f"{title} has relatively limited AI exposure because many core parts of the role still depend on expert judgment, specialized knowledge, or real-world interaction."
 
     return f"{title} has a mixed level of AI exposure compared with other jobs in the dataset."
@@ -102,13 +136,144 @@ def build_comparison_text(percentile: int) -> str:
     return "This job ranks among the least AI-exposed occupations in the dataset."
 
 
+def load_state_wage_data(filepath: str) -> Dict[str, Dict[str, Dict[str, Any]]]:
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"Could not find state wage file: {filepath}")
+
+    results: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+    with open(filepath, "r", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            state = (row.get("PRIM_STATE") or "").strip()
+            occ_code = (row.get("OCC_CODE") or "").strip()
+
+            if not state or not occ_code:
+                continue
+
+            entry = {
+                "title": (row.get("OCC_TITLE") or "").strip() or None,
+                "employment": parse_int(row.get("TOT_EMP")),
+                "mean_wage": parse_int(row.get("A_MEAN")),
+                "median_wage": parse_int(row.get("A_MEDIAN")),
+                "annual_p10": parse_int(row.get("A_PCT10")),
+                "annual_p25": parse_int(row.get("A_PCT25")),
+                "annual_p75": parse_int(row.get("A_PCT75")),
+                "annual_p90": parse_int(row.get("A_PCT90")),
+                "jobs_per_1000": parse_float(row.get("JOBS_1000")),
+                "location_quotient": parse_float(row.get("LOC_QUOTIENT")),
+            }
+
+            results.setdefault(occ_code, {})[state] = entry
+
+    return results
+
+
+def load_state_projection_data(filepath: str) -> Dict[str, Dict[str, Dict[str, Any]]]:
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"Could not find state projections file: {filepath}")
+
+    results: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+    with open(filepath, "r", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            stfips_raw = (row.get("STFIPS") or "").strip()
+            occ_code = (row.get("OccCode") or "").strip()
+
+            if not stfips_raw or not occ_code:
+                continue
+
+            if stfips_raw == "0":
+                continue
+
+            state = STATE_FIPS_TO_ABBR.get(stfips_raw)
+            if not state:
+                continue
+
+            entry = {
+                "title": (row.get("Title") or "").strip() or None,
+                "projected_base_employment": parse_int(row.get("Base")),
+                "projected_employment": parse_int(row.get("Projected")),
+                "percent_change": parse_float(row.get("PercentChange")),
+                "avg_annual_openings": parse_int(row.get("AvgAnnualOpenings")),
+            }
+
+            results.setdefault(occ_code, {})[state] = entry
+
+    return results
+
+
+def merge_state_data(
+    wage_data: Dict[str, Dict[str, Dict[str, Any]]],
+    projection_data: Dict[str, Dict[str, Dict[str, Any]]]
+) -> Dict[str, Dict[str, Dict[str, Any]]]:
+    merged: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+    all_occ_codes = set(wage_data.keys()) | set(projection_data.keys())
+
+    for occ_code in all_occ_codes:
+        merged[occ_code] = {}
+        states = set(wage_data.get(occ_code, {}).keys()) | set(projection_data.get(occ_code, {}).keys())
+
+        for state in states:
+            merged[occ_code][state] = {}
+            merged[occ_code][state].update(wage_data.get(occ_code, {}).get(state, {}))
+            merged[occ_code][state].update(projection_data.get(occ_code, {}).get(state, {}))
+
+    return merged
+
+
+def build_state_summary(state_data: Dict[str, Any]) -> Dict[str, Any]:
+    valid_mean_wages = [
+        value["mean_wage"]
+        for value in state_data.values()
+        if isinstance(value.get("mean_wage"), int)
+    ]
+    valid_growth = [
+        value["percent_change"]
+        for value in state_data.values()
+        if isinstance(value.get("percent_change"), float)
+    ]
+    valid_openings = [
+        value["avg_annual_openings"]
+        for value in state_data.values()
+        if isinstance(value.get("avg_annual_openings"), int)
+    ]
+
+    summary: Dict[str, Any] = {
+        "states_available": len(state_data),
+    }
+
+    if valid_mean_wages:
+        summary["mean_state_wage_avg"] = round(sum(valid_mean_wages) / len(valid_mean_wages))
+        summary["highest_mean_wage"] = max(valid_mean_wages)
+        summary["lowest_mean_wage"] = min(valid_mean_wages)
+
+    if valid_growth:
+        summary["avg_percent_change"] = round(sum(valid_growth) / len(valid_growth), 2)
+        summary["highest_percent_change"] = round(max(valid_growth), 2)
+        summary["lowest_percent_change"] = round(min(valid_growth), 2)
+
+    if valid_openings:
+        summary["avg_annual_openings_avg"] = round(sum(valid_openings) / len(valid_openings))
+        summary["highest_avg_annual_openings"] = max(valid_openings)
+        summary["lowest_avg_annual_openings"] = min(valid_openings)
+
+    return summary
+
+
 def main():
     if not os.path.exists(INPUT_CSV):
         raise FileNotFoundError(f"Could not find input file: {INPUT_CSV}")
 
+    wage_data = load_state_wage_data(STATE_WAGE_CSV)
+    projection_data = load_state_projection_data(STATE_PROJECTIONS_CSV)
+    merged_state_data = merge_state_data(wage_data, projection_data)
+
     jobs = []
 
-    with open(INPUT_CSV, "r", encoding="utf-8") as f:
+    with open(INPUT_CSV, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
             occ_code = row["occ_code"].strip()
@@ -130,6 +295,7 @@ def main():
         probability = calculate_probability(job["observed_exposure"])
         percentile = round(((total_jobs - index - 1) / max(total_jobs - 1, 1)) * 100)
         family = get_job_family(job["occ_code"])
+        state_data = merged_state_data.get(job["occ_code"], {})
 
         job["odds_ai_replaces_major_parts_of_job"] = probability
         job["ai_risk_rank"] = index + 1
@@ -138,6 +304,8 @@ def main():
         job["job_family"] = family
         job["explanation"] = build_explanation(job["title"], probability, family)
         job["comparison_text"] = build_comparison_text(percentile)
+        job["state_data"] = state_data
+        job["state_summary"] = build_state_summary(state_data)
 
     os.makedirs(os.path.dirname(OUTPUT_JSON), exist_ok=True)
 
@@ -145,6 +313,8 @@ def main():
         json.dump(jobs, f, indent=2, ensure_ascii=False)
 
     print(f"Built {len(jobs)} jobs")
+    print(f"Loaded wage states for {len(wage_data)} occupation codes")
+    print(f"Loaded projection states for {len(projection_data)} occupation codes")
     print(f"Saved output to {OUTPUT_JSON}")
 
 
