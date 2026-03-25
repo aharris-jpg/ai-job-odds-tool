@@ -137,7 +137,8 @@
       min-width: 220px;
     }
 
-    .search-box input {
+    .search-box input,
+    .search-box select {
       width: 100%;
       border: none;
       border-radius: 16px;
@@ -146,6 +147,7 @@
       outline: none;
       color: var(--text);
       box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+      background: #fff;
     }
 
     .search-box button,
@@ -552,7 +554,8 @@
       font-size: 17px;
     }
 
-    .copy-box p {
+    .copy-box p,
+    .copy-box div {
       margin: 0;
       color: #53645f;
       line-height: 1.55;
@@ -591,6 +594,26 @@
       font-weight: 700;
       white-space: nowrap;
       flex-shrink: 0;
+    }
+
+    .state-result {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .state-result h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .state-result p {
+      margin: 0 0 12px;
+      color: #53645f;
+      line-height: 1.55;
+      font-size: 15px;
     }
 
     .quote-section-below {
@@ -941,7 +964,8 @@
       margin: 0 0 12px;
     }
 
-    .accordion-body ol {
+    .accordion-body ol,
+    .accordion-body ul {
       margin: 8px 0 14px 20px;
       padding: 0;
     }
@@ -1060,7 +1084,8 @@
       }
 
       .search-input-wrap,
-      .search-box button {
+      .search-box button,
+      .search-box select {
         width: 100%;
       }
 
@@ -1126,7 +1151,7 @@
         <div class="eyebrow">Action Network AI Job Odds Tool</div>
         <h1>What Are the Odds AI Replaces Your Job?</h1>
         <p class="subhead">
-          Search your job to see the implied odds AI replaces it.
+          Search your job to see the implied odds AI replaces it, then compare how those odds shift in your state.
         </p>
 
         <div class="search-panel">
@@ -1140,6 +1165,11 @@
               />
               <div id="autocomplete" class="autocomplete hidden"></div>
             </div>
+
+            <select id="stateSelect" aria-label="Select a state">
+              <option value="">Select a state</option>
+            </select>
+
             <button id="searchButton">Search</button>
           </div>
 
@@ -1159,7 +1189,7 @@
     <div class="jump-row">
       <button class="btn" onclick="scrollToSection('resultSection')">Result</button>
       <button class="btn" onclick="scrollToSection('findingsSection')">Key findings</button>
-      <button class="btn" onclick="scrollToSection('topSection')">Top 10s</button>
+      <button class="btn" id="topJumpButton" onclick="scrollToTopSection()">Top 10s</button>
       <button class="btn" onclick="scrollToSection('rankingSection')">Full ranking</button>
       <button class="btn" onclick="scrollToSection('methodSection')">Methodology</button>
     </div>
@@ -1220,9 +1250,9 @@
           </div>
 
           <div class="score-card">
-            <div class="score-label">Implied Odds AI Replaces Your Job</div>
+            <div class="score-label" id="scoreLabel">Implied Odds AI Replaces Your Job</div>
             <div class="score-value" id="jobProbability">0%</div>
-            <div class="score-note">
+            <div class="score-note" id="scoreNote">
               Action Network modeled this score using occupation-level AI exposure data.
             </div>
           </div>
@@ -1232,7 +1262,7 @@
           <div class="mini-stat">
             <div class="mini-label">Risk Rank</div>
             <div class="mini-value" id="jobRank">#0</div>
-            <div class="mini-help">Position in the full ranking.</div>
+            <div class="mini-help" id="jobRankHelp">Position in the full ranking.</div>
           </div>
 
           <div class="mini-stat">
@@ -1244,7 +1274,7 @@
 
         <div class="bar-wrap">
           <div class="bar-head">
-            <span>Implied Odds AI Replaces Your Job</span>
+            <span id="barTitle">Implied Odds AI Replaces Your Job</span>
             <span class="bar-number" id="jobProbabilityBarValue">0%</span>
           </div>
           <div class="bar">
@@ -1265,6 +1295,37 @@
           <div class="copy-box">
             <h3>Jobs With Similar AI Exposure</h3>
             <div id="jobComparison"></div>
+          </div>
+        </div>
+
+        <div id="stateResultSection" class="state-result hidden">
+          <h3 id="stateResultTitle">How this job looks in your state</h3>
+          <p id="stateResultText"></p>
+
+          <div class="mini-stats" style="margin-top: 12px;">
+            <div class="mini-stat">
+              <div class="mini-label">State-Adjusted Odds</div>
+              <div class="mini-value" id="stateProbability">0%</div>
+              <div class="mini-help">Adjusted from the national baseline using local wage, growth, openings, and concentration.</div>
+            </div>
+
+            <div class="mini-stat">
+              <div class="mini-label">Mean Annual Wage</div>
+              <div class="mini-value" id="stateMeanWage">—</div>
+              <div class="mini-help">Average annual pay in the selected state.</div>
+            </div>
+
+            <div class="mini-stat">
+              <div class="mini-label">Projected Growth</div>
+              <div class="mini-value" id="stateGrowth">—</div>
+              <div class="mini-help">Long-term projected growth in the selected state.</div>
+            </div>
+
+            <div class="mini-stat">
+              <div class="mini-label">Annual Openings</div>
+              <div class="mini-value" id="stateOpenings">—</div>
+              <div class="mini-help">Average projected annual openings in the selected state.</div>
+            </div>
           </div>
         </div>
 
@@ -1346,6 +1407,32 @@
         </div>
       </section>
 
+      <section id="stateTopSection" class="section-card hidden">
+        <div class="top-grid">
+          <div>
+            <div class="section-heading">
+              <div>
+                <h2 id="stateTopTitle">Top 10 Most at Risk in Your State</h2>
+                <p id="stateTopSubtitle">Select a state to see which occupations look most exposed locally.</p>
+              </div>
+            </div>
+            <div class="ranking-note" id="stateTopNote">State rankings combine the national baseline with local labor-market data.</div>
+            <div id="stateTopJobs" class="ranking-list"></div>
+          </div>
+
+          <div>
+            <div class="section-heading">
+              <div>
+                <h2 id="stateSafeTitle">Top 10 Lowest Odds in Your State</h2>
+                <p id="stateSafeSubtitle">These occupations remain at the safer end in the selected state.</p>
+              </div>
+            </div>
+            <div class="ranking-note" id="stateSafeNote">Hands-on, in-person, and manual roles still tend to rank lower locally.</div>
+            <div id="stateSafeJobs" class="ranking-list"></div>
+          </div>
+        </div>
+      </section>
+
       <section id="rankingSection" class="section-card">
         <div class="section-heading">
           <div>
@@ -1411,7 +1498,7 @@
                 <li>The source dataset provides the exposure score for each occupation.</li>
                 <li>Action Network uses that score as the base signal of AI task overlap.</li>
                 <li>Action Network converts it into a probability-style metric for easier comparison across jobs.</li>
-                <li>Action Network ranks occupations from highest to lowest using that implied odds figure.</li>
+                <li>State-level view adjusts the national baseline using local wage, projected growth, annual openings, and concentration where available.</li>
               </ol>
 
               <div class="quote-line">
@@ -1436,8 +1523,8 @@
                 </div>
 
                 <div class="source-card">
-                  <strong>Occupational framework</strong>
-                  <p>O*NET occupation codes and titles used to structure the jobs across the dataset.</p>
+                  <strong>State labor-market layer</strong>
+                  <p>State wage, employment, openings, and growth data joined by occupation code.</p>
                 </div>
 
                 <div class="source-card">
@@ -1461,10 +1548,26 @@
   <script>
     const FINAL_SHARE_BASE_URL = "https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job";
 
+    const STATE_NAMES = {
+      AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+      CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
+      FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
+      IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+      ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+      MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+      NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+      NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma",
+      OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+      SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+      VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin",
+      WY: "Wyoming", PR: "Puerto Rico"
+    };
+
     let enrichedJobs = [];
     let currentSortMode = "highest";
     let rankingSearchTerm = "";
     let autocompleteIndex = -1;
+    let currentRenderedJob = null;
 
     function clamp(value, min = 0, max = 1) {
       return Math.max(min, Math.min(value, max));
@@ -1485,6 +1588,31 @@
 
     function formatExposureDecimal(value) {
       return Number(value).toFixed(2);
+    }
+
+    function formatCurrency(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      return `$${Number(value).toLocaleString()}`;
+    }
+
+    function formatWholeNumber(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      return Number(value).toLocaleString();
+    }
+
+    function formatGrowth(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "—";
+      const num = Number(value);
+      return `${num > 0 ? "+" : ""}${num.toFixed(1)}%`;
+    }
+
+    function getSelectedStateCode() {
+      return document.getElementById("stateSelect").value || "";
+    }
+
+    function getSelectedStateName() {
+      const code = getSelectedStateCode();
+      return STATE_NAMES[code] || code || "";
     }
 
     function getRiskPillClass(level) {
@@ -1527,22 +1655,46 @@
       }
     }
 
+    function scrollToTopSection() {
+      if (getSelectedStateCode()) {
+        scrollToSection("stateTopSection");
+      } else {
+        scrollToSection("topSection");
+      }
+    }
+
     window.scrollToSection = scrollToSection;
 
-    function buildCanonicalUrl(jobTitle) {
-      return `${FINAL_SHARE_BASE_URL}?job=${encodeURIComponent(jobTitle)}`;
+    function buildCanonicalUrl(jobTitle, stateCode = "") {
+      const url = new URL(FINAL_SHARE_BASE_URL);
+      if (jobTitle) url.searchParams.set("job", jobTitle);
+      if (stateCode) url.searchParams.set("state", stateCode);
+      return url.toString();
     }
 
     function buildIntro(job) {
       const plural = isPluralJobTitle(job.title);
       const verb = plural ? "have" : "has";
       const pronoun = plural ? "them" : "it";
+      const stateCode = getSelectedStateCode();
+
+      if (stateCode && job.state_data && job.state_data[stateCode]) {
+        const local = getStateAdjustedProbability(job, stateCode);
+        return `${job.title} ${verb} ${formatProbabilityPercent(local)} implied odds of AI replacing ${pronoun} in ${getSelectedStateName()}, versus a national baseline of ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}.`;
+      }
+
       return `${job.title} ${verb} ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
     }
 
     function buildShareText(job) {
       const plural = isPluralJobTitle(job.title);
       const pronoun = plural ? "them" : "it";
+      const stateCode = getSelectedStateCode();
+
+      if (stateCode && job.state_data && job.state_data[stateCode]) {
+        return `${job.title} in ${getSelectedStateName()}: ${formatProbabilityPercent(getStateAdjustedProbability(job, stateCode))} implied odds of AI replacing ${pronoun}. National baseline: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}. Check yours: ${buildCanonicalUrl(job.title, stateCode)}`;
+      }
+
       return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
     }
 
@@ -1588,7 +1740,7 @@
       const index = sorted.findIndex(item => item.title === job.title);
 
       if (index === -1) {
-        return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+        return `<p>Nearby roles are unavailable for this occupation.</p>`;
       }
 
       const nearby = [
@@ -1599,7 +1751,7 @@
       ].filter(Boolean);
 
       if (!nearby.length) {
-        return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+        return `<p>Nearby roles are unavailable for this occupation.</p>`;
       }
 
       return `
@@ -1620,15 +1772,17 @@
           window.top.location.href = url;
           return;
         }
-      } catch (e) {
-        // ignore and fallback below
-      }
+      } catch (e) {}
       window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
     }
 
     function getShareUrls(job) {
-      const resultUrl = buildCanonicalUrl(job.title);
-      const shareText = `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job.`;
+      const stateCode = getSelectedStateCode();
+      const resultUrl = buildCanonicalUrl(job.title, stateCode);
+      const shareValue = stateCode && job.state_data && job.state_data[stateCode]
+        ? getStateAdjustedProbability(job, stateCode)
+        : job.odds_ai_replaces_major_parts_of_job;
+      const shareText = `${job.title}: ${formatProbabilityPercent(shareValue)} implied odds AI replaces this job.`;
 
       return {
         x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
@@ -1638,26 +1792,125 @@
       };
     }
 
+    function getStateModifier(stateData) {
+      if (!stateData) return 1;
+
+      let modifier = 1;
+
+      const meanWage = Number(stateData.mean_wage);
+      const growth = Number(stateData.percent_change);
+      const openings = Number(stateData.avg_annual_openings);
+      const lq = Number(stateData.location_quotient);
+
+      if (!Number.isNaN(meanWage)) {
+        if (meanWage >= 120000) modifier += 0.08;
+        else if (meanWage >= 90000) modifier += 0.05;
+        else if (meanWage <= 45000) modifier -= 0.03;
+      }
+
+      if (!Number.isNaN(growth)) {
+        if (growth >= 10) modifier -= 0.12;
+        else if (growth >= 5) modifier -= 0.07;
+        else if (growth > 0) modifier -= 0.03;
+        else if (growth < 0) modifier += 0.08;
+      }
+
+      if (!Number.isNaN(openings)) {
+        if (openings >= 10000) modifier -= 0.08;
+        else if (openings >= 3000) modifier -= 0.04;
+        else if (openings < 500) modifier += 0.04;
+      }
+
+      if (!Number.isNaN(lq)) {
+        if (lq >= 1.5) modifier += 0.05;
+        else if (lq >= 1.2) modifier += 0.03;
+        else if (lq <= 0.8) modifier -= 0.02;
+      }
+
+      return clamp(modifier, 0.7, 1.3);
+    }
+
+    function getStateAdjustedProbability(job, stateCode) {
+      const base = Number(job.odds_ai_replaces_major_parts_of_job || 0);
+      if (!stateCode || !job.state_data || !job.state_data[stateCode]) return base;
+      return clamp(base * getStateModifier(job.state_data[stateCode]));
+    }
+
+    function renderStateResult(job) {
+      const stateCode = getSelectedStateCode();
+      const section = document.getElementById("stateResultSection");
+
+      if (!stateCode || !job.state_data || !job.state_data[stateCode]) {
+        section.classList.add("hidden");
+        return;
+      }
+
+      const sd = job.state_data[stateCode];
+      const stateName = getSelectedStateName();
+      const national = Number(job.odds_ai_replaces_major_parts_of_job || 0);
+      const local = getStateAdjustedProbability(job, stateCode);
+      const diff = Math.round((local - national) * 100);
+      const compare = diff > 0
+        ? `${diff} points above the national baseline`
+        : diff < 0
+          ? `${Math.abs(diff)} points below the national baseline`
+          : `roughly in line with the national baseline`;
+
+      document.getElementById("stateResultTitle").textContent = `How this job looks in ${stateName}`;
+      document.getElementById("stateResultText").textContent =
+        `${job.title} shows ${formatProbabilityPercent(local)} implied odds in ${stateName}, which is ${compare}.`;
+      document.getElementById("stateProbability").textContent = formatProbabilityPercent(local);
+      document.getElementById("stateMeanWage").textContent = formatCurrency(sd.mean_wage);
+      document.getElementById("stateGrowth").textContent = formatGrowth(sd.percent_change);
+      document.getElementById("stateOpenings").textContent = formatWholeNumber(sd.avg_annual_openings);
+
+      section.classList.remove("hidden");
+    }
+
     function renderResult(job) {
+      currentRenderedJob = job;
+
+      const stateCode = getSelectedStateCode();
+      const hasState = stateCode && job.state_data && job.state_data[stateCode];
+      const displayedProbability = hasState
+        ? getStateAdjustedProbability(job, stateCode)
+        : job.odds_ai_replaces_major_parts_of_job;
+
       document.getElementById("resultSection").classList.remove("hidden");
       document.getElementById("noResults").classList.add("hidden");
 
       document.getElementById("jobTitle").textContent = job.title;
       document.getElementById("jobIntro").textContent = buildIntro(job);
-      document.getElementById("jobProbability").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+      document.getElementById("jobProbability").textContent = formatProbabilityPercent(displayedProbability);
       document.getElementById("jobRank").textContent = `#${job.ai_risk_rank}`;
       document.getElementById("jobExposure").textContent = formatExposureDecimal(job.observed_exposure);
       document.getElementById("jobExplanation").textContent = buildExplanation(job);
       document.getElementById("jobComparison").innerHTML = buildNearbyRoles(job);
       document.getElementById("jobFamily").textContent = job.job_family;
-      document.getElementById("jobProbabilityBarValue").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+      document.getElementById("jobProbabilityBarValue").textContent = formatProbabilityPercent(displayedProbability);
+      document.getElementById("probabilityBar").style.width = `${clamp(displayedProbability) * 100}%`;
+
+      document.getElementById("scoreLabel").textContent = hasState
+        ? `Implied Odds AI Replaces Your Job in ${getSelectedStateName()}`
+        : "Implied Odds AI Replaces Your Job";
+
+      document.getElementById("scoreNote").textContent = hasState
+        ? "Action Network modeled this score using the national baseline plus state wage, growth, openings, and concentration data."
+        : "Action Network modeled this score using occupation-level AI exposure data.";
+
+      document.getElementById("barTitle").textContent = hasState
+        ? `Implied Odds AI Replaces Your Job in ${getSelectedStateName()}`
+        : "Implied Odds AI Replaces Your Job";
+
+      document.getElementById("jobRankHelp").textContent = hasState
+        ? "National position in the full ranking."
+        : "Position in the full ranking.";
 
       const risk = document.getElementById("riskLevel");
       risk.textContent = `${job.risk_level} Risk`;
       risk.className = getRiskPillClass(job.risk_level);
 
-      document.getElementById("probabilityBar").style.width =
-        `${clamp(job.odds_ai_replaces_major_parts_of_job) * 100}%`;
+      renderStateResult(job);
 
       const copyShareTextBtn = document.getElementById("copyShareTextBtn");
       const copyLinkBtn = document.getElementById("copyLinkBtn");
@@ -1666,29 +1919,23 @@
       const shareLinkedInBtn = document.getElementById("shareLinkedInBtn");
       const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
 
-      if (copyShareTextBtn) {
-        copyShareTextBtn.onclick = () => copyText(buildShareText(job), "Share text copied.");
-      }
-
-      if (copyLinkBtn) {
-        copyLinkBtn.onclick = () => copyText(buildCanonicalUrl(job.title), "Result link copied.");
-      }
+      copyShareTextBtn.onclick = () => copyText(buildShareText(job), "Share text copied.");
+      copyLinkBtn.onclick = () => copyText(buildCanonicalUrl(job.title, getSelectedStateCode()), "Result link copied.");
 
       const shareUrls = getShareUrls(job);
-
-      if (shareXBtn) shareXBtn.onclick = () => openShareWindow(shareUrls.x);
-      if (shareFacebookBtn) shareFacebookBtn.onclick = () => openShareWindow(shareUrls.facebook);
-      if (shareLinkedInBtn) shareLinkedInBtn.onclick = () => openShareWindow(shareUrls.linkedin);
-      if (shareWhatsAppBtn) shareWhatsAppBtn.onclick = () => openShareWindow(shareUrls.whatsapp);
+      shareXBtn.onclick = () => openShareWindow(shareUrls.x);
+      shareFacebookBtn.onclick = () => openShareWindow(shareUrls.facebook);
+      shareLinkedInBtn.onclick = () => openShareWindow(shareUrls.linkedin);
+      shareWhatsAppBtn.onclick = () => openShareWindow(shareUrls.whatsapp);
     }
 
-    function createRankingItem(job, rankNumber) {
+    function createRankingItem(job, rankNumber, subtitle) {
       return `
         <div class="ranking-item">
           <div class="ranking-number">${rankNumber}</div>
           <div class="ranking-main">
             <div class="ranking-title">${escapeHtml(job.title)}</div>
-            <div class="ranking-sub">${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} · Score ${formatExposureDecimal(job.observed_exposure)}</div>
+            <div class="ranking-sub">${subtitle}</div>
           </div>
         </div>
       `;
@@ -1706,10 +1953,106 @@
         .slice(0, 10);
 
       document.getElementById("topJobs").innerHTML =
-        highest.map((job, index) => createRankingItem(job, index + 1)).join("");
+        highest.map((job, index) =>
+          createRankingItem(
+            job,
+            index + 1,
+            `${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} · Score ${formatExposureDecimal(job.observed_exposure)}`
+          )
+        ).join("");
 
       document.getElementById("safeJobs").innerHTML =
-        lowest.map((job, index) => createRankingItem(job, index + 1)).join("");
+        lowest.map((job, index) =>
+          createRankingItem(
+            job,
+            index + 1,
+            `${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} · Score ${formatExposureDecimal(job.observed_exposure)}`
+          )
+        ).join("");
+    }
+
+    function renderStateRankings() {
+      const stateCode = getSelectedStateCode();
+      const section = document.getElementById("stateTopSection");
+      const topWrap = document.getElementById("stateTopJobs");
+      const safeWrap = document.getElementById("stateSafeJobs");
+
+      if (!stateCode) {
+        section.classList.add("hidden");
+        topWrap.innerHTML = "";
+        safeWrap.innerHTML = "";
+        return;
+      }
+
+      const jobsWithState = enrichedJobs
+        .filter(job => job.state_data && job.state_data[stateCode])
+        .map(job => ({
+          ...job,
+          state_probability: getStateAdjustedProbability(job, stateCode)
+        }));
+
+      if (!jobsWithState.length) {
+        section.classList.add("hidden");
+        topWrap.innerHTML = "";
+        safeWrap.innerHTML = "";
+        return;
+      }
+
+      const stateName = getSelectedStateName();
+      document.getElementById("stateTopTitle").textContent = `Top 10 Most at Risk in ${stateName}`;
+      document.getElementById("stateTopSubtitle").textContent = `These occupations have the highest state-adjusted implied odds in ${stateName}.`;
+      document.getElementById("stateTopNote").textContent = `State rankings combine the national AI baseline with ${stateName}'s local labor-market data.`;
+
+      document.getElementById("stateSafeTitle").textContent = `Top 10 Lowest Odds in ${stateName}`;
+      document.getElementById("stateSafeSubtitle").textContent = `These occupations remain at the safer end in ${stateName}.`;
+      document.getElementById("stateSafeNote").textContent = `Hands-on, in-person, and manual roles still tend to rank lower locally.`;
+
+      const highest = jobsWithState
+        .slice()
+        .sort((a, b) => b.state_probability - a.state_probability)
+        .slice(0, 10);
+
+      const lowest = jobsWithState
+        .slice()
+        .sort((a, b) => a.state_probability - b.state_probability || a.ai_risk_rank - b.ai_risk_rank)
+        .slice(0, 10);
+
+      topWrap.innerHTML = highest.map((job, index) => {
+        const sd = job.state_data[stateCode];
+        return createRankingItem(
+          job,
+          index + 1,
+          `${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.state_probability)} · Growth ${formatGrowth(sd.percent_change)} · Openings ${formatWholeNumber(sd.avg_annual_openings)}`
+        );
+      }).join("");
+
+      safeWrap.innerHTML = lowest.map((job, index) => {
+        const sd = job.state_data[stateCode];
+        return createRankingItem(
+          job,
+          index + 1,
+          `${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.state_probability)} · Growth ${formatGrowth(sd.percent_change)} · Openings ${formatWholeNumber(sd.avg_annual_openings)}`
+        );
+      }).join("");
+
+      section.classList.remove("hidden");
+    }
+
+    function updateTopSections() {
+      const national = document.getElementById("topSection");
+      const state = document.getElementById("stateTopSection");
+      const jumpButton = document.getElementById("topJumpButton");
+      const hasState = getSelectedStateCode() !== "";
+
+      if (hasState) {
+        national.classList.add("hidden");
+        jumpButton.textContent = "State Top 10s";
+        if (!state.innerHTML.trim()) state.classList.add("hidden");
+      } else {
+        national.classList.remove("hidden");
+        state.classList.add("hidden");
+        jumpButton.textContent = "Top 10s";
+      }
     }
 
     function getFilteredRankingJobs() {
@@ -1816,16 +2159,22 @@
       });
     }
 
+    function updateUrl(jobTitle = "", stateCode = "") {
+      const url = new URL(window.location);
+      if (jobTitle) url.searchParams.set("job", jobTitle);
+      else url.searchParams.delete("job");
+      if (stateCode) url.searchParams.set("state", stateCode);
+      else url.searchParams.delete("state");
+      window.history.replaceState({}, "", url);
+    }
+
     function selectAutocomplete(title) {
       document.getElementById("jobSearch").value = title;
       hideAutocomplete();
       const result = findJob(title);
       if (result) {
         renderResult(result);
-        const url = new URL(window.location);
-        url.searchParams.set("job", result.title);
-        window.history.replaceState({}, "", url);
-        scrollToSection("resultSection");
+        updateUrl(result.title, getSelectedStateCode());
       }
     }
 
@@ -1835,15 +2184,22 @@
 
       if (result) {
         renderResult(result);
-        const url = new URL(window.location);
-        url.searchParams.set("job", result.title);
-        window.history.replaceState({}, "", url);
+        updateUrl(result.title, getSelectedStateCode());
         hideAutocomplete();
-        scrollToSection("resultSection");
       } else {
         document.getElementById("resultSection").classList.add("hidden");
         document.getElementById("noResults").classList.remove("hidden");
       }
+    }
+
+    function applyStateFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const stateCode = params.get("state");
+      if (!stateCode) return;
+
+      const select = document.getElementById("stateSelect");
+      const exists = [...select.options].some(option => option.value === stateCode);
+      if (exists) select.value = stateCode;
     }
 
     function applyJobFromUrl() {
@@ -1874,6 +2230,26 @@
       }
     }
 
+    function populateStateSelect() {
+      const select = document.getElementById("stateSelect");
+      const codes = new Set();
+
+      enrichedJobs.forEach(job => {
+        if (job.state_data) {
+          Object.keys(job.state_data).forEach(code => codes.add(code));
+        }
+      });
+
+      [...codes]
+        .sort((a, b) => (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b))
+        .forEach(code => {
+          const option = document.createElement("option");
+          option.value = code;
+          option.textContent = STATE_NAMES[code] || code;
+          select.appendChild(option);
+        });
+    }
+
     async function loadData() {
       try {
         const response = await fetch("./data/enriched_jobs.json");
@@ -1884,7 +2260,12 @@
         document.getElementById("loadingState").classList.add("hidden");
         document.getElementById("datasetCount").textContent = `${enrichedJobs.length} jobs in dataset`;
 
+        populateStateSelect();
+        applyStateFromUrl();
+
         renderRankings();
+        renderStateRankings();
+        updateTopSections();
         setSortButtons();
         renderFullRanking();
 
@@ -1944,6 +2325,21 @@
       }
     });
 
+    document.getElementById("stateSelect").addEventListener("change", function () {
+      renderStateRankings();
+      updateTopSections();
+      if (currentRenderedJob) {
+        renderResult(currentRenderedJob);
+      } else {
+        const input = document.getElementById("jobSearch").value;
+        if (input) {
+          const result = findJob(input);
+          if (result) renderResult(result);
+        }
+      }
+      updateUrl(currentRenderedJob ? currentRenderedJob.title : document.getElementById("jobSearch").value, getSelectedStateCode());
+    });
+
     document.addEventListener("click", function (e) {
       const wrap = document.querySelector(".search-input-wrap");
       if (wrap && !wrap.contains(e.target)) {
@@ -1985,5 +2381,3 @@
   </script>
 </body>
 </html>
-
-
