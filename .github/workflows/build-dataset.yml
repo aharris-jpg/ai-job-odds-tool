@@ -4,8 +4,11 @@ on:
   push:
     paths:
       - data/anthropic_jobs.csv
+      - data/state_wage_employment.csv
+      - data/state_projections.csv
       - scripts/build_dataset.py
       - .github/workflows/build-dataset.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
