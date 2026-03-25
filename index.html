@@ -137,8 +137,7 @@
       min-width: 220px;
     }
 
-    .search-box input,
-    .search-box select {
+    .search-box input {
       width: 100%;
       border: none;
       border-radius: 16px;
@@ -147,7 +146,6 @@
       outline: none;
       color: var(--text);
       box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
-      background: #fff;
     }
 
     .search-box button,
@@ -274,11 +272,6 @@
       box-shadow: var(--shadow-soft);
       border: 1px solid var(--border);
       margin-bottom: 16px;
-    }
-
-    .national-top-section.hidden,
-    .state-top-section.hidden {
-      display: none !important;
     }
 
     .result-grid {
@@ -452,21 +445,6 @@
       z-index: 1;
     }
 
-    .state-compare-note {
-      margin-top: 12px;
-      display: inline-block;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: #f4faf7;
-      border: 1px solid #dcede4;
-      color: #355147;
-      font-size: 14px;
-      line-height: 1.5;
-      font-weight: 700;
-      position: relative;
-      z-index: 1;
-    }
-
     .mini-stats {
       margin-top: 16px;
       display: grid;
@@ -546,10 +524,6 @@
       box-shadow: inset 0 -1px 0 rgba(0,0,0,0.08);
     }
 
-    .bar-fill.state {
-      background: linear-gradient(90deg, #127c52, #22aa72);
-    }
-
     .bar-scale {
       display: flex;
       justify-content: space-between;
@@ -579,28 +553,6 @@
     }
 
     .copy-box p {
-      margin: 0;
-      color: #53645f;
-      line-height: 1.55;
-      font-size: 15px;
-    }
-
-    .state-block {
-      margin-top: 16px;
-      border: 1px solid #d9e9df;
-      border-radius: 22px;
-      padding: 18px;
-      background: linear-gradient(180deg, #f7fcf9 0%, #ffffff 100%);
-    }
-
-    .state-block h3 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-
-    .state-block p {
       margin: 0;
       color: #53645f;
       line-height: 1.55;
@@ -989,8 +941,7 @@
       margin: 0 0 12px;
     }
 
-    .accordion-body ol,
-    .accordion-body ul {
+    .accordion-body ol {
       margin: 8px 0 14px 20px;
       padding: 0;
     }
@@ -1070,11 +1021,6 @@
       transform: translateY(0);
     }
 
-    .national-top-section.hidden,
-    .state-top-section.hidden {
-      display: none !important;
-    }
-
     @media (max-width: 980px) {
       .result-grid,
       .explain-grid,
@@ -1114,8 +1060,7 @@
       }
 
       .search-input-wrap,
-      .search-box button,
-      .search-box select {
+      .search-box button {
         width: 100%;
       }
 
@@ -1181,7 +1126,7 @@
         <div class="eyebrow">Action Network AI Job Odds Tool</div>
         <h1>What Are the Odds AI Replaces Your Job?</h1>
         <p class="subhead">
-          Search your job to see the implied odds AI replaces it, then compare how those odds shift in your state.
+          Search your job to see the implied odds AI replaces it.
         </p>
 
         <div class="search-panel">
@@ -1195,11 +1140,6 @@
               />
               <div id="autocomplete" class="autocomplete hidden"></div>
             </div>
-
-            <select id="stateSelect" aria-label="Select a state">
-              <option value="">Select a state</option>
-            </select>
-
             <button id="searchButton">Search</button>
           </div>
 
@@ -1219,7 +1159,7 @@
     <div class="jump-row">
       <button class="btn" onclick="scrollToSection('resultSection')">Result</button>
       <button class="btn" onclick="scrollToSection('findingsSection')">Key findings</button>
-      <button class="btn" id="topJumpButton" onclick="scrollToTopRankings()">Top 10s</button>
+      <button class="btn" onclick="scrollToSection('topSection')">Top 10s</button>
       <button class="btn" onclick="scrollToSection('rankingSection')">Full ranking</button>
       <button class="btn" onclick="scrollToSection('methodSection')">Methodology</button>
     </div>
@@ -1280,12 +1220,11 @@
           </div>
 
           <div class="score-card">
-            <div class="score-label" id="scoreLabel">Implied Odds AI Replaces Your Job</div>
+            <div class="score-label">Implied Odds AI Replaces Your Job</div>
             <div class="score-value" id="jobProbability">0%</div>
-            <div class="score-note" id="scoreNote">
+            <div class="score-note">
               Action Network modeled this score using occupation-level AI exposure data.
             </div>
-            <div id="stateCompareNote" class="state-compare-note hidden"></div>
           </div>
         </div>
 
@@ -1293,7 +1232,7 @@
           <div class="mini-stat">
             <div class="mini-label">Risk Rank</div>
             <div class="mini-value" id="jobRank">#0</div>
-            <div class="mini-help">Position in the national ranking.</div>
+            <div class="mini-help">Position in the full ranking.</div>
           </div>
 
           <div class="mini-stat">
@@ -1305,7 +1244,7 @@
 
         <div class="bar-wrap">
           <div class="bar-head">
-            <span id="barTitle">Implied Odds AI Replaces Your Job</span>
+            <span>Implied Odds AI Replaces Your Job</span>
             <span class="bar-number" id="jobProbabilityBarValue">0%</span>
           </div>
           <div class="bar">
@@ -1326,51 +1265,6 @@
           <div class="copy-box">
             <h3>Jobs With Similar AI Exposure</h3>
             <div id="jobComparison"></div>
-          </div>
-        </div>
-
-        <div id="stateResultBlock" class="state-block hidden">
-          <h3 id="stateHeadline">How this job looks in your state</h3>
-          <p id="stateNarrative"></p>
-
-          <div class="mini-stats">
-            <div class="mini-stat">
-              <div class="mini-label">Implied Odds In This State</div>
-              <div class="mini-value" id="stateProbability">0%</div>
-              <div class="mini-help">State-adjusted estimate built from the national baseline and local labor-market signals.</div>
-            </div>
-
-            <div class="mini-stat">
-              <div class="mini-label">Mean Annual Wage</div>
-              <div class="mini-value" id="stateMeanWage">$0</div>
-              <div class="mini-help">Average annual pay for this occupation in the selected state.</div>
-            </div>
-
-            <div class="mini-stat">
-              <div class="mini-label">Projected Growth</div>
-              <div class="mini-value" id="stateGrowth">0%</div>
-              <div class="mini-help">Projected long-term employment growth for this occupation in the selected state.</div>
-            </div>
-
-            <div class="mini-stat">
-              <div class="mini-label">Annual Openings</div>
-              <div class="mini-value" id="stateOpenings">0</div>
-              <div class="mini-help">Average annual openings projected for this occupation in the selected state.</div>
-            </div>
-          </div>
-
-          <div class="bar-wrap">
-            <div class="bar-head">
-              <span>State-Adjusted Implied Odds</span>
-              <span class="bar-number" id="stateProbabilityBarValue">0%</span>
-            </div>
-            <div class="bar">
-              <div id="stateProbabilityBar" class="bar-fill state"></div>
-            </div>
-            <div class="bar-scale">
-              <span>Lower odds</span>
-              <span>Higher odds</span>
-            </div>
           </div>
         </div>
 
@@ -1420,19 +1314,19 @@
           </div>
 
           <div class="finding">
-            <h3>State results add local context, not a second official dataset.</h3>
-            <p>The state view starts with the same national AI baseline, then adjusts it using local wage, openings, projected growth, and occupational concentration to estimate how exposed the role looks in that market.</p>
+            <h3>Low implied odds do not mean no AI impact.</h3>
+            <p>Even the safest jobs may still use AI tools in parts of the workflow. This ranking measures the implied odds of AI replacing the job overall, not whether AI can assist with smaller tasks inside it.</p>
           </div>
         </div>
       </section>
 
-      <section id="nationalTopSection" class="section-card national-top-section">
+      <section id="topSection" class="section-card">
         <div class="top-grid">
           <div>
             <div class="section-heading">
               <div>
                 <h2>Top 10 Highest Odds</h2>
-                <p>Jobs with the highest national implied odds of AI replacing them.</p>
+                <p>Jobs with the highest implied odds of AI replacing them.</p>
               </div>
             </div>
             <div class="ranking-note">The most exposed jobs tend to be digital, text-heavy, and highly structured.</div>
@@ -1443,7 +1337,7 @@
             <div class="section-heading">
               <div>
                 <h2>Top 10 Lowest Odds</h2>
-                <p>Jobs with the lowest national implied odds of AI replacing them.</p>
+                <p>Jobs with the lowest implied odds of AI replacing them.</p>
               </div>
             </div>
             <div class="ranking-note">These roles cluster at the safer end because they depend on physical work or real-world interaction.</div>
@@ -1452,132 +1346,644 @@
         </div>
       </section>
 
-      <section id="stateTopSection" class="section-card hidden state-top-section">
-        <div class="top-grid">
+      <section id="rankingSection" class="section-card">
+        <div class="section-heading">
           <div>
-            <div class="section-heading">
-              <div>
-                <h2 id="stateTopTitle">Top 10 Most at Risk in Your State</h2>
-                <p id="stateTopSubtitle">Select a state above to see which occupations look most exposed locally.</p>
-              </div>
-            </div>
-            <div class="ranking-note" id="stateTopNote">State rankings combine the national baseline with local labor-market data.</div>
-            <div id="stateTopJobs" class="ranking-list"></div>
+            <h2>Full Ranking</h2>
+            <p>All occupations ranked by implied odds.</p>
+          </div>
+        </div>
+
+        <div class="ranking-toggle-row">
+          <div class="ranking-toggle">
+            <button class="toggle-btn active" id="sortMostExposedBtn">Highest odds first</button>
+            <button class="toggle-btn" id="sortSafestBtn">Lowest odds first</button>
           </div>
 
-          <div>
-            <div class="section-heading">
-              <div>
-                <h2 id="stateSafeTitle">Top 10 Lowest Odds in Your State</h2>
-                <p id="stateSafeSubtitle">These occupations remain at the safer end of the scale in the selected state.</p>
-              </div>
-            </div>
-            <div class="ranking-note" id="stateSafeNote">These roles still have low local implied odds because hands-on work remains difficult to automate directly.</div>
-            <div id="stateSafeJobs" class="ranking-list"></div>
-          </div>
+          <button class="small-link-btn" onclick="scrollToSection('top')">Back to top</button>
+        </div>
+
+        <div class="ranking-search-row">
+          <input
+            type="text"
+            id="rankingSearch"
+            placeholder="Search the full ranking"
+          />
+          <button class="small-link-btn" id="clearRankingSearch">Clear</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Job</th>
+                <th>Implied Odds</th>
+                <th>Exposure Score</th>
+                <th>Risk Level</th>
+              </tr>
+            </thead>
+            <tbody id="fullRankingBody"></tbody>
+          </table>
         </div>
       </section>
 
-      <section id="rankingSection" class="section-card">
-  <div class="section-heading">
-    <div>
-      <h2>Full Ranking</h2>
-      <p>All occupations ranked by national implied odds.</p>
-    </div>
+      <section id="methodSection" class="section-card">
+        <div class="accordion">
+          <details>
+            <summary>
+              <span>
+                How We Built This Tool
+                <span class="summary-sub">What comes from the source dataset, and what Action Network added.</span>
+              </span>
+              <span class="summary-mark">+</span>
+            </summary>
+            <div class="accordion-body">
+              <p>
+                This tool starts with <strong>occupation-level AI exposure data</strong>, which estimates how much of each job overlaps with tasks AI can already perform or assist with.
+              </p>
+
+              <p>
+                <strong>Action Network then transformed that source data into this odds-based ranking.</strong>
+              </p>
+
+              <ol>
+                <li>The source dataset provides the exposure score for each occupation.</li>
+                <li>Action Network uses that score as the base signal of AI task overlap.</li>
+                <li>Action Network converts it into a probability-style metric for easier comparison across jobs.</li>
+                <li>Action Network ranks occupations from highest to lowest using that implied odds figure.</li>
+              </ol>
+
+              <div class="quote-line">
+                This tool measures the implied odds of AI replacing a job, not the odds a job disappears completely.
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span>
+                Sources
+                <span class="summary-sub">The underlying data and modeling layer behind the page.</span>
+              </span>
+              <span class="summary-mark">+</span>
+            </summary>
+            <div class="accordion-body">
+              <div class="source-grid">
+                <div class="source-card">
+                  <strong>Source data</strong>
+                  <p>Occupation-level AI exposure dataset.</p>
+                </div>
+
+                <div class="source-card">
+                  <strong>Occupational framework</strong>
+                  <p>O*NET occupation codes and titles used to structure the jobs across the dataset.</p>
+                </div>
+
+                <div class="source-card">
+                  <strong>Action Network analysis</strong>
+                  <p>Implied odds conversion, rankings, editorial findings, and page design.</p>
+                </div>
+              </div>
+
+              <div class="footer-note">
+                Source pipeline: occupation data → Action Network modeling → rankings and search tool.
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <div class="ranking-toggle-row">
-    <div class="ranking-toggle">
-      <button class="toggle-btn active" id="sortMostExposedBtn">Highest odds first</button>
-      <button class="toggle-btn" id="sortSafestBtn">Lowest odds first</button>
-    </div>
+  <button id="stickyTopBtn" class="sticky-top-btn" type="button">↑ Back to top</button>
 
-    <button class="small-link-btn" onclick="scrollToSection('top')">Back to top</button>
-  </div>
+  <script>
+    const FINAL_SHARE_BASE_URL = "https://www.actionnetwork.com/lifestyle/will-ai-replace-your-job";
 
-  <div class="ranking-search-row">
-    <input
-      type="text"
-      id="rankingSearch"
-      placeholder="Search the full ranking"
-    />
-    <button class="small-link-btn" id="clearRankingSearch">Clear</button>
-  </div>
+    let enrichedJobs = [];
+    let currentSortMode = "highest";
+    let rankingSearchTerm = "";
+    let autocompleteIndex = -1;
 
-  <div class="table-wrap">
-    <table>
-      <thead>
+    function clamp(value, min = 0, max = 1) {
+      return Math.max(min, Math.min(value, max));
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatProbabilityPercent(value) {
+      return `${Math.round(clamp(Number(value)) * 100)}%`;
+    }
+
+    function formatExposureDecimal(value) {
+      return Number(value).toFixed(2);
+    }
+
+    function getRiskPillClass(level) {
+      if (level === "Very High") return "pill pill-veryhigh";
+      if (level === "High") return "pill pill-high";
+      if (level === "Moderate") return "pill pill-moderate";
+      if (level === "Low") return "pill pill-low";
+      return "pill pill-minimal";
+    }
+
+    function isPluralJobTitle(title) {
+      const cleaned = String(title).trim().toLowerCase();
+      const lastWord = cleaned.split(/\s+/).pop() || "";
+      if (cleaned.includes(" and ")) return true;
+      if (lastWord.endsWith("ss")) return false;
+      return lastWord.endsWith("s");
+    }
+
+    function titleGrammar(title) {
+      const plural = isPluralJobTitle(title);
+      return {
+        have: plural ? "have" : "has",
+        rank: plural ? "rank" : "ranks",
+        show: plural ? "show" : "shows"
+      };
+    }
+
+    function copyText(text, message) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert(message);
+      }).catch(() => {
+        alert("Could not copy automatically. Please try again.");
+      });
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    window.scrollToSection = scrollToSection;
+
+    function buildCanonicalUrl(jobTitle) {
+      return `${FINAL_SHARE_BASE_URL}?job=${encodeURIComponent(jobTitle)}`;
+    }
+
+    function buildIntro(job) {
+      const plural = isPluralJobTitle(job.title);
+      const verb = plural ? "have" : "has";
+      const pronoun = plural ? "them" : "it";
+      return `${job.title} ${verb} ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}, ranking #${job.ai_risk_rank} out of ${enrichedJobs.length}.`;
+    }
+
+    function buildShareText(job) {
+      const plural = isPluralJobTitle(job.title);
+      const pronoun = plural ? "them" : "it";
+      return `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds of AI replacing ${pronoun}. Rank #${job.ai_risk_rank} out of ${enrichedJobs.length}. Check yours: ${buildCanonicalUrl(job.title)}`;
+    }
+
+    function buildExplanation(job) {
+      const title = job.title;
+      const g = titleGrammar(title);
+      const probability = Number(job.odds_ai_replaces_major_parts_of_job || 0);
+      const family = (job.job_family || "").trim();
+
+      if (["Computer & Math", "Office & Admin", "Business & Finance", "Arts & Media", "Sales"].includes(family)) {
+        if (probability >= 0.45) {
+          return `${title} ${g.rank} highly for AI exposure because the role centers on structured digital, text-based, or analytical work that AI can already help perform.`;
+        }
+        if (probability >= 0.20) {
+          return `${title} ${g.show} moderate AI exposure because parts of the role overlap with work AI can already help perform, while other responsibilities still depend on human judgment.`;
+        }
+        return `${title} ${g.show} relatively low AI exposure compared with other digital and office-based roles, though some tasks may still be supported by AI tools.`;
+      }
+
+      if (["Construction", "Repair & Maintenance", "Food Service", "Cleaning & Grounds", "Transportation", "Farming & Forestry"].includes(family)) {
+        return `${title} ${g.rank} lower for AI exposure because the work depends on physical skill, manual movement, and on-site problem-solving that AI cannot directly perform.`;
+      }
+
+      if (["Healthcare Practitioners", "Healthcare Support", "Community & Social Service", "Protective Service"].includes(family)) {
+        return `${title} ${g.show} lower AI exposure because the role relies on in-person care, physical procedures, and real-world decision-making that still requires human presence.`;
+      }
+
+      if (["Education", "Legal", "Science", "Engineering"].includes(family)) {
+        if (probability >= 0.30) {
+          return `${title} ${g.show} moderate to elevated AI exposure because parts of the job involve research, writing, analysis, or structured information work that AI tools can increasingly support.`;
+        }
+        return `${title} ${g.show} relatively limited AI exposure because core responsibilities depend on expert judgment, specialized knowledge, or real-world interaction.`;
+      }
+
+      return `${title} ${g.show} a mixed level of AI exposure compared with other occupations in the dataset.`;
+    }
+
+    function buildNearbyRoles(job) {
+      const sorted = enrichedJobs
+        .slice()
+        .sort((a, b) => a.ai_risk_rank - b.ai_risk_rank);
+
+      const index = sorted.findIndex(item => item.title === job.title);
+
+      if (index === -1) {
+        return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+      }
+
+      const nearby = [
+        sorted[index - 2],
+        sorted[index - 1],
+        sorted[index + 1],
+        sorted[index + 2]
+      ].filter(Boolean);
+
+      if (!nearby.length) {
+        return `<p style="margin:0;color:#53645f;line-height:1.55;font-size:15px;">Nearby roles are unavailable for this occupation.</p>`;
+      }
+
+      return `
+        <div class="nearby-list">
+          ${nearby.map(item => `
+            <div class="nearby-row">
+              <span class="nearby-name">${escapeHtml(item.title)}</span>
+              <span class="nearby-odds">${formatProbabilityPercent(item.odds_ai_replaces_major_parts_of_job)}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function openShareWindow(url) {
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = url;
+          return;
+        }
+      } catch (e) {
+        // ignore and fallback below
+      }
+      window.open(url, "_blank", "noopener,noreferrer,width=700,height=640");
+    }
+
+    function getShareUrls(job) {
+      const resultUrl = buildCanonicalUrl(job.title);
+      const shareText = `${job.title}: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} implied odds AI replaces this job.`;
+
+      return {
+        x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(resultUrl)}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(resultUrl)}`,
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(resultUrl)}`,
+        whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + resultUrl)}`
+      };
+    }
+
+    function renderResult(job) {
+      document.getElementById("resultSection").classList.remove("hidden");
+      document.getElementById("noResults").classList.add("hidden");
+
+      document.getElementById("jobTitle").textContent = job.title;
+      document.getElementById("jobIntro").textContent = buildIntro(job);
+      document.getElementById("jobProbability").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+      document.getElementById("jobRank").textContent = `#${job.ai_risk_rank}`;
+      document.getElementById("jobExposure").textContent = formatExposureDecimal(job.observed_exposure);
+      document.getElementById("jobExplanation").textContent = buildExplanation(job);
+      document.getElementById("jobComparison").innerHTML = buildNearbyRoles(job);
+      document.getElementById("jobFamily").textContent = job.job_family;
+      document.getElementById("jobProbabilityBarValue").textContent = formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job);
+
+      const risk = document.getElementById("riskLevel");
+      risk.textContent = `${job.risk_level} Risk`;
+      risk.className = getRiskPillClass(job.risk_level);
+
+      document.getElementById("probabilityBar").style.width =
+        `${clamp(job.odds_ai_replaces_major_parts_of_job) * 100}%`;
+
+      const copyShareTextBtn = document.getElementById("copyShareTextBtn");
+      const copyLinkBtn = document.getElementById("copyLinkBtn");
+      const shareXBtn = document.getElementById("shareXBtn");
+      const shareFacebookBtn = document.getElementById("shareFacebookBtn");
+      const shareLinkedInBtn = document.getElementById("shareLinkedInBtn");
+      const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
+
+      if (copyShareTextBtn) {
+        copyShareTextBtn.onclick = () => copyText(buildShareText(job), "Share text copied.");
+      }
+
+      if (copyLinkBtn) {
+        copyLinkBtn.onclick = () => copyText(buildCanonicalUrl(job.title), "Result link copied.");
+      }
+
+      const shareUrls = getShareUrls(job);
+
+      if (shareXBtn) shareXBtn.onclick = () => openShareWindow(shareUrls.x);
+      if (shareFacebookBtn) shareFacebookBtn.onclick = () => openShareWindow(shareUrls.facebook);
+      if (shareLinkedInBtn) shareLinkedInBtn.onclick = () => openShareWindow(shareUrls.linkedin);
+      if (shareWhatsAppBtn) shareWhatsAppBtn.onclick = () => openShareWindow(shareUrls.whatsapp);
+    }
+
+    function createRankingItem(job, rankNumber) {
+      return `
+        <div class="ranking-item">
+          <div class="ranking-number">${rankNumber}</div>
+          <div class="ranking-main">
+            <div class="ranking-title">${escapeHtml(job.title)}</div>
+            <div class="ranking-sub">${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)} · Score ${formatExposureDecimal(job.observed_exposure)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRankings() {
+      const highest = enrichedJobs
+        .slice()
+        .sort((a, b) => b.odds_ai_replaces_major_parts_of_job - a.odds_ai_replaces_major_parts_of_job)
+        .slice(0, 10);
+
+      const lowest = enrichedJobs
+        .slice()
+        .sort((a, b) => a.odds_ai_replaces_major_parts_of_job - b.odds_ai_replaces_major_parts_of_job || a.ai_risk_rank - b.ai_risk_rank)
+        .slice(0, 10);
+
+      document.getElementById("topJobs").innerHTML =
+        highest.map((job, index) => createRankingItem(job, index + 1)).join("");
+
+      document.getElementById("safeJobs").innerHTML =
+        lowest.map((job, index) => createRankingItem(job, index + 1)).join("");
+    }
+
+    function getFilteredRankingJobs() {
+      let jobs = enrichedJobs.slice();
+
+      if (currentSortMode === "highest") {
+        jobs.sort((a, b) => b.odds_ai_replaces_major_parts_of_job - a.odds_ai_replaces_major_parts_of_job);
+      } else {
+        jobs.sort((a, b) => a.odds_ai_replaces_major_parts_of_job - b.odds_ai_replaces_major_parts_of_job || a.ai_risk_rank - b.ai_risk_rank);
+      }
+
+      if (rankingSearchTerm.trim()) {
+        const q = rankingSearchTerm.trim().toLowerCase();
+        jobs = jobs.filter(job =>
+          job.title.toLowerCase().includes(q) ||
+          (job.job_family || "").toLowerCase().includes(q)
+        );
+      }
+
+      return jobs;
+    }
+
+    function renderFullRanking() {
+      const jobs = getFilteredRankingJobs();
+
+      document.getElementById("fullRankingBody").innerHTML = jobs.map((job, index) => `
         <tr>
-          <th>Rank</th>
-          <th>Job</th>
-          <th>Implied Odds</th>
-          <th>Exposure Score</th>
-          <th>Risk Level</th>
+          <td>${index + 1}</td>
+          <td>
+            <div class="table-job">${escapeHtml(job.title)}</div>
+            <div style="margin-top:4px;color:#6f7d92;font-size:12px;">${escapeHtml(job.job_family)}</div>
+          </td>
+          <td>${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}</td>
+          <td>${formatExposureDecimal(job.observed_exposure)}</td>
+          <td><span class="table-chip">${escapeHtml(job.risk_level)}</span></td>
         </tr>
-      </thead>
-      <tbody id="fullRankingBody"></tbody>
-    </table>
-  </div>
-</section>
+      `).join("");
 
-<section id="methodSection" class="section-card">
-  <div class="accordion">
-    <details>
-      <summary>
-        <span>
-          How We Built This Tool
-          <span class="summary-sub">What comes from the source dataset, and what Action Network added.</span>
-        </span>
-        <span class="summary-mark">+</span>
-      </summary>
-      <div class="accordion-body">
-        <p>
-          This tool starts with <strong>occupation-level AI exposure data</strong>.
-        </p>
+      if (!jobs.length) {
+        document.getElementById("fullRankingBody").innerHTML = `
+          <tr>
+            <td colspan="5">No matching jobs found.</td>
+          </tr>
+        `;
+      }
+    }
 
-        <ol>
-          <li>Baseline exposure score from dataset</li>
-          <li>Converted into implied odds</li>
-          <li>State-adjusted using wage, growth, openings, and concentration</li>
-        </ol>
+    function findJob(searchTerm) {
+      const query = searchTerm.trim().toLowerCase();
+      if (!query) return null;
 
-        <div class="quote-line">
-          This tool measures AI replacing tasks — not entire jobs disappearing.
+      const exact = enrichedJobs.find(job => job.title.toLowerCase() === query);
+      if (exact) return exact;
+
+      const startsWith = enrichedJobs.find(job => job.title.toLowerCase().startsWith(query));
+      if (startsWith) return startsWith;
+
+      const contains = enrichedJobs.find(job => job.title.toLowerCase().includes(query));
+      if (contains) return contains;
+
+      return null;
+    }
+
+    function getAutocompleteMatches(searchTerm) {
+      const q = searchTerm.trim().toLowerCase();
+      if (!q) return [];
+
+      const startsWith = enrichedJobs.filter(job => job.title.toLowerCase().startsWith(q));
+      const contains = enrichedJobs.filter(job => !job.title.toLowerCase().startsWith(q) && job.title.toLowerCase().includes(q));
+
+      return [...startsWith, ...contains].slice(0, 8);
+    }
+
+    function hideAutocomplete() {
+      const box = document.getElementById("autocomplete");
+      box.classList.add("hidden");
+      box.innerHTML = "";
+      autocompleteIndex = -1;
+    }
+
+    function renderAutocomplete(matches) {
+      const box = document.getElementById("autocomplete");
+
+      if (!matches.length) {
+        hideAutocomplete();
+        return;
+      }
+
+      box.innerHTML = matches.map((job, index) => `
+        <div class="autocomplete-item ${index === autocompleteIndex ? "active" : ""}" data-title="${escapeHtml(job.title)}">
+          <div class="autocomplete-title">${escapeHtml(job.title)}</div>
+          <div class="autocomplete-sub">${escapeHtml(job.job_family)} · Odds: ${formatProbabilityPercent(job.odds_ai_replaces_major_parts_of_job)}</div>
         </div>
-      </div>
-    </details>
+      `).join("");
 
-    <details>
-      <summary>
-        <span>
-          Sources
-          <span class="summary-sub">Underlying data and modeling.</span>
-        </span>
-        <span class="summary-mark">+</span>
-      </summary>
-      <div class="accordion-body">
-        <div class="source-grid">
-          <div class="source-card">
-            <strong>AI exposure dataset</strong>
-            <p>Occupation-level baseline.</p>
-          </div>
+      box.classList.remove("hidden");
 
-          <div class="source-card">
-            <strong>State labor data</strong>
-            <p>Wages, growth, openings.</p>
-          </div>
+      box.querySelectorAll(".autocomplete-item").forEach(item => {
+        item.addEventListener("mousedown", function (e) {
+          e.preventDefault();
+          const title = this.getAttribute("data-title");
+          selectAutocomplete(title);
+        });
+      });
+    }
 
-          <div class="source-card">
-            <strong>Action Network</strong>
-            <p>Modeling, ranking, UI.</p>
-          </div>
-        </div>
-      </div>
-    </details>
-  </div>
-</section>
+    function selectAutocomplete(title) {
+      document.getElementById("jobSearch").value = title;
+      hideAutocomplete();
+      const result = findJob(title);
+      if (result) {
+        renderResult(result);
+        const url = new URL(window.location);
+        url.searchParams.set("job", result.title);
+        window.history.replaceState({}, "", url);
+        scrollToSection("resultSection");
+      }
+    }
 
-</main>
-</div>
+    function runSearch() {
+      const input = document.getElementById("jobSearch").value;
+      const result = findJob(input);
 
-<button id="stickyTopBtn" class="sticky-top-btn">↑ Back to top</button>
+      if (result) {
+        renderResult(result);
+        const url = new URL(window.location);
+        url.searchParams.set("job", result.title);
+        window.history.replaceState({}, "", url);
+        hideAutocomplete();
+        scrollToSection("resultSection");
+      } else {
+        document.getElementById("resultSection").classList.add("hidden");
+        document.getElementById("noResults").classList.remove("hidden");
+      }
+    }
+
+    function applyJobFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const jobName = params.get("job");
+      if (!jobName) return false;
+
+      const job = findJob(jobName);
+      if (job) {
+        document.getElementById("jobSearch").value = job.title;
+        renderResult(job);
+        return true;
+      }
+      return false;
+    }
+
+    function setSortButtons() {
+      document.getElementById("sortMostExposedBtn").classList.toggle("active", currentSortMode === "highest");
+      document.getElementById("sortSafestBtn").classList.toggle("active", currentSortMode === "lowest");
+    }
+
+    function updateStickyTopButton() {
+      const btn = document.getElementById("stickyTopBtn");
+      if (window.scrollY > 700) {
+        btn.classList.add("show");
+      } else {
+        btn.classList.remove("show");
+      }
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch("./data/enriched_jobs.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        enrichedJobs = await response.json();
+
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("datasetCount").textContent = `${enrichedJobs.length} jobs in dataset`;
+
+        renderRankings();
+        setSortButtons();
+        renderFullRanking();
+
+        const loadedFromUrl = applyJobFromUrl();
+        if (!loadedFromUrl && enrichedJobs.length > 0) {
+          renderResult(
+            enrichedJobs
+              .slice()
+              .sort((a, b) => b.odds_ai_replaces_major_parts_of_job - a.odds_ai_replaces_major_parts_of_job)[0]
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load dataset:", error);
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("datasetCount").textContent = "Dataset unavailable";
+        document.getElementById("noResults").classList.remove("hidden");
+        document.getElementById("noResults").textContent = "Could not load the AI job dataset.";
+      }
+    }
+
+    document.getElementById("searchButton").addEventListener("click", runSearch);
+
+    document.getElementById("jobSearch").addEventListener("input", function (e) {
+      const matches = getAutocompleteMatches(e.target.value);
+      autocompleteIndex = -1;
+      renderAutocomplete(matches);
+    });
+
+    document.getElementById("jobSearch").addEventListener("keydown", function (e) {
+      const matches = getAutocompleteMatches(e.target.value);
+
+      if (e.key === "ArrowDown" && matches.length) {
+        e.preventDefault();
+        autocompleteIndex = (autocompleteIndex + 1) % matches.length;
+        renderAutocomplete(matches);
+        return;
+      }
+
+      if (e.key === "ArrowUp" && matches.length) {
+        e.preventDefault();
+        autocompleteIndex = autocompleteIndex <= 0 ? matches.length - 1 : autocompleteIndex - 1;
+        renderAutocomplete(matches);
+        return;
+      }
+
+      if (e.key === "Enter") {
+        if (matches.length && autocompleteIndex >= 0) {
+          e.preventDefault();
+          selectAutocomplete(matches[autocompleteIndex].title);
+          return;
+        }
+        runSearch();
+      }
+
+      if (e.key === "Escape") {
+        hideAutocomplete();
+      }
+    });
+
+    document.addEventListener("click", function (e) {
+      const wrap = document.querySelector(".search-input-wrap");
+      if (wrap && !wrap.contains(e.target)) {
+        hideAutocomplete();
+      }
+    });
+
+    document.getElementById("sortMostExposedBtn").addEventListener("click", function () {
+      currentSortMode = "highest";
+      setSortButtons();
+      renderFullRanking();
+    });
+
+    document.getElementById("sortSafestBtn").addEventListener("click", function () {
+      currentSortMode = "lowest";
+      setSortButtons();
+      renderFullRanking();
+    });
+
+    document.getElementById("rankingSearch").addEventListener("input", function (e) {
+      rankingSearchTerm = e.target.value;
+      renderFullRanking();
+    });
+
+    document.getElementById("clearRankingSearch").addEventListener("click", function () {
+      rankingSearchTerm = "";
+      document.getElementById("rankingSearch").value = "";
+      renderFullRanking();
+    });
+
+    document.getElementById("stickyTopBtn").addEventListener("click", function () {
+      scrollToSection("top");
+    });
+
+    window.addEventListener("scroll", updateStickyTopButton);
+
+    loadData();
+    updateStickyTopButton();
+  </script>
+</body>
+</html>
+
+
